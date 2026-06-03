@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gaiheki+ 初回ガイダンス資料作成</title>
+<style>
+:root {
+  --purple: #7c5cbf;
+  --purple-light: #f0ebff;
+  --purple-mid: #c5aff0;
+  --green: #3db87a;
+  --green-light: #eafaf2;
+  --gray-bg: #f5f4f1;
+  --gray-border: #e2e0db;
+  --gray-text: #999;
+  --dark: #1a1a1a;
+  --mid: #555;
+  --white: #fff;
+  --sidebar-w: 200px;
+  --form-w: 360px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:var(--gray-bg);color:var(--dark);font-size:14px;line-height:1.7;overflow:hidden}
+
+/* ── 3ペインレイアウト ── */
+.app{display:grid;grid-template-columns:var(--sidebar-w) 1fr var(--form-w);height:100vh;overflow:hidden}
+
+/* ── 左ナビ ── */
+.nav{background:var(--white);border-right:1px solid var(--gray-border);display:flex;flex-direction:column;overflow:hidden}
+.nav-logo{padding:16px 16px 12px;border-bottom:1px solid var(--gray-border);flex-shrink:0}
+.nav-logo .brand{font-size:17px;font-weight:800;letter-spacing:-0.5px}
+.nav-logo .brand span{color:var(--purple)}
+.nav-logo .sub{font-size:10px;color:var(--gray-text);margin-top:1px}
+.nav-list{padding:12px 10px;overflow-y:auto;flex:1}
+.nav-section{font-size:9px;font-weight:700;letter-spacing:0.08em;color:var(--gray-text);padding:8px 6px 4px;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500;color:var(--mid);margin-bottom:2px;border:none;background:none;width:100%;text-align:left;transition:all 0.12s}
+.nav-item:hover{background:var(--gray-bg)}
+.nav-item.active{background:var(--purple-light);color:var(--purple)}
+.nav-item .n{width:18px;height:18px;border-radius:50%;background:var(--gray-bg);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:var(--gray-text);flex-shrink:0}
+.nav-item.active .n{background:var(--purple);color:var(--white)}
+.nav-page-badge{font-size:9px;padding:1px 5px;border-radius:3px;margin-left:auto;font-weight:600}
+.nav-page-badge.pg1{background:var(--purple-light);color:var(--purple)}
+.nav-page-badge.pg2{background:#fff3e0;color:#e65100}
+.nav-page-badge.pg3{background:var(--green-light);color:var(--green)}
+.nav-divider{height:1px;background:var(--gray-border);margin:6px 0}
+
+/* ── 中央プレビュー ── */
+.preview{overflow-y:auto;padding:28px 24px;background:var(--gray-bg)}
+
+/* ページ全体 */
+.doc-page{background:var(--white);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.07);max-width:700px;margin:0 auto 32px;overflow:hidden}
+.doc-page.hidden{display:none}
+
+/* ページヘッダー */
+.page-header{display:flex;align-items:center;gap:10px;padding:14px 28px 12px;border-bottom:2px solid var(--gray-border);background:var(--gray-bg)}
+.page-num-badge{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.page-num-badge.p1{background:var(--purple-light);color:var(--purple)}
+.page-num-badge.p2{background:#fff3e0;color:#e65100}
+.page-num-badge.p3{background:var(--green-light);color:var(--green)}
+.page-title-area .pt{font-size:15px;font-weight:700}
+.page-title-area .ps{font-size:11px;color:var(--gray-text)}
+
+/* ドキュメントヘッダー（1ページ目のみ） */
+.doc-header{background:#1a1a1a;color:var(--white);padding:26px 32px 22px}
+.doc-header .brand-big{font-size:20px;font-weight:800;letter-spacing:-0.5px}
+.doc-header .brand-big span{color:var(--purple-mid)}
+.doc-header .doc-kind{font-size:11px;color:#aaa;margin-top:2px;letter-spacing:0.05em}
+.doc-header .to{font-size:14px;margin-top:12px}
+.doc-header .to strong{font-size:17px}
+.doc-header .issued{font-size:11px;color:#999;margin-top:4px}
+
+.doc-body{padding:20px 32px 32px}
+
+/* セクション */
+.sec{margin-bottom:24px}
+.sec-head{display:flex;align-items:center;gap:8px;border-bottom:1.5px solid var(--gray-border);padding-bottom:7px;margin-bottom:12px}
+.sec-dot{width:8px;height:8px;border-radius:50%;background:var(--purple);flex-shrink:0}
+.sec-dot.green{background:var(--green)}
+.sec-dot.orange{background:#e65100}
+.sec-title{font-size:13px;font-weight:700}
+.sec-badge{margin-left:auto;font-size:9px;padding:2px 7px;border-radius:3px;font-weight:700}
+.sec-badge.own{background:var(--purple-light);color:var(--purple)}
+.sec-badge.gai{background:var(--green-light);color:var(--green)}
+
+/* 情報グリッド */
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.info-box{background:var(--gray-bg);border-radius:6px;padding:9px 12px;border-left:3px solid var(--purple)}
+.info-box.g{border-left-color:var(--green)}
+.info-box.o{border-left-color:#e65100}
+.info-box .lbl{font-size:10px;color:var(--gray-text);margin-bottom:2px}
+.info-box .val{font-size:14px;font-weight:700}
+.info-box .sub{font-size:10px;color:var(--gray-text);margin-top:2px}
+.span2{grid-column:span 2}
+
+/* タグ */
+.tags{display:flex;flex-wrap:wrap;gap:5px}
+.tag{background:var(--purple-light);color:var(--purple);border-radius:4px;padding:3px 9px;font-size:11px;font-weight:500}
+
+/* テキストブロック */
+.txt-block{background:var(--gray-bg);border-radius:6px;padding:10px 13px;font-size:12.5px;line-height:1.85;white-space:pre-wrap}
+
+/* ステップ */
+.steps{display:flex;flex-direction:column;gap:7px}
+.step{display:flex;gap:9px;align-items:flex-start}
+.step-n{width:19px;height:19px;border-radius:50%;background:var(--purple);color:var(--white);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0;margin-top:2px}
+.step-t{font-size:12.5px;line-height:1.6}
+
+/* ログインボックス */
+.login-box{background:#1a1a1a;color:var(--white);border-radius:7px;padding:13px 15px;font-family:'Courier New',monospace}
+.lb-row{display:flex;gap:10px;align-items:flex-start;margin-bottom:5px;font-size:12px}
+.lb-row:last-child{margin-bottom:0}
+.lb-k{color:#aaa;min-width:80px;flex-shrink:0}
+.lb-v{color:#7df5a5;font-weight:600;word-break:break-all}
+.lb-v.url{color:#74c0fc}
+
+/* 写真ボックス */
+.photo-box{border:1px solid var(--gray-border);border-radius:8px;padding:14px 16px}
+.photo-examples{display:flex;flex-wrap:wrap;gap:5px;margin:8px 0}
+.photo-ex{background:var(--gray-bg);border-radius:4px;padding:2px 7px;font-size:11px;color:var(--mid)}
+.photo-ex::before{content:'📷 '}
+
+/* ローン */
+.loan-wrap{border:1px solid var(--green);border-radius:8px;overflow:hidden;margin-bottom:14px}
+.loan-head{background:var(--green);color:var(--white);padding:7px 13px;font-size:12px;font-weight:700}
+.loan-body{padding:11px 13px;font-size:12.5px;line-height:1.8}
+.pill-row{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.pill{background:var(--green-light);color:var(--green);border-radius:4px;padding:2px 8px;font-size:11px;font-weight:600}
+
+/* Amazonギフト */
+.amz-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.amz-card{border:1px solid var(--gray-border);border-radius:7px;padding:11px 13px}
+.amz-badge{font-size:10px;font-weight:700;background:#ff9900;color:#fff;border-radius:3px;padding:2px 5px;display:inline-block;margin-bottom:5px}
+.amz-amount{font-size:18px;font-weight:800}
+.amz-cond{font-size:10px;color:var(--gray-text);margin-top:1px}
+.amz-url{font-size:10px;color:var(--purple);margin-top:5px;word-break:break-all}
+
+/* 緑ボックス */
+.green-box{background:var(--green-light);border-radius:8px;padding:13px 15px}
+.green-box .gb-t{font-size:12px;font-weight:700;color:var(--green);margin-bottom:8px}
+
+/* divider */
+.divider{border:none;border-top:1px solid var(--gray-border);margin:20px 0}
+
+/* feature box */
+.feature-box{background:var(--gray-bg);border-radius:7px;padding:12px 14px;font-size:12.5px;line-height:1.75}
+
+/* url行 */
+.url-line{font-size:12px;margin-top:6px}
+.url-line span{color:var(--purple);word-break:break-all}
+.url-line.g span{color:var(--green)}
+
+/* ── 右フォーム ── */
+.form-pane{background:var(--white);border-left:1px solid var(--gray-border);display:flex;flex-direction:column;overflow:hidden}
+.form-header{padding:14px 16px 10px;border-bottom:1px solid var(--gray-border);flex-shrink:0}
+.form-header .fh-title{font-size:13px;font-weight:700}
+.form-header .fh-sub{font-size:10px;color:var(--gray-text);margin-top:1px}
+
+/* ページタブ */
+.page-tabs{display:flex;border-bottom:1px solid var(--gray-border);flex-shrink:0}
+.ptab{flex:1;padding:9px 4px;text-align:center;font-size:11px;font-weight:600;color:var(--gray-text);cursor:pointer;border:none;background:none;border-bottom:2px solid transparent;transition:all 0.13s;line-height:1.3}
+.ptab.active{color:var(--purple);border-bottom-color:var(--purple)}
+.ptab:hover:not(.active){background:var(--gray-bg)}
+
+/* フォームスクロール */
+.form-scroll{overflow-y:auto;flex:1;padding:14px 16px 20px}
+.f-sec{font-size:9px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--purple);margin:16px 0 8px;padding-bottom:3px;border-bottom:1px solid var(--purple-light)}
+.f-sec:first-child{margin-top:0}
+.field{margin-bottom:10px}
+.field label{display:block;font-size:11px;font-weight:500;color:var(--mid);margin-bottom:3px}
+.field label .req{color:var(--purple);margin-left:1px}
+.field input,.field select,.field textarea{width:100%;padding:6px 9px;border:1px solid var(--gray-border);border-radius:5px;font-size:12px;background:var(--white);color:var(--dark);font-family:inherit;transition:border-color 0.13s;appearance:none;-webkit-appearance:none}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--purple)}
+.field textarea{resize:vertical;min-height:52px}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%23999' d='M5 7L0 2h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;padding-right:24px}
+.field-row{display:flex;gap:7px}
+.field-row .field{flex:1}
+.fnote{font-size:10px;color:var(--gray-text);margin-top:2px}
+
+/* エリア */
+.area-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:6px;min-height:4px}
+.area-tag{background:var(--purple-light);color:var(--purple);border-radius:3px;padding:2px 6px;font-size:11px;display:flex;align-items:center;gap:3px}
+.area-tag button{background:none;border:none;color:var(--purple);cursor:pointer;font-size:13px;line-height:1;padding:0}
+.area-add{display:flex;gap:5px}
+.area-add input{flex:1}
+.area-add button{padding:6px 10px;background:var(--purple);color:var(--white);border:none;border-radius:5px;cursor:pointer;font-size:11px;white-space:nowrap}
+
+/* アクション */
+.form-actions{padding:12px 16px;border-top:1px solid var(--gray-border);display:flex;gap:7px;flex-shrink:0}
+.btn-print{flex:1;padding:9px;background:var(--purple);color:var(--white);border:none;border-radius:7px;font-size:12px;font-weight:700;cursor:pointer;transition:background 0.13s}
+.btn-print:hover{background:#6b4daf}
+.btn-copy{padding:9px 12px;background:var(--white);color:var(--mid);border:1px solid var(--gray-border);border-radius:7px;font-size:12px;cursor:pointer;transition:all 0.13s}
+.btn-copy:hover{background:var(--gray-bg)}
+
+/* ── 印刷 ── */
+@media print{
+  body{background:#fff;overflow:visible}
+  .app{display:block;height:auto}
+  .nav,.form-pane{display:none}
+  .preview{padding:0;overflow:visible}
+  .doc-page{box-shadow:none;border-radius:0;max-width:100%;margin-bottom:0;page-break-after:always}
+  .doc-page.hidden{display:block!important}
+  .page-header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .doc-header,.sec-dot,.step-n,.tag,.info-box,.login-box,.loan-head,.amz-badge,.pill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ══ 左ナビ ══ -->
+<div class="nav">
+  <div class="nav-logo">
+    <div class="brand">gaiheki<span>+</span></div>
+    <div class="sub">初回ガイダンス資料</div>
+  </div>
+  <div class="nav-list">
+    <div class="nav-section">ページ一覧</div>
+
+    <div class="nav-section" style="margin-top:2px">Page 1　確認事項</div>
+    <button class="nav-item active" onclick="gotoSection('s-contract')" id="nav-contract">
+      <span class="n">1</span>契約プラン
+      <span class="nav-page-badge pg1">P1</span>
+    </button>
+    <button class="nav-item" onclick="gotoSection('s-area')" id="nav-area">
+      <span class="n">2</span>対応エリア
+      <span class="nav-page-badge pg1">P1</span>
+    </button>
+    <button class="nav-item" onclick="gotoSection('s-payment')" id="nav-payment">
+      <span class="n">3</span>お支払い
+      <span class="nav-page-badge pg1">P1</span>
+    </button>
+    <button class="nav-item" onclick="gotoSection('s-holiday')" id="nav-holiday">
+      <span class="n">4</span>休業日
+      <span class="nav-page-badge pg1">P1</span>
+    </button>
+    <button class="nav-item" onclick="gotoSection('s-exclude')" id="nav-exclude">
+      <span class="n">5</span>除外情報
+      <span class="nav-page-badge pg1">P1</span>
+    </button>
+    <button class="nav-item" onclick="gotoSection('s-delivery')" id="nav-delivery">
+      <span class="n">6</span>配信先
+      <span class="nav-page-badge pg1">P1</span>
+    </button>
+    <button class="nav-item" onclick="gotoSection('s-login')" id="nav-login">
+      <span class="n">7</span>ログイン情報
+      <span class="nav-page-badge pg1">P1</span>
+    </button>
+    <button class="nav-item" onclick="gotoSection('s-report')" id="nav-report">
+      <span class="n">8</span>成約報告
+      <span class="nav-page-badge pg1">P1</span>
+    </button>
+
+    <div class="nav-divider"></div>
+    <div class="nav-section">Page 2　写真・ご要望</div>
+    <button class="nav-item" onclick="gotoSection('s-photo')" id="nav-photo">
+      <span class="n">📷</span>写真提供依頼
+      <span class="nav-page-badge pg2">P2</span>
+    </button>
+    <button class="nav-item" onclick="gotoSection('s-feature')" id="nav-feature">
+      <span class="n">💬</span>機能ご要望
+      <span class="nav-page-badge pg2">P2</span>
+    </button>
+
+    <div class="nav-divider"></div>
+    <div class="nav-section">Page 3　現調施策</div>
+    <button class="nav-item" onclick="gotoSection('s-loan')" id="nav-loan">
+      <span class="n">💰</span>ローン案内
+      <span class="nav-page-badge pg3">P3</span>
+    </button>
+    <button class="nav-item" onclick="gotoSection('s-amazon')" id="nav-amazon">
+      <span class="n">🎁</span>Amazonギフト
+      <span class="nav-page-badge pg3">P3</span>
+    </button>
+  </div>
+</div>
+
+<!-- ══ 中央プレビュー ══ -->
+<div class="preview" id="preview-scroll">
+
+  <!-- ━━ PAGE 1 ━━ -->
+  <div class="doc-page" id="page1">
+    <div class="doc-header">
+      <div class="brand-big">gaiheki<span>+</span></div>
+      <div class="doc-kind">初回ガイダンス資料</div>
+      <div class="to" style="margin-top:14px">宛先：<strong id="p-company">（会社名・担当者名）</strong> 様</div>
+      <div class="issued" id="p-date"></div>
+    </div>
+    <div style="background:var(--purple-light);padding:8px 32px;font-size:11px;font-weight:700;color:var(--purple);letter-spacing:0.04em">
+      PAGE 1　ご確認事項
+    </div>
+    <div class="doc-body">
+
+      <!-- ①契約 -->
+      <div class="sec" id="s-contract">
+        <div class="sec-head">
+          <div class="sec-dot"></div>
+          <div class="sec-title">① ご契約プランについて</div>
+          <div class="sec-badge own">ご確認事項</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-box"><div class="lbl">プラン</div><div class="val" id="p-plan">—</div></div>
+          <div class="info-box"><div class="lbl">月額費用（税抜）</div><div class="val" id="p-fee">—</div></div>
+          <div class="info-box g"><div class="lbl">成約手数料</div><div class="val" id="p-commission">—</div></div>
+          <div class="info-box g"><div class="lbl">契約期間</div><div class="val" id="p-period">—</div><div class="sub">自動更新 / 退会は14日前に管理画面から申請</div></div>
+          <div class="info-box"><div class="lbl">月間紹介件数（想定）</div><div class="val" id="p-monthly">—</div></div>
+          <div class="info-box"><div class="lbl">6ヶ月紹介件数（想定）</div><div class="val" id="p-half">—</div></div>
+          <div class="info-box o span2"><div class="lbl">最低補償件数</div><div class="val" id="p-guarantee">—</div><div class="sub">保証件数に満たない場合は6ヶ月後に返金対応</div></div>
+        </div>
+      </div>
+
+      <!-- ②エリア -->
+      <div class="sec" id="s-area">
+        <div class="sec-head">
+          <div class="sec-dot"></div>
+          <div class="sec-title">② 対応エリア</div>
+          <div class="sec-badge own">ご確認事項</div>
+        </div>
+        <div class="tags" id="p-areas"><span style="font-size:12px;color:var(--gray-text)">エリアが未設定です</span></div>
+        <div style="margin-top:6px;font-size:11px;color:var(--gray-text)" id="p-area-points"></div>
+      </div>
+
+      <!-- ③支払い -->
+      <div class="sec" id="s-payment">
+        <div class="sec-head">
+          <div class="sec-dot"></div>
+          <div class="sec-title">③ お支払いについて</div>
+          <div class="sec-badge own">ご確認事項</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-box g span2">
+            <div class="lbl">ステータス</div>
+            <div class="val" id="p-pay-status">—</div>
+            <div class="sub" id="p-pay-note"></div>
+          </div>
+        </div>
+        <div style="margin-top:9px;font-size:12px;color:var(--mid);line-height:1.75">
+          月額料金のお支払いは原則<strong>クレジットカード払い</strong>となります。<br>
+          GMOサインより申込書ご記入の上、免許証画像の添付・クレジットカード情報のご登録をお願いいたします。
+        </div>
+      </div>
+
+      <!-- ④休業日 -->
+      <div class="sec" id="s-holiday">
+        <div class="sec-head">
+          <div class="sec-dot green"></div>
+          <div class="sec-title">④ 弊社の休業日について</div>
+          <div class="sec-badge gai">弊社情報</div>
+        </div>
+        <div class="txt-block">弊社は基本的にカレンダー通りの営業となるため、<strong>土日祝日は営業しておりません</strong>。
+配信内容の変更等を含め、ご連絡は<strong>平日 09:00〜19:00</strong> の間にお願いいたします。</div>
+      </div>
+
+      <!-- ⑤除外 -->
+      <div class="sec" id="s-exclude">
+        <div class="sec-head">
+          <div class="sec-dot green"></div>
+          <div class="sec-title">⑤ 除外となり得るお客様情報について</div>
+          <div class="sec-badge gai">弊社情報</div>
+        </div>
+        <div class="txt-block">以下に該当するお客様情報はカウント対象外となります。
+該当ケースを発見された際はご報告ください。
+
+・30日以内の、同一人物からの重複申込
+・使用されていない電話番号
+・別人の人（例：山田 太郎 → 実際は異なる方）</div>
+      </div>
+
+      <!-- ⑥配信先 -->
+      <div class="sec" id="s-delivery">
+        <div class="sec-head">
+          <div class="sec-dot"></div>
+          <div class="sec-title">⑥ 配信先メールアドレス・電話番号・LINEについて</div>
+          <div class="sec-badge own">ご確認事項</div>
+        </div>
+        <div class="info-grid">
+          <div class="info-box"><div class="lbl">配信メールアドレス</div><div class="val" id="p-email" style="font-size:12px;word-break:break-all">—</div></div>
+          <div class="info-box"><div class="lbl">配信電話番号</div><div class="val" id="p-phone">—</div></div>
+          <div class="info-box g span2"><div class="lbl">LINE通知</div><div class="val" id="p-line">—</div></div>
+        </div>
+        <div style="margin-top:8px;font-size:11.5px;color:var(--mid)">お客様情報はLINE・メールでリアルタイムに受け取れます。追加・変更がある場合はご連絡ください。</div>
+      </div>
+
+      <!-- ⑦ログイン -->
+      <div class="sec" id="s-login">
+        <div class="sec-head">
+          <div class="sec-dot"></div>
+          <div class="sec-title">⑦ 顧客管理システム ログイン情報</div>
+          <div class="sec-badge own">ご確認事項</div>
+        </div>
+        <div class="login-box">
+          <div class="lb-row"><div class="lb-k">ログインURL</div><div class="lb-v url" id="p-login-url">—</div></div>
+          <div class="lb-row"><div class="lb-k">ID</div><div class="lb-v" id="p-login-id">—</div></div>
+          <div class="lb-row"><div class="lb-k">パスワード</div><div class="lb-v" id="p-login-pass">—</div></div>
+        </div>
+      </div>
+
+      <!-- ⑧成約報告 -->
+      <div class="sec" id="s-report">
+        <div class="sec-head">
+          <div class="sec-dot green"></div>
+          <div class="sec-title">⑧ ご成約報告について</div>
+          <div class="sec-badge gai">弊社情報</div>
+        </div>
+        <div class="steps">
+          <div class="step"><div class="step-n">1</div><div class="step-t">お客様情報ページを開き、<strong>案件メモ下「新規登録」</strong>から成約報告を入力</div></div>
+          <div class="step"><div class="step-n">2</div><div class="step-t">お客様からの<strong>入金確認後</strong>、7営業日以内に報告</div></div>
+          <div class="step"><div class="step-n">3</div><div class="step-t">弊社より請求書を発行いたします</div></div>
+          <div class="step"><div class="step-n">4</div><div class="step-t">請求書受け取りから<strong>3営業日以内</strong>に成約手数料をお振込ください</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /page1 -->
+
+  <!-- ━━ PAGE 2 ━━ -->
+  <div class="doc-page" id="page2">
+    <div style="background:#fff3e0;padding:8px 32px;font-size:11px;font-weight:700;color:#e65100;letter-spacing:0.04em">
+      PAGE 2　現場・会社の写真ご提供のお願い ＆ 管理画面へのご要望
+    </div>
+    <div class="doc-body">
+
+      <!-- 写真 -->
+      <div class="sec" id="s-photo">
+        <div class="sec-head">
+          <div class="sec-dot orange" style="background:#e65100"></div>
+          <div class="sec-title">📷 現場・会社の写真ご提供のお願い</div>
+          <div class="sec-badge gai">弊社情報</div>
+        </div>
+        <div class="photo-box">
+          <div style="font-size:12.5px;line-height:1.8;margin-bottom:8px">
+            加盟店様の紹介ページ掲載にあたり、お客様が安心してご依頼いただけるよう<strong>現場・会社の雰囲気が伝わる写真</strong>をご提供ください。<br>
+            写真掲載により<strong>成約率・アポ率の向上</strong>が確認されています。スマホ撮影でも問題ありません（2〜5枚）。
+          </div>
+          <div style="font-size:11px;font-weight:600;color:var(--mid);margin-bottom:4px">おすすめの写真例</div>
+          <div class="photo-examples">
+            <div class="photo-ex">施工中の様子</div>
+            <div class="photo-ex">会社外観・社内</div>
+            <div class="photo-ex">スタッフ集合写真</div>
+            <div class="photo-ex">社名入り車両</div>
+            <div class="photo-ex">看板</div>
+          </div>
+          <div class="url-line">▼ 写真アップロードフォーム<br><span id="p-photo-url">（URL未設定）</span></div>
+          <div class="url-line" style="margin-top:6px">▼ 加盟店紹介ページ<br><span id="p-store-url">（URL未設定）</span></div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- 機能要望 -->
+      <div class="sec" id="s-feature">
+        <div class="sec-head">
+          <div class="sec-dot orange" style="background:#e65100"></div>
+          <div class="sec-title">💬 管理画面への追加機能ご要望</div>
+          <div class="sec-badge gai">弊社情報</div>
+        </div>
+        <div class="feature-box">
+          <div style="font-size:12px;color:var(--mid)">普段お使いのシステムや管理ツールで「こんな機能があれば便利なのに！」というご要望がございましたら、ぜひお聞かせください。</div>
+          <div id="p-feature-req" style="margin-top:8px;font-size:12.5px;color:var(--dark);white-space:pre-wrap;min-height:20px"></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /page2 -->
+
+  <!-- ━━ PAGE 3 ━━ -->
+  <div class="doc-page" id="page3">
+    <div style="background:var(--green-light);padding:8px 32px;font-size:11px;font-weight:700;color:var(--green);letter-spacing:0.04em">
+      PAGE 3　現調・成約に繋げるための施策
+    </div>
+    <div class="doc-body">
+
+      <!-- ローン -->
+      <div class="sec" id="s-loan">
+        <div class="sec-head">
+          <div class="sec-dot green"></div>
+          <div class="sec-title">💰 エンドユーザー向けローン導入のご案内</div>
+          <div class="sec-badge gai">弊社情報</div>
+        </div>
+        <div class="loan-wrap">
+          <div class="loan-head">【ローンについて】現調・成約率アップのための施策</div>
+          <div class="loan-body">
+            外壁・屋根工事は高額になりやすく、「金額で迷われる」「今は難しい」といった理由での失注防止のため、エンドユーザー様向けローンを導入しました。
+            <div class="pill-row">
+              <span class="pill">月々払いでのご提案が可能</span>
+              <span class="pill">予算で迷う顧客の後押し</span>
+              <span class="pill">ワンランク上の工事提案</span>
+              <span class="pill">加盟店様の費用・手数料負担なし</span>
+            </div>
+            <div style="margin-top:8px;font-size:11px;color:var(--gray-text)">※お客様に所定の審査がございます。</div>
+            <div class="url-line g" style="margin-top:8px">📄 媒体資料：<span id="p-loan-doc">（URL未設定）</span></div>
+            <div class="url-line g" style="margin-top:4px">📝 申込書：<span id="p-loan-apply">（URL未設定）</span></div>
+          </div>
+        </div>
+      </div>
+
+      <hr class="divider">
+
+      <!-- Amazonギフト -->
+      <div class="sec" id="s-amazon">
+        <div class="sec-head">
+          <div class="sec-dot green"></div>
+          <div class="sec-title">🎁 弊社からAmazonギフト券をお送りします！</div>
+          <div class="sec-badge gai">弊社情報</div>
+        </div>
+        <div class="green-box">
+          <div class="gb-t">現地調査・作業完了でAmazonギフト券プレゼント</div>
+          <div class="amz-grid">
+            <div class="amz-card">
+              <div class="amz-badge">Amazon Gift</div>
+              <div class="amz-amount">500円分</div>
+              <div class="amz-cond">現地調査完了 ＋ お見積書提示</div>
+              <div class="amz-url" id="p-gift-survey">（URL未設定）</div>
+            </div>
+            <div class="amz-card">
+              <div class="amz-badge">Amazon Gift</div>
+              <div class="amz-amount">作業金額 × 1%</div>
+              <div class="amz-cond">作業完了後</div>
+              <div class="amz-url" id="p-gift-work">（URL未設定）</div>
+            </div>
+          </div>
+          <div style="margin-top:10px;font-size:12px;color:var(--mid);line-height:1.75">
+            <strong>営業トークへの活用方法：</strong><br>
+            「現地見積もりを受けていただくだけでAmazonギフト券500円分をプレゼントしています」とフックとして使い、まずは現調アポへ繋げてください。<br>
+            ギフト券は弊社から直接お客様へお送りします。
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /page3 -->
+
+</div><!-- /preview -->
+
+<!-- ══ 右フォーム ══ -->
+<div class="form-pane">
+  <div class="form-header">
+    <div class="fh-title">フォーム入力</div>
+    <div class="fh-sub">入力内容がリアルタイムで資料に反映されます</div>
+  </div>
+
+  <div class="page-tabs">
+    <button class="ptab active" onclick="switchFormPage('fp1')">P1 確認事項</button>
+    <button class="ptab" onclick="switchFormPage('fp2')">P2 写真・要望</button>
+    <button class="ptab" onclick="switchFormPage('fp3')">P3 現調施策</button>
+  </div>
+
+  <div class="form-scroll">
+
+    <!-- フォームページ1 -->
+    <div id="fp1">
+      <div class="f-sec">業者情報</div>
+      <div class="field">
+        <label>会社名 / 担当者名<span class="req">*</span></label>
+        <input type="text" id="company" placeholder="例：株式会社〇〇塗装　山田様" oninput="render()">
+      </div>
+
+      <div class="f-sec">契約プラン</div>
+      <div class="field">
+        <label>プラン</label>
+        <select id="plan" onchange="updatePlanDefaults();render()">
+          <option value="light">ライト（8万円/月・手数料10%）</option>
+          <option value="basic" selected>ベーシック（10万円/月・手数料5%）</option>
+          <option value="pro">プロ（15万円/月・手数料3%）</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>月額費用（税抜）</label>
+          <input type="text" id="monthly_fee" placeholder="例：7万円" oninput="render()">
+          <div class="fnote">継続特典後の金額</div>
+        </div>
+        <div class="field">
+          <label>成約手数料</label>
+          <input type="text" id="commission" placeholder="5%" oninput="render()">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>契約期間</label>
+          <select id="contract_period" onchange="render()">
+            <option value="6ヶ月契約">6ヶ月契約</option>
+            <option value="12ヶ月契約">12ヶ月契約</option>
+            <option value="3ヶ月契約">3ヶ月契約</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>最低補償件数</label>
+          <input type="text" id="guarantee" placeholder="25件" oninput="render()">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>月間紹介件数（想定）</label>
+          <input type="text" id="monthly_est" placeholder="5〜8件" oninput="render()">
+        </div>
+        <div class="field">
+          <label>6ヶ月紹介件数</label>
+          <input type="text" id="half_est" placeholder="40〜55件" oninput="render()">
+        </div>
+      </div>
+
+      <div class="f-sec">対応エリア</div>
+      <div class="area-tags" id="area-tags"></div>
+      <div class="area-add">
+        <input type="text" id="area-input" placeholder="例：神奈川県横浜市" onkeydown="if(event.key==='Enter'){addArea()}">
+        <button onclick="addArea()">追加</button>
+      </div>
+      <div class="field" style="margin-top:8px">
+        <label>エリアポイント数</label>
+        <input type="text" id="area_points" placeholder="例：10ポイントまで" oninput="render()">
+      </div>
+
+      <div class="f-sec">お支払い</div>
+      <div class="field">
+        <label>ステータス</label>
+        <select id="payment_status" onchange="render()">
+          <option value="確認済み ✓">確認済み ✓</option>
+          <option value="クレジットカード登録待ち">クレジットカード登録待ち</option>
+          <option value="請求書払い対応">請求書払い対応</option>
+          <option value="未確認">未確認</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>備考</label>
+        <input type="text" id="payment_note" placeholder="例：毎月25日引き落とし" oninput="render()">
+      </div>
+
+      <div class="f-sec">配信先情報</div>
+      <div class="field">
+        <label>配信メールアドレス</label>
+        <input type="text" id="email" placeholder="info@example.com" oninput="render()">
+      </div>
+      <div class="field">
+        <label>配信電話番号</label>
+        <input type="text" id="phone" placeholder="090-0000-0000" oninput="render()">
+      </div>
+      <div class="field">
+        <label>LINE通知</label>
+        <select id="line_status" onchange="render()">
+          <option value="設定済み ✓">設定済み ✓</option>
+          <option value="設定待ち（案内済み）">設定待ち（案内済み）</option>
+          <option value="未設定">未設定</option>
+        </select>
+      </div>
+
+      <div class="f-sec">顧客管理システム</div>
+      <div class="field">
+        <label>ログインURL</label>
+        <input type="text" id="login_url" value="https://business.gaihekiplus.com/sign_in" oninput="render()">
+      </div>
+      <div class="field">
+        <label>ID</label>
+        <input type="text" id="login_id" placeholder="メールアドレス等" oninput="render()">
+      </div>
+      <div class="field">
+        <label>パスワード</label>
+        <input type="text" id="login_pass" placeholder="初期パスワード" oninput="render()">
+      </div>
+    </div>
+
+    <!-- フォームページ2 -->
+    <div id="fp2" style="display:none">
+      <div class="f-sec">写真提供依頼</div>
+      <div class="field">
+        <label>写真アップロードフォームURL</label>
+        <input type="text" id="photo_url" placeholder="GoogleフォームのURL等" oninput="render()">
+      </div>
+      <div class="field">
+        <label>加盟店紹介ページURL</label>
+        <input type="text" id="store_page_url" placeholder="https://gaihekiplus.com/store/..." oninput="render()">
+      </div>
+
+      <div class="f-sec">管理画面へのご要望</div>
+      <div class="field">
+        <label>ご要望・メモ</label>
+        <textarea id="feature_request" placeholder="例：他社管理システムにあるこの機能が欲しい、など" oninput="render()"></textarea>
+      </div>
+    </div>
+
+    <!-- フォームページ3 -->
+    <div id="fp3" style="display:none">
+      <div class="f-sec">ローン導入</div>
+      <div class="field">
+        <label>媒体資料URL</label>
+        <input type="text" id="loan_doc_url" placeholder="Googleドライブ等のURL" oninput="render()">
+      </div>
+      <div class="field">
+        <label>申込書URL</label>
+        <input type="text" id="loan_apply_url" placeholder="Googleドライブ等のURL" oninput="render()">
+      </div>
+
+      <div class="f-sec">Amazonギフト</div>
+      <div class="field">
+        <label>現調完了ギフト申請フォームURL</label>
+        <input type="text" id="gift_survey_url" placeholder="申請フォームURL" oninput="render()">
+      </div>
+      <div class="field">
+        <label>作業完了ギフト申請フォームURL</label>
+        <input type="text" id="gift_work_url" placeholder="申請フォームURL" oninput="render()">
+      </div>
+    </div>
+
+  </div><!-- /form-scroll -->
+
+  <div class="form-actions">
+    <button class="btn-copy" onclick="copyText()">📋 コピー</button>
+    <button class="btn-print" onclick="window.print()">🖨️ PDF保存</button>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+const areas = [];
+
+/* ── フォームページ切替 ── */
+function switchFormPage(id) {
+  ['fp1','fp2','fp3'].forEach(p => {
+    document.getElementById(p).style.display = p===id?'':'none';
+  });
+  document.querySelectorAll('.ptab').forEach((btn,i) => {
+    btn.classList.toggle('active', ['fp1','fp2','fp3'][i]===id);
+  });
+  // 対応するドキュメントページへスクロール
+  const pageMap = {fp1:'page1', fp2:'page2', fp3:'page3'};
+  const el = document.getElementById(pageMap[id]);
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+/* ── ナビクリック → セクションへスクロール ── */
+function gotoSection(id) {
+  const el = document.getElementById(id);
+  if(!el) return;
+  el.scrollIntoView({behavior:'smooth', block:'start'});
+  // ナビのアクティブ更新
+  document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+  const navId = 'nav-' + id.replace('s-','');
+  const navEl = document.getElementById(navId);
+  if(navEl) navEl.classList.add('active');
+}
+
+/* ── プラン初期値 ── */
+function updatePlanDefaults() {
+  const plan = document.getElementById('plan').value;
+  const d = {
+    light:  {fee:'8万円',  comm:'10%', guar:'なし', mo:'25〜35件', half:'—'},
+    basic:  {fee:'10万円', comm:'5%',  guar:'25件',  mo:'40〜55件', half:'40〜55件'},
+    pro:    {fee:'15万円', comm:'3%',  guar:'40件',  mo:'65〜80件', half:'65〜80件'},
+  }[plan];
+  document.getElementById('monthly_fee').value = d.fee;
+  document.getElementById('commission').value  = d.comm;
+  document.getElementById('guarantee').value   = d.guar;
+  document.getElementById('monthly_est').value = d.mo;
+  document.getElementById('half_est').value    = d.half;
+}
+
+/* ── エリア ── */
+function addArea() {
+  const inp = document.getElementById('area-input');
+  const val = inp.value.trim();
+  if(!val) return;
+  areas.push(val);
+  inp.value = '';
+  renderAreaTags();
+  render();
+}
+function removeArea(i) {
+  areas.splice(i,1);
+  renderAreaTags();
+  render();
+}
+function renderAreaTags() {
+  document.getElementById('area-tags').innerHTML =
+    areas.map((a,i)=>`<div class="area-tag">${a}<button onclick="removeArea(${i})">×</button></div>`).join('');
+}
+
+/* ── 値取得ヘルパー ── */
+function v(id){ return (document.getElementById(id)?.value||'').trim(); }
+
+/* ── レンダー ── */
+function render() {
+  const planLabel = {light:'LIGHT（ライト）', basic:'BASIC（ベーシック）', pro:'PRO（プロ）'};
+
+  set('p-company',  v('company') || '（会社名・担当者名）');
+  set('p-date',     '発行日：' + new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'}));
+  set('p-plan',     planLabel[v('plan')] || '—');
+  set('p-fee',      v('monthly_fee') || '—');
+  set('p-commission', v('commission') || '—');
+  set('p-period',   v('contract_period') || '—');
+  set('p-monthly',  v('monthly_est') || '—');
+  set('p-half',     v('half_est') || '—');
+  set('p-guarantee', v('guarantee') || '—');
+
+  const ap = document.getElementById('p-areas');
+  ap.innerHTML = areas.length
+    ? areas.map(a=>`<div class="tag">${a}</div>`).join('')
+    : '<span style="font-size:12px;color:var(--gray-text)">エリアが未設定です</span>';
+  set('p-area-points', v('area_points') ? '対応エリアポイント：' + v('area_points') : '');
+
+  set('p-pay-status', v('payment_status') || '—');
+  set('p-pay-note',   v('payment_note'));
+  set('p-email',      v('email') || '—');
+  set('p-phone',      v('phone') || '—');
+  set('p-line',       v('line_status') || '—');
+  set('p-login-url',  v('login_url') || '—');
+  set('p-login-id',   v('login_id') || '—');
+  set('p-login-pass', v('login_pass') || '—');
+
+  set('p-photo-url',  v('photo_url') || '（URL未設定）');
+  set('p-store-url',  v('store_page_url') || '（URL未設定）');
+  set('p-feature-req', v('feature_request') || '（ご記入いただいた内容がここに表示されます）');
+
+  set('p-loan-doc',    v('loan_doc_url') || '（URL未設定）');
+  set('p-loan-apply',  v('loan_apply_url') || '（URL未設定）');
+  set('p-gift-survey', v('gift_survey_url') || '（URL未設定）');
+  set('p-gift-work',   v('gift_work_url') || '（URL未設定）');
+}
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if(el) el.textContent = val;
+}
+
+/* ── コピー ── */
+function copyText() {
+  const lines = [
+    '【gaiheki+ 初回ガイダンス資料】',
+    '宛先：'+(v('company')||'—')+' 様', '',
+    '■ 契約プラン',
+    'プラン：'+({light:'ライト',basic:'ベーシック',pro:'プロ'}[v('plan')]||'—'),
+    '月額費用：'+v('monthly_fee'),
+    '成約手数料：'+v('commission'),
+    '契約期間：'+v('contract_period'),
+    '補償件数：'+v('guarantee'),
+    '月間想定：'+v('monthly_est'), '',
+    '■ 対応エリア',
+    areas.length ? areas.join('、') : '未設定', '',
+    '■ お支払いステータス：'+v('payment_status'), '',
+    '■ 配信先',
+    'メール：'+v('email'),
+    '電話：'+v('phone'),
+    'LINE：'+v('line_status'), '',
+    '■ 顧客管理システム',
+    'URL：'+v('login_url'),
+    'ID：'+v('login_id'),
+    'PW：'+v('login_pass'),
+  ];
+  navigator.clipboard.writeText(lines.join('\n'))
+    .then(()=>alert('コピーしました'))
+    .catch(()=>alert('コピーに失敗しました'));
+}
+
+// 初期化
+updatePlanDefaults();
+render();
+</script>
+</body>
+</html>
