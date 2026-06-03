@@ -884,6 +884,11 @@ function saveCase() {
 (function init() {
   const editId = new URLSearchParams(location.search).get('id');
   if (!editId) {
+    const staffParam = new URLSearchParams(location.search).get('staff');
+    if (staffParam) {
+      const el = document.getElementById('assignee');
+      if (el) el.value = staffParam;
+    }
     updatePlanDefaults();
     render();
     return;

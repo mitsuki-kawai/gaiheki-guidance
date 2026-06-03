@@ -88,7 +88,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
     gaiheki<span>+</span>
     <span class="sub">初回ガイダンス管理</span>
   </div>
-  <a href="create.html" class="btn-new">＋ 新規作成</a>
+  <button class="btn-new" onclick="goToCreate()">＋ 新規作成</button>
 </div>
 
 <!-- ── 左サイドバー ── -->
@@ -145,6 +145,11 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 
 <script>
 let currentFilter = 'all';
+
+function goToCreate() {
+  const url = currentFilter === 'all' ? 'create.html' : 'create.html?staff=' + encodeURIComponent(currentFilter);
+  location.href = url;
+}
 
 function getCases() {
   try { return JSON.parse(localStorage.getItem('gaiheki_cases') || '[]'); } catch(e) { return []; }
