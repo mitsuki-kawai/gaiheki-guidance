@@ -219,60 +219,16 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
   </div>
   <div class="nav-list">
     <div class="nav-section">ページ一覧</div>
-
-    <div class="nav-section" style="margin-top:2px">Page 1　確認事項</div>
-    <button class="nav-item active" onclick="gotoSection('s-contract')" id="nav-contract">
-      <span class="n">1</span>契約プラン
+    <button class="nav-item active" onclick="gotoPage('page1')" id="nav-page1">
+      <span class="n">1</span>確認事項
       <span class="nav-page-badge pg1">P1</span>
     </button>
-    <button class="nav-item" onclick="gotoSection('s-area')" id="nav-area">
-      <span class="n">2</span>対応エリア
-      <span class="nav-page-badge pg1">P1</span>
-    </button>
-    <button class="nav-item" onclick="gotoSection('s-payment')" id="nav-payment">
-      <span class="n">3</span>お支払い
-      <span class="nav-page-badge pg1">P1</span>
-    </button>
-    <button class="nav-item" onclick="gotoSection('s-holiday')" id="nav-holiday">
-      <span class="n">4</span>休業日
-      <span class="nav-page-badge pg1">P1</span>
-    </button>
-    <button class="nav-item" onclick="gotoSection('s-exclude')" id="nav-exclude">
-      <span class="n">5</span>除外情報
-      <span class="nav-page-badge pg1">P1</span>
-    </button>
-    <button class="nav-item" onclick="gotoSection('s-delivery')" id="nav-delivery">
-      <span class="n">6</span>配信先
-      <span class="nav-page-badge pg1">P1</span>
-    </button>
-    <button class="nav-item" onclick="gotoSection('s-login')" id="nav-login">
-      <span class="n">7</span>ログイン情報
-      <span class="nav-page-badge pg1">P1</span>
-    </button>
-    <button class="nav-item" onclick="gotoSection('s-report')" id="nav-report">
-      <span class="n">8</span>成約報告
-      <span class="nav-page-badge pg1">P1</span>
-    </button>
-
-    <div class="nav-divider"></div>
-    <div class="nav-section">Page 2　写真・ご要望</div>
-    <button class="nav-item" onclick="gotoSection('s-photo')" id="nav-photo">
-      <span class="n">📷</span>写真提供依頼
+    <button class="nav-item" onclick="gotoPage('page2')" id="nav-page2">
+      <span class="n">2</span>写真・ご要望
       <span class="nav-page-badge pg2">P2</span>
     </button>
-    <button class="nav-item" onclick="gotoSection('s-feature')" id="nav-feature">
-      <span class="n">💬</span>機能ご要望
-      <span class="nav-page-badge pg2">P2</span>
-    </button>
-
-    <div class="nav-divider"></div>
-    <div class="nav-section">Page 3　現調施策</div>
-    <button class="nav-item" onclick="gotoSection('s-loan')" id="nav-loan">
-      <span class="n">💰</span>ローン案内
-      <span class="nav-page-badge pg3">P3</span>
-    </button>
-    <button class="nav-item" onclick="gotoSection('s-amazon')" id="nav-amazon">
-      <span class="n">🎁</span>Amazonギフト
+    <button class="nav-item" onclick="gotoPage('page3')" id="nav-page3">
+      <span class="n">3</span>現調施策
       <span class="nav-page-badge pg3">P3</span>
     </button>
   </div>
@@ -746,14 +702,12 @@ function switchFormPage(id) {
   if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-/* ── ナビクリック → セクションへスクロール ── */
-function gotoSection(id) {
+/* ── ナビクリック → ページへスクロール ── */
+function gotoPage(id) {
   const el = document.getElementById(id);
-  if(!el) return;
-  el.scrollIntoView({behavior:'smooth', block:'start'});
+  if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
   document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
-  const navId = 'nav-' + id.replace('s-','');
-  const navEl = document.getElementById(navId);
+  const navEl = document.getElementById('nav-' + id);
   if(navEl) navEl.classList.add('active');
 }
 
