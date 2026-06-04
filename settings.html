@@ -156,6 +156,7 @@ a.header-logo:hover { opacity: 0.8; }
           <div class="field"><label>成約手数料</label><input type="text" id="light-commission" placeholder="10%"></div>
           <div class="field"><label>最低補償件数</label><input type="text" id="light-guarantee" placeholder="なし"></div>
           <div class="field"><label>月間紹介件数（想定）</label><input type="text" id="light-monthly" placeholder="25〜35件"></div>
+          <div class="field"><label>契約期間</label><input type="text" id="light-contract-period" placeholder="なし"></div>
           <div class="field"><label>6ヶ月紹介件数（想定）</label><input type="text" id="light-half" placeholder="—"></div>
         </div>
 
@@ -165,6 +166,7 @@ a.header-logo:hover { opacity: 0.8; }
           <div class="field"><label>成約手数料</label><input type="text" id="basic-commission" placeholder="5%"></div>
           <div class="field"><label>最低補償件数</label><input type="text" id="basic-guarantee" placeholder="25件"></div>
           <div class="field"><label>月間紹介件数（想定）</label><input type="text" id="basic-monthly" placeholder="40〜55件"></div>
+          <div class="field"><label>契約期間</label><input type="text" id="basic-contract-period" placeholder="6ヶ月契約"></div>
           <div class="field"><label>6ヶ月紹介件数（想定）</label><input type="text" id="basic-half" placeholder="40〜55件"></div>
         </div>
 
@@ -174,6 +176,7 @@ a.header-logo:hover { opacity: 0.8; }
           <div class="field"><label>成約手数料</label><input type="text" id="pro-commission" placeholder="3%"></div>
           <div class="field"><label>最低補償件数</label><input type="text" id="pro-guarantee" placeholder="40件"></div>
           <div class="field"><label>月間紹介件数（想定）</label><input type="text" id="pro-monthly" placeholder="65〜80件"></div>
+          <div class="field"><label>契約期間</label><input type="text" id="pro-contract-period" placeholder="6ヶ月契約"></div>
           <div class="field"><label>6ヶ月紹介件数（想定）</label><input type="text" id="pro-half" placeholder="65〜80件"></div>
         </div>
 
@@ -210,6 +213,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-title">URL設定</div>
       <div class="section-desc">資料作成時にフォームへ自動入力されるデフォルトURLです。</div>
       <div class="url-grid">
+        <div class="field"><label>ログイン管理画面URL</label><input type="text" id="login-url" placeholder="https://business.gaihekiplus.com/sign_in"></div>
         <div class="field"><label>ローン媒体資料URL</label><input type="text" id="loan-doc-url" placeholder="Googleドライブ等のURL"></div>
         <div class="field"><label>ローン申込書URL</label><input type="text" id="loan-apply-url" placeholder="Googleドライブ等のURL"></div>
         <div class="field"><label>現調完了ギフト申請フォームURL</label><input type="text" id="gift-survey-url" placeholder="申請フォームURL"></div>
@@ -227,14 +231,14 @@ a.header-logo:hover { opacity: 0.8; }
 <script>
 const DEFAULT_SETTINGS = {
   plans: {
-    light: { fee: '8万円',  commission: '10%', guarantee: 'なし', monthly: '25〜35件', half: '—' },
-    basic: { fee: '10万円', commission: '5%',  guarantee: '25件',  monthly: '40〜55件', half: '40〜55件' },
-    pro:   { fee: '15万円', commission: '3%',  guarantee: '40件',  monthly: '65〜80件', half: '65〜80件' },
+    light: { fee: '8万円',  commission: '10%', guarantee: 'なし', monthly: '25〜35件', half: '—', contractPeriod: '6ヶ月契約' },
+    basic: { fee: '10万円', commission: '5%',  guarantee: '25件',  monthly: '40〜55件', half: '40〜55件', contractPeriod: '6ヶ月契約' },
+    pro:   { fee: '15万円', commission: '3%',  guarantee: '40件',  monthly: '65〜80件', half: '65〜80件', contractPeriod: '6ヶ月契約' },
   },
   holidayText: '弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。\n配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。',
   excludeText: '以下に該当するお客様情報はカウント対象外となります。\n該当ケースを発見された際はご報告ください。\n\n・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人（例：山田 太郎 → 実際は異なる方）',
   staffList: ['恩田', '宏午', '皆川', '中村', '松本', '亀井', '穴澤', '染葉'],
-  loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '',
+  loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '', loginUrl: 'https://business.gaihekiplus.com/sign_in',
 };
 
 function getSettings() {
@@ -288,11 +292,12 @@ function saveSettings() {
   ['light', 'basic', 'pro'].forEach(p => {
     const get = id => document.getElementById(`${p}-${id}`).value.trim();
     plans[p] = {
-      fee:        get('fee')        || DEFAULT_SETTINGS.plans[p].fee,
-      commission: get('commission') || DEFAULT_SETTINGS.plans[p].commission,
-      guarantee:  get('guarantee')  || DEFAULT_SETTINGS.plans[p].guarantee,
-      monthly:    get('monthly')    || DEFAULT_SETTINGS.plans[p].monthly,
-      half:       get('half')       || DEFAULT_SETTINGS.plans[p].half,
+      fee:            get('fee')             || DEFAULT_SETTINGS.plans[p].fee,
+      commission:     get('commission')      || DEFAULT_SETTINGS.plans[p].commission,
+      guarantee:      get('guarantee')       || DEFAULT_SETTINGS.plans[p].guarantee,
+      monthly:        get('monthly')         || DEFAULT_SETTINGS.plans[p].monthly,
+      half:           get('half')            || DEFAULT_SETTINGS.plans[p].half,
+      contractPeriod: get('contract-period') || DEFAULT_SETTINGS.plans[p].contractPeriod,
     };
   });
 
@@ -307,6 +312,7 @@ function saveSettings() {
     giftWorkUrl:   document.getElementById('gift-work-url').value.trim(),
     photoUrl:      document.getElementById('photo-url').value.trim(),
     storePageUrl:  document.getElementById('store-page-url').value.trim(),
+    loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
   };
 
   localStorage.setItem('gaiheki_settings', JSON.stringify(settings));
@@ -325,11 +331,12 @@ function escHtml(s) {
   const s = getSettings();
 
   ['light', 'basic', 'pro'].forEach(p => {
-    document.getElementById(`${p}-fee`).value        = s.plans[p].fee;
-    document.getElementById(`${p}-commission`).value = s.plans[p].commission;
-    document.getElementById(`${p}-guarantee`).value  = s.plans[p].guarantee;
-    document.getElementById(`${p}-monthly`).value    = s.plans[p].monthly;
-    document.getElementById(`${p}-half`).value       = s.plans[p].half;
+    document.getElementById(`${p}-fee`).value             = s.plans[p].fee;
+    document.getElementById(`${p}-commission`).value      = s.plans[p].commission;
+    document.getElementById(`${p}-guarantee`).value       = s.plans[p].guarantee;
+    document.getElementById(`${p}-monthly`).value         = s.plans[p].monthly;
+    document.getElementById(`${p}-half`).value            = s.plans[p].half;
+    document.getElementById(`${p}-contract-period`).value = s.plans[p].contractPeriod;
   });
 
   staffList = [...s.staffList];
@@ -343,6 +350,7 @@ function escHtml(s) {
   document.getElementById('gift-work-url').value  = s.giftWorkUrl;
   document.getElementById('photo-url').value      = s.photoUrl;
   document.getElementById('store-page-url').value = s.storePageUrl;
+  document.getElementById('login-url').value      = s.loginUrl;
 })();
 </script>
 </body>

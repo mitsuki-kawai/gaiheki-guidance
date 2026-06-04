@@ -37,7 +37,6 @@ body {
 .nav-logo a.brand:hover { opacity: 0.8; }
 .nav-logo .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 .nav-list { padding: 16px 0; overflow-y: auto; flex: 1; }
-.nav-section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0 20px 6px; }
 .nav-item { display: block; width: 100%; padding: 9px 20px; font-size: 12px; font-weight: 400; color: var(--label); background: none; border: none; border-left: 3px solid transparent; text-align: left; cursor: pointer; transition: color .12s, border-color .12s; margin-bottom: 1px; }
 .nav-item:hover { color: var(--main); }
 .nav-item.active { color: var(--main); border-left-color: var(--main); font-weight: 600; }
@@ -54,7 +53,6 @@ body {
 .phb-l { display: flex; align-items: baseline; gap: 10px; }
 .phb-brand { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; }
 .phb-title { font-size: 11px; opacity: .85; letter-spacing: .04em; }
-.phb-r { font-size: 11px; font-weight: 600; letter-spacing: .06em; opacity: .9; }
 
 /* ドキュメントメタ（1ページのみ） */
 .doc-meta { padding: 11px 32px 10px; border-bottom: 2px solid var(--main); display: flex; justify-content: space-between; align-items: flex-end; }
@@ -93,6 +91,10 @@ body {
 
 /* サブノート */
 .sub-note { font-size: 10px; color: var(--muted); margin-left: 8px; font-weight: 400; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+.tc-cell { padding: 9px 12px; background: var(--bg); border-right: 1px solid var(--border); }
+.tc-cell:last-child { border-right: none; background: var(--white); }
+.tc-label { font-size: 10px; color: var(--muted); font-weight: 600; margin-bottom: 4px; }
 .note { font-size: 11.5px; color: var(--label); line-height: 1.75; }
 
 /* エリアタグ */
@@ -203,10 +205,9 @@ a.lb-url:hover { text-decoration: underline; }
     <div class="sub">ガイダンス資料作成</div>
   </div>
   <div class="nav-list">
-    <div class="nav-section-label">ページ</div>
-    <button class="nav-item active" onclick="scrollToPage('p1')" id="nav-p1">P1　確認事項①〜④</button>
-    <button class="nav-item" onclick="scrollToPage('p2')" id="nav-p2">P2　確認事項⑤〜⑧</button>
-    <button class="nav-item" onclick="scrollToPage('p3')" id="nav-p3">P3　写真・施策</button>
+    <button class="nav-item active" onclick="scrollToPage('p1')" id="nav-p1">P1</button>
+    <button class="nav-item" onclick="scrollToPage('p2')" id="nav-p2">P2</button>
+    <button class="nav-item" onclick="scrollToPage('p3')" id="nav-p3">P3</button>
   </div>
 </div>
 
@@ -218,7 +219,7 @@ a.lb-url:hover { text-decoration: underline; }
 <div class="a4-page" id="p1">
   <div class="page-hbar">
     <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">初回ガイダンス資料</span></div>
-    <div class="phb-r">P1</div>
+    
   </div>
   <div class="doc-meta">
     <div class="doc-recipient">宛先：<strong id="p-company">（会社名・担当者名）</strong> 様</div>
@@ -230,16 +231,13 @@ a.lb-url:hover { text-decoration: underline; }
       <tr class="sh"><td colspan="2">① ご契約プランについて</td></tr>
       <tr><td class="k">プラン</td><td class="v" id="p-plan">—</td></tr>
       <tr>
-        <td class="k">月額費用（税抜）</td>
-        <td class="v"><span class="va" id="p-fee">—</span></td>
-      </tr>
-      <tr>
-        <td class="k">成約手数料</td>
-        <td class="v"><span class="va-sm" id="p-commission">—</span></td>
-      </tr>
-      <tr>
-        <td class="k">契約期間</td>
-        <td class="v"><span id="p-period">—</span><span class="sub-note">自動更新 / 退会は14日前に管理画面から申請</span></td>
+        <td colspan="2" style="padding:0">
+          <div class="three-col">
+            <div class="tc-cell"><div class="tc-label">月額費用（税抜）</div><span class="va" id="p-fee">—</span></div>
+            <div class="tc-cell"><div class="tc-label">成約手数料</div><span class="va-sm" id="p-commission">—</span></div>
+            <div class="tc-cell"><div class="tc-label">契約期間</div><span id="p-period">—</span><div style="font-size:10px;color:var(--muted);margin-top:2px">自動更新 / 退会は14日前に管理画面から申請</div></div>
+          </div>
+        </td>
       </tr>
       <tr><td class="k">月間紹介件数（想定）</td><td class="v" id="p-monthly">—</td></tr>
       <tr><td class="k">6ヶ月紹介件数（想定）</td><td class="v" id="p-half">—</td></tr>
@@ -283,7 +281,7 @@ a.lb-url:hover { text-decoration: underline; }
 <div class="a4-page" id="p2">
   <div class="page-hbar">
     <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">初回ガイダンス資料</span></div>
-    <div class="phb-r">P2</div>
+    
   </div>
   <div class="page-content">
     <table class="doc-table">
@@ -308,16 +306,9 @@ a.lb-url:hover { text-decoration: underline; }
       <tr class="gap"><td colspan="2"></td></tr>
 
       <tr class="sh"><td colspan="2">⑦ 顧客管理システム ログイン情報</td></tr>
-      <tr>
-        <td class="k">ログイン情報</td>
-        <td class="v" style="padding:8px 10px">
-          <div class="login-box">
-            <div class="lb-row"><div class="lb-k">ログインURL</div><a class="lb-url" id="p-login-url" href="#" target="_blank">—</a></div>
-            <div class="lb-row"><div class="lb-k">ID</div><div class="lb-val" id="p-login-id">—</div></div>
-            <div class="lb-row"><div class="lb-k">パスワード</div><div class="lb-val" id="p-login-pass">—</div></div>
-          </div>
-        </td>
-      </tr>
+      <tr><td class="k">ログインURL</td><td class="v"><a class="url-val" id="p-login-url" href="#" target="_blank">—</a></td></tr>
+      <tr><td class="k">ID</td><td class="v" id="p-login-id">—</td></tr>
+      <tr><td class="k">パスワード</td><td class="v" id="p-login-pass">—</td></tr>
 
       <tr class="gap"><td colspan="2"></td></tr>
 
@@ -342,7 +333,7 @@ a.lb-url:hover { text-decoration: underline; }
 <div class="a4-page" id="p3">
   <div class="page-hbar">
     <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">写真ご提供のお願い・現調施策</span></div>
-    <div class="phb-r">P3</div>
+    
   </div>
   <div class="page-content">
     <table class="doc-table">
@@ -481,19 +472,9 @@ a.lb-url:hover { text-decoration: underline; }
           <input type="text" id="commission" placeholder="5%" oninput="render()">
         </div>
       </div>
-      <div class="field-row">
-        <div class="field">
-          <label>契約期間</label>
-          <select id="contract_period" onchange="render()">
-            <option value="6ヶ月契約">6ヶ月契約</option>
-            <option value="12ヶ月契約">12ヶ月契約</option>
-            <option value="3ヶ月契約">3ヶ月契約</option>
-          </select>
-        </div>
-        <div class="field">
-          <label>最低補償件数</label>
-          <input type="text" id="guarantee" placeholder="25件" oninput="render()">
-        </div>
+      <div class="field">
+        <label>最低補償件数</label>
+        <input type="text" id="guarantee" placeholder="25件" oninput="render()">
       </div>
       <div class="field-row">
         <div class="field">
@@ -548,10 +529,6 @@ a.lb-url:hover { text-decoration: underline; }
       </div>
       <div class="f-sec">顧客管理システム</div>
       <div class="field">
-        <label>ログインURL</label>
-        <input type="text" id="login_url" value="https://business.gaihekiplus.com/sign_in" oninput="render()">
-      </div>
-      <div class="field">
         <label>ID</label>
         <input type="text" id="login_id" placeholder="メールアドレス等" oninput="render()">
       </div>
@@ -578,14 +555,14 @@ const areas = [];
 /* ── 設定デフォルト値 ── */
 const DEFAULT_SETTINGS = {
   plans: {
-    light: { fee: '8万円',  commission: '10%', guarantee: 'なし', monthly: '25〜35件', half: '—' },
-    basic: { fee: '10万円', commission: '5%',  guarantee: '25件',  monthly: '40〜55件', half: '40〜55件' },
-    pro:   { fee: '15万円', commission: '3%',  guarantee: '40件',  monthly: '65〜80件', half: '65〜80件' },
+    light: { fee: '8万円',  commission: '10%', guarantee: 'なし', monthly: '25〜35件', half: '—', contractPeriod: '6ヶ月契約' },
+    basic: { fee: '10万円', commission: '5%',  guarantee: '25件',  monthly: '40〜55件', half: '40〜55件', contractPeriod: '6ヶ月契約' },
+    pro:   { fee: '15万円', commission: '3%',  guarantee: '40件',  monthly: '65〜80件', half: '65〜80件', contractPeriod: '6ヶ月契約' },
   },
   holidayText: '弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。\n配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。',
   excludeText: '以下に該当するお客様情報はカウント対象外となります。\n該当ケースを発見された際はご報告ください。\n\n・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人（例：山田 太郎 → 実際は異なる方）',
   staffList: ['恩田', '宏午', '皆川', '中村', '松本', '亀井', '穴澤', '染葉'],
-  loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '',
+  loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '', loginUrl: 'https://business.gaihekiplus.com/sign_in',
 };
 
 function getSettings() {
@@ -651,12 +628,13 @@ function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').re
 
 function render() {
   const planLabel = {light:'LIGHT（ライト）', basic:'BASIC（ベーシック）', pro:'PRO（プロ）'};
+  const s = getSettings();
   set('p-company',    v('company') || '（会社名・担当者名）');
   set('p-date',       '発行日：' + new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'}));
   set('p-plan',       planLabel[v('plan')] || '—');
   set('p-fee',        v('monthly_fee') || '—');
   set('p-commission', v('commission') || '—');
-  set('p-period',     v('contract_period') || '—');
+  set('p-period',     (s.plans[v('plan')] || s.plans.basic).contractPeriod || '—');
   set('p-monthly',    v('monthly_est') || '—');
   set('p-half',       v('half_est') || '—');
   set('p-guarantee',  v('guarantee') || '—');
@@ -674,14 +652,13 @@ function render() {
   set('p-line',       v('line_status') || '—');
   set('p-login-id',   v('login_id') || '—');
   set('p-login-pass', v('login_pass') || '—');
-  const s = getSettings();
   setLink('p-photo-url',   s.photoUrl);
   setLink('p-store-url',   s.storePageUrl);
   setLink('p-loan-doc',    s.loanDocUrl);
   setLink('p-loan-apply',  s.loanApplyUrl);
   setLink('p-gift-survey', s.giftSurveyUrl);
   setLink('p-gift-work',   s.giftWorkUrl);
-  setLink('p-login-url',   v('login_url'));
+  setLink('p-login-url',   s.loginUrl);
   set('p-holiday-text', s.holidayText);
   set('p-exclude-text', s.excludeText);
 }
@@ -707,9 +684,9 @@ function getCases() {
   try { return JSON.parse(localStorage.getItem('gaiheki_cases') || '[]'); } catch(e) { return []; }
 }
 function collectFormData() {
-  const fields = ['assignee','company','plan','monthly_fee','commission','contract_period','guarantee',
+  const fields = ['assignee','company','plan','monthly_fee','commission','guarantee',
     'monthly_est','half_est','area_points','payment_status','payment_note','email','phone',
-    'line_status','login_url','login_id','login_pass'];
+    'line_status','login_id','login_pass'];
   const data = {};
   fields.forEach(f => { const el = document.getElementById(f); if(el) data[f] = el.value; });
   data.areas = [...areas];
@@ -748,9 +725,9 @@ function saveCase() {
   const c = getCases().find(c => c.id === editId);
   if (!c) { updatePlanDefaults(); render(); return; }
   const d = c.formData;
-  ['assignee','company','plan','monthly_fee','commission','contract_period','guarantee',
+  ['assignee','company','plan','monthly_fee','commission','guarantee',
    'monthly_est','half_est','area_points','payment_status','payment_note','email','phone',
-   'line_status','login_url','login_id','login_pass'].forEach(f => {
+   'line_status','login_id','login_pass'].forEach(f => {
     const el = document.getElementById(f);
     if (el && d[f] !== undefined) el.value = d[f];
   });
