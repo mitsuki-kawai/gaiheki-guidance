@@ -11,7 +11,7 @@
   --bg:     #F3F3F3;
   --text:   #1a1a1a;
   --white:  #ffffff;
-  --border: #dcdcdc;
+  --border: #d0d0d0;
   --label:  #555555;
   --muted:  #999999;
   --nav-w:  210px;
@@ -19,309 +19,166 @@
 }
 *,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
-  font-family: 'Hiragino Kaku Gothic ProN', 'Noto Sans JP', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  font-size: 14px;
-  line-height: 1.7;
-  overflow: hidden;
+  font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;
+  background: var(--bg); color: var(--text); font-size: 14px;
+  line-height: 1.6; overflow: hidden;
 }
 
 /* ── 3ペインレイアウト ── */
-.app {
-  display: grid;
-  grid-template-columns: var(--nav-w) 1fr var(--form-w);
-  height: 100vh;
-  overflow: hidden;
-}
+.app { display: grid; grid-template-columns: var(--nav-w) 1fr var(--form-w); height: 100vh; overflow: hidden; }
 
 /* ── 左ナビ ── */
-.nav {
-  background: var(--white);
-  border-right: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.nav-logo {
-  padding: 20px 20px 14px;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
-.nav-logo .back-link {
-  display: inline-block;
-  font-size: 11px;
-  color: var(--muted);
-  text-decoration: none;
-  margin-bottom: 10px;
-}
+.nav { background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.nav-logo { padding: 20px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.nav-logo .back-link { display: inline-block; font-size: 11px; color: var(--muted); text-decoration: none; margin-bottom: 10px; }
 .nav-logo .back-link:hover { color: var(--main); }
 .nav-logo .brand { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
 .nav-logo .brand span { color: var(--main); }
 .nav-logo .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 .nav-list { padding: 16px 0; overflow-y: auto; flex: 1; }
-.nav-section-label {
-  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
-  text-transform: uppercase; color: var(--muted);
-  padding: 0 20px 6px;
-}
-.nav-item {
-  display: block; width: 100%; padding: 9px 20px;
-  font-size: 13px; font-weight: 400; color: var(--label);
-  background: none; border: none;
-  border-left: 3px solid transparent;
-  text-align: left; cursor: pointer;
-  transition: color 0.12s, border-color 0.12s;
-  margin-bottom: 1px;
-}
+.nav-section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0 20px 6px; }
+.nav-item { display: block; width: 100%; padding: 9px 20px; font-size: 12px; font-weight: 400; color: var(--label); background: none; border: none; border-left: 3px solid transparent; text-align: left; cursor: pointer; transition: color .12s, border-color .12s; margin-bottom: 1px; }
 .nav-item:hover { color: var(--main); }
 .nav-item.active { color: var(--main); border-left-color: var(--main); font-weight: 600; }
 
-/* ── プレビュー（A4用紙表示） ── */
-.preview {
-  overflow-y: auto;
-  overflow-x: auto;
-  padding: 24px 0 40px;
-  background: #e0e0e0;
-}
-#pages-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 16px;
-}
-.a4-page {
-  width: 794px;
-  min-height: 1123px;
-  background: var(--white);
-  position: relative;
-  flex-shrink: 0;
-}
-.a4-inner {
-  padding: 40px 48px 72px;
-}
-.a4-footer {
-  position: absolute;
-  bottom: 20px;
-  left: 0; right: 0;
-  text-align: center;
-  font-size: 10px;
-  color: var(--muted);
-  letter-spacing: 0.05em;
-}
+/* ── プレビュー ── */
+.preview { overflow-y: auto; overflow-x: auto; padding: 24px 0 40px; background: #d8d8d8; }
+#pages-container { display: flex; flex-direction: column; align-items: center; gap: 16px; }
 
-/* ── ドキュメント内コンテンツ ── */
-.doc-header {
-  border-bottom: 3px solid var(--main);
-  padding-bottom: 24px;
-  margin-bottom: 24px;
-}
-.doc-header .brand-big {
-  font-size: 22px; font-weight: 800; letter-spacing: -0.5px; color: var(--main);
-}
-.doc-header .doc-kind {
-  font-size: 11px; color: var(--muted); margin-top: 2px;
-  letter-spacing: 0.06em; text-transform: uppercase;
-}
-.doc-header .doc-meta {
-  margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border);
-}
-.doc-header .to { font-size: 14px; color: var(--label); }
-.doc-header .to strong { font-size: 16px; color: var(--text); }
-.doc-header .issued { font-size: 11px; color: var(--muted); margin-top: 4px; }
+/* ── A4ページ ── */
+.a4-page { width: 794px; min-height: 1123px; background: var(--white); position: relative; flex-shrink: 0; }
 
-.page-label {
-  font-size: 11px; font-weight: 600; letter-spacing: 0.06em;
-  text-transform: uppercase; color: var(--main);
-  padding: 8px 0 10px;
-  border-bottom: 1px solid #e8e5f4;
-  margin-bottom: 20px;
-}
-.page-label.p2 { color: var(--accent); border-bottom-color: #fde8d0; }
-.page-label.p3 { color: #2a7a50; border-bottom-color: #c8e8d5; }
+/* ページヘッダーバー */
+.page-hbar { background: var(--main); color: var(--white); padding: 13px 32px; display: flex; justify-content: space-between; align-items: center; }
+.phb-l { display: flex; align-items: baseline; gap: 10px; }
+.phb-brand { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; }
+.phb-title { font-size: 11px; opacity: .85; letter-spacing: .04em; }
+.phb-r { font-size: 11px; font-weight: 600; letter-spacing: .06em; opacity: .9; }
 
-.sec { margin-bottom: 24px; }
-.sec-head {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border);
-}
-.sec-title { font-size: 13px; font-weight: 700; color: var(--main); }
-.sec-badge {
-  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 2px;
-  color: var(--muted); border: 1px solid var(--border);
-}
+/* ドキュメントメタ（1ページのみ） */
+.doc-meta { padding: 11px 32px 10px; border-bottom: 2px solid var(--main); display: flex; justify-content: space-between; align-items: flex-end; }
+.doc-recipient { font-size: 13px; color: var(--label); }
+.doc-recipient strong { font-size: 15px; font-weight: 700; color: var(--text); }
+.doc-issued { font-size: 11px; color: var(--muted); }
 
-.info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-.info-box {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
-  padding: 10px 14px; border-left: 3px solid var(--main);
-}
-.info-box.g { border-left-color: #2a7a50; }
-.info-box.o { border-left-color: var(--accent); }
-.info-box .lbl { font-size: 10px; color: var(--muted); margin-bottom: 3px; }
-.info-box .val { font-size: 14px; font-weight: 700; color: var(--text); }
-.info-box .sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
-.span2 { grid-column: span 2; }
+/* ページコンテンツ */
+.page-content { padding: 18px 32px 52px; }
 
-.tags { display: flex; flex-wrap: wrap; gap: 6px; }
-.tag {
-  background: #eeecf8; color: var(--main); border-radius: 4px;
-  padding: 3px 10px; font-size: 11px; font-weight: 500;
+/* ── 書類テーブル ── */
+.doc-table { width: 100%; border-collapse: collapse; }
+.doc-table td { border: 1px solid var(--border); vertical-align: top; padding: 9px 12px; }
+
+/* セクションヘッダー行 */
+.sh td {
+  background: #eeecf8; color: var(--main);
+  font-size: 11px; font-weight: 700;
+  padding: 8px 12px; border-left: 3px solid var(--main);
+  letter-spacing: .02em;
 }
-.txt-block {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
-  padding: 12px 16px; font-size: 13px; line-height: 1.85;
-  white-space: pre-wrap; color: var(--label);
-}
-.steps { display: flex; flex-direction: column; gap: 10px; }
-.step { display: flex; gap: 12px; align-items: flex-start; }
-.step-n {
-  width: 20px; height: 20px; border-radius: 50%; background: var(--main); color: var(--white);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 3px;
-}
-.step-t { font-size: 13px; line-height: 1.65; color: var(--label); }
-.login-box {
-  background: #1e1e2e; color: #cdd6f4; border-radius: 4px;
-  padding: 16px 18px; font-family: 'Courier New', monospace;
-}
-.lb-row { display: flex; gap: 16px; align-items: flex-start; margin-bottom: 8px; font-size: 12px; }
+.sh .sh-badge { float: right; font-weight: 400; font-size: 10px; color: #8a7fc7; margin-top: 1px; }
+
+/* ギャップ行 */
+.gap td { height: 8px; border: none; padding: 0; }
+
+/* キーセル */
+.k { background: var(--bg); color: var(--main); font-size: 11px; font-weight: 600; width: 148px; vertical-align: middle; }
+
+/* バリューセル */
+.v { background: var(--white); color: var(--text); font-size: 12.5px; }
+
+/* アクセント値（オレンジ強調） */
+.va { color: var(--accent); font-weight: 700; font-size: 15px; }
+.va-sm { color: var(--accent); font-weight: 700; }
+
+/* サブノート */
+.sub-note { font-size: 10px; color: var(--muted); margin-left: 8px; font-weight: 400; }
+.note { font-size: 11.5px; color: var(--label); line-height: 1.75; }
+
+/* エリアタグ */
+.tag { background: #eeecf8; color: var(--main); border-radius: 3px; padding: 2px 8px; font-size: 11px; display: inline-block; margin: 2px 3px 2px 0; }
+
+/* ログインボックス */
+.login-box { background: #1e1e2e; color: #cdd6f4; border-radius: 3px; padding: 12px 14px; font-family: 'Courier New', monospace; font-size: 12px; }
+.lb-row { display: flex; gap: 10px; margin-bottom: 6px; }
 .lb-row:last-child { margin-bottom: 0; }
-.lb-k { color: #6c7086; min-width: 90px; flex-shrink: 0; }
-.lb-v { color: #a6e3a1; font-weight: 600; word-break: break-all; }
-.lb-v.url { color: #89b4fa; }
-.photo-box {
-  border: 1px solid var(--border); border-radius: 4px;
-  padding: 16px 18px; background: var(--bg);
-}
-.photo-examples { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
-.photo-ex {
-  background: var(--white); border: 1px solid var(--border); border-radius: 4px;
-  padding: 3px 10px; font-size: 11px; color: var(--label);
-}
-.photo-ex::before { content: '📷 '; }
-.loan-wrap { border: 1px solid #c8e8d5; border-radius: 4px; overflow: hidden; margin-bottom: 16px; }
-.loan-head { background: #2a7a50; color: var(--white); padding: 8px 16px; font-size: 12px; font-weight: 700; }
-.loan-body { padding: 14px 16px; font-size: 13px; line-height: 1.8; color: var(--label); }
-.pill-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
-.pill {
-  background: #f4fbf7; color: #2a7a50; border: 1px solid #c8e8d5;
-  border-radius: 4px; padding: 2px 10px; font-size: 11px; font-weight: 500;
-}
+.lb-k { color: #6c7086; min-width: 80px; flex-shrink: 0; }
+.lb-url { color: #89b4fa; word-break: break-all; }
+.lb-val { color: #a6e3a1; font-weight: 600; word-break: break-all; }
+
+/* ステップリスト */
+.steps { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.steps li { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; line-height: 1.6; }
+.sn { min-width: 20px; height: 20px; border-radius: 50%; background: var(--main); color: var(--white); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+/* 写真例タグ */
+.photo-tag { background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 2px 8px; font-size: 11px; display: inline-block; margin: 2px 3px 2px 0; }
+
+/* ピル */
+.pill-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.pill { background: #f4fbf7; color: #2a7a50; border: 1px solid #c8e8d5; border-radius: 3px; padding: 2px 8px; font-size: 11px; }
+
+/* Amazonカード */
 .amz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.amz-card { border: 1px solid var(--border); border-radius: 4px; padding: 14px 16px; background: var(--white); }
-.amz-badge {
-  font-size: 10px; font-weight: 700; background: #ff9900; color: var(--white);
-  border-radius: 2px; padding: 2px 6px; display: inline-block; margin-bottom: 6px;
-}
-.amz-amount { font-size: 20px; font-weight: 800; color: var(--text); }
-.amz-cond { font-size: 11px; color: var(--muted); margin-top: 2px; }
-.amz-url { font-size: 11px; color: var(--main); margin-top: 6px; word-break: break-all; }
-.green-box { background: #f4fbf7; border: 1px solid #c8e8d5; border-radius: 4px; padding: 16px 18px; }
-.green-box .gb-t { font-size: 12px; font-weight: 700; color: #2a7a50; margin-bottom: 10px; }
-.divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
-.feature-box {
-  background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
-  padding: 14px 16px; font-size: 13px; line-height: 1.75; color: var(--label);
-}
-.url-line { font-size: 12px; margin-top: 8px; color: var(--label); }
-.url-line span { color: var(--main); word-break: break-all; }
-.url-line.g span { color: #2a7a50; }
+.amz-card { border: 1px solid var(--border); border-radius: 3px; padding: 10px 12px; }
+.amz-badge { font-size: 10px; font-weight: 700; background: #ff9900; color: var(--white); border-radius: 2px; padding: 1px 5px; display: inline-block; margin-bottom: 5px; }
+.amz-amount { font-size: 17px; font-weight: 800; }
+.amz-cond { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+/* URL表示 */
+.url-val { color: var(--main); font-size: 12px; word-break: break-all; }
+
+/* ページフッター */
+.page-footer { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; font-size: 11px; color: var(--muted); letter-spacing: .06em; }
 
 /* ── 右フォーム ── */
-.form-pane {
-  background: var(--white); border-left: 1px solid var(--border);
-  display: flex; flex-direction: column; overflow: hidden;
-}
+.form-pane { background: var(--white); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
 .form-header { padding: 16px 20px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
 .form-header .fh-title { font-size: 13px; font-weight: 700; }
 .form-header .fh-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 .page-tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.ptab {
-  flex: 1; padding: 10px 4px; text-align: center; font-size: 11px; font-weight: 500;
-  color: var(--muted); cursor: pointer; border: none; background: none;
-  border-bottom: 2px solid transparent; transition: color 0.12s, border-color 0.12s;
-}
+.ptab { flex: 1; padding: 10px 4px; text-align: center; font-size: 11px; font-weight: 500; color: var(--muted); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: color .12s, border-color .12s; }
 .ptab.active { color: var(--main); border-bottom-color: var(--main); font-weight: 700; }
 .ptab:hover:not(.active) { color: var(--main); }
 .form-scroll { overflow-y: auto; flex: 1; padding: 16px 20px 24px; }
-.f-sec {
-  font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--main); margin: 20px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #e8e5f4;
-}
+.f-sec { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--main); margin: 20px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #e8e5f4; }
 .f-sec:first-child { margin-top: 0; }
 .field { margin-bottom: 12px; }
 .field label { display: block; font-size: 11px; font-weight: 500; color: var(--label); margin-bottom: 4px; }
 .field label .req { color: var(--accent); margin-left: 2px; }
-.field input, .field select, .field textarea {
-  width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: 4px;
-  font-size: 12px; background: var(--white); color: var(--text); font-family: inherit;
-  transition: border-color 0.12s; appearance: none; -webkit-appearance: none;
-}
-.field input:focus, .field select:focus, .field textarea:focus {
-  outline: none; border-color: var(--main);
-}
+.field input, .field select, .field textarea { width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--white); color: var(--text); font-family: inherit; transition: border-color .12s; appearance: none; -webkit-appearance: none; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--main); }
 .field textarea { resize: vertical; min-height: 56px; }
-.field select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px;
-}
+.field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999' d='M5 6L0 0h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
 .field-row { display: flex; gap: 8px; }
 .field-row .field { flex: 1; }
 .fnote { font-size: 10px; color: var(--muted); margin-top: 3px; }
 .area-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 7px; min-height: 4px; }
-.area-tag {
-  background: #eeecf8; color: var(--main); border-radius: 4px;
-  padding: 3px 8px; font-size: 11px; display: flex; align-items: center; gap: 4px;
-}
-.area-tag button { background: none; border: none; color: var(--main); cursor: pointer; font-size: 14px; line-height: 1; padding: 0; opacity: 0.6; }
+.area-tag { background: #eeecf8; color: var(--main); border-radius: 4px; padding: 3px 8px; font-size: 11px; display: flex; align-items: center; gap: 4px; }
+.area-tag button { background: none; border: none; color: var(--main); cursor: pointer; font-size: 14px; line-height: 1; padding: 0; opacity: .6; }
 .area-tag button:hover { opacity: 1; }
 .area-add { display: flex; gap: 6px; }
 .area-add input { flex: 1; }
-.area-add button {
-  padding: 7px 12px; background: var(--main); color: var(--white);
-  border: none; border-radius: 4px; cursor: pointer; font-size: 11px;
-  font-weight: 600; white-space: nowrap; transition: opacity 0.12s;
-}
-.area-add button:hover { opacity: 0.85; }
-.form-actions {
-  padding: 12px 20px; border-top: 1px solid var(--border);
-  display: flex; gap: 8px; flex-shrink: 0;
-}
-.btn-save {
-  flex: 1; padding: 10px; background: var(--main); color: var(--white);
-  border: none; border-radius: 4px; font-size: 12px; font-weight: 700;
-  cursor: pointer; transition: opacity 0.12s;
-}
-.btn-save:hover { opacity: 0.85; }
-.btn-pdf {
-  padding: 10px 14px; background: var(--accent); color: var(--white);
-  border: none; border-radius: 4px; font-size: 12px; font-weight: 600;
-  cursor: pointer; transition: opacity 0.12s; white-space: nowrap;
-}
-.btn-pdf:hover { opacity: 0.85; }
+.area-add button { padding: 7px 12px; background: var(--main); color: var(--white); border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; white-space: nowrap; transition: opacity .12s; }
+.area-add button:hover { opacity: .85; }
+.form-actions { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; flex-shrink: 0; }
+.btn-save { flex: 1; padding: 10px; background: var(--main); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: opacity .12s; }
+.btn-save:hover { opacity: .85; }
+.btn-pdf { padding: 10px 14px; background: var(--accent); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; white-space: nowrap; }
+.btn-pdf:hover { opacity: .85; }
 
 /* ── 印刷（A4） ── */
 @media print {
   body { overflow: visible; background: white; }
   .app { display: block; height: auto; }
-  .nav, .form-pane, #content-source { display: none !important; }
-  .preview {
-    overflow: visible; padding: 0; background: white;
-    display: block;
-  }
+  .nav, .form-pane { display: none !important; }
+  .preview { overflow: visible; padding: 0; background: white; display: block; }
   #pages-container { gap: 0; padding: 0; display: block; }
-  .a4-page {
-    width: 210mm; min-height: 297mm; margin: 0;
-    page-break-after: always; break-after: page;
-  }
-  .a4-inner { padding: 14mm 16mm 20mm; }
-  .a4-footer {
-    position: absolute; bottom: 8mm;
-    -webkit-print-color-adjust: exact; print-color-adjust: exact;
-  }
-  .doc-header, .page-label, .sec-title, .info-box,
-  .step-n, .tag, .loan-head, .amz-badge, .pill, .login-box {
+  .a4-page { width: 210mm; min-height: 297mm; margin: 0; page-break-after: always; break-after: page; }
+  .page-hbar { padding: 13px 16mm; }
+  .doc-meta { padding: 11px 16mm 10px; }
+  .page-content { padding: 18px 16mm 20mm; }
+  .page-footer { bottom: 8mm; }
+  .page-hbar, .sh td, .k, .login-box, .sn, .tag, .amz-badge, .pill, .va, .va-sm {
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
   }
   @page { size: A4; margin: 0; }
@@ -329,255 +186,9 @@ body {
 </style>
 </head>
 <body>
-
-<!-- ══ コンテンツソース（非表示・getElementById用）DOM上で.appより前 ══ -->
-<div id="content-source" style="display:none">
-
-  <!-- Block 0: ドキュメントヘッダー + PAGE1ラベル -->
-  <div id="src-0">
-    <div class="doc-header">
-      <div class="brand-big">gaiheki+</div>
-      <div class="doc-kind">初回ガイダンス資料</div>
-      <div class="doc-meta">
-        <div class="to">宛先：<strong id="p-company">（会社名・担当者名）</strong> 様</div>
-        <div class="issued" id="p-date"></div>
-      </div>
-    </div>
-    <div class="page-label">PAGE 1　ご確認事項</div>
-  </div>
-
-  <!-- Block 1: ①契約プラン -->
-  <div id="src-1">
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">① ご契約プランについて</div>
-        <div class="sec-badge">ご確認事項</div>
-      </div>
-      <div class="info-grid">
-        <div class="info-box"><div class="lbl">プラン</div><div class="val" id="p-plan">—</div></div>
-        <div class="info-box"><div class="lbl">月額費用（税抜）</div><div class="val" id="p-fee">—</div></div>
-        <div class="info-box g"><div class="lbl">成約手数料</div><div class="val" id="p-commission">—</div></div>
-        <div class="info-box g"><div class="lbl">契約期間</div><div class="val" id="p-period">—</div><div class="sub">自動更新 / 退会は14日前に管理画面から申請</div></div>
-        <div class="info-box"><div class="lbl">月間紹介件数（想定）</div><div class="val" id="p-monthly">—</div></div>
-        <div class="info-box"><div class="lbl">6ヶ月紹介件数（想定）</div><div class="val" id="p-half">—</div></div>
-        <div class="info-box o span2"><div class="lbl">最低補償件数</div><div class="val" id="p-guarantee">—</div><div class="sub">保証件数に満たない場合は6ヶ月後に返金対応</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Block 2: ②対応エリア -->
-  <div id="src-2">
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">② 対応エリア</div>
-        <div class="sec-badge">ご確認事項</div>
-      </div>
-      <div class="tags" id="p-areas"><span style="font-size:12px;color:var(--muted)">エリアが未設定です</span></div>
-      <div style="margin-top:6px;font-size:11px;color:var(--muted)" id="p-area-points"></div>
-    </div>
-  </div>
-
-  <!-- Block 3: ③お支払い -->
-  <div id="src-3">
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">③ お支払いについて</div>
-        <div class="sec-badge">ご確認事項</div>
-      </div>
-      <div class="info-grid">
-        <div class="info-box g span2">
-          <div class="lbl">ステータス</div>
-          <div class="val" id="p-pay-status">—</div>
-          <div class="sub" id="p-pay-note"></div>
-        </div>
-      </div>
-      <div style="margin-top:10px;font-size:13px;color:var(--label);line-height:1.75">
-        月額料金のお支払いは原則<strong>クレジットカード払い</strong>となります。<br>
-        GMOサインより申込書ご記入の上、免許証画像の添付・クレジットカード情報のご登録をお願いいたします。
-      </div>
-    </div>
-  </div>
-
-  <!-- Block 4: ④休業日 -->
-  <div id="src-4">
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">④ 弊社の休業日について</div>
-        <div class="sec-badge">弊社情報</div>
-      </div>
-      <div class="txt-block">弊社は基本的にカレンダー通りの営業となるため、<strong>土日祝日は営業しておりません</strong>。
-配信内容の変更等を含め、ご連絡は<strong>平日 09:00〜19:00</strong> の間にお願いいたします。</div>
-    </div>
-  </div>
-
-  <!-- Block 5: ⑤除外 -->
-  <div id="src-5">
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">⑤ 除外となり得るお客様情報について</div>
-        <div class="sec-badge">弊社情報</div>
-      </div>
-      <div class="txt-block">以下に該当するお客様情報はカウント対象外となります。
-該当ケースを発見された際はご報告ください。
-
-・30日以内の、同一人物からの重複申込
-・使用されていない電話番号
-・別人の人（例：山田 太郎 → 実際は異なる方）</div>
-    </div>
-  </div>
-
-  <!-- Block 6: ⑥配信先 -->
-  <div id="src-6">
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">⑥ 配信先メールアドレス・電話番号・LINEについて</div>
-        <div class="sec-badge">ご確認事項</div>
-      </div>
-      <div class="info-grid">
-        <div class="info-box"><div class="lbl">配信メールアドレス</div><div class="val" id="p-email" style="font-size:12px;word-break:break-all">—</div></div>
-        <div class="info-box"><div class="lbl">配信電話番号</div><div class="val" id="p-phone">—</div></div>
-        <div class="info-box g span2"><div class="lbl">LINE通知</div><div class="val" id="p-line">—</div></div>
-      </div>
-      <div style="margin-top:10px;font-size:12px;color:var(--label)">お客様情報はLINE・メールでリアルタイムに受け取れます。追加・変更がある場合はご連絡ください。</div>
-    </div>
-  </div>
-
-  <!-- Block 7: ⑦ログイン -->
-  <div id="src-7">
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">⑦ 顧客管理システム ログイン情報</div>
-        <div class="sec-badge">ご確認事項</div>
-      </div>
-      <div class="login-box">
-        <div class="lb-row"><div class="lb-k">ログインURL</div><div class="lb-v url" id="p-login-url">—</div></div>
-        <div class="lb-row"><div class="lb-k">ID</div><div class="lb-v" id="p-login-id">—</div></div>
-        <div class="lb-row"><div class="lb-k">パスワード</div><div class="lb-v" id="p-login-pass">—</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Block 8: ⑧成約報告 -->
-  <div id="src-8">
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">⑧ ご成約報告について</div>
-        <div class="sec-badge">弊社情報</div>
-      </div>
-      <div class="steps">
-        <div class="step"><div class="step-n">1</div><div class="step-t">お客様情報ページを開き、<strong>案件メモ下「新規登録」</strong>から成約報告を入力</div></div>
-        <div class="step"><div class="step-n">2</div><div class="step-t">お客様からの<strong>入金確認後</strong>、7営業日以内に報告</div></div>
-        <div class="step"><div class="step-n">3</div><div class="step-t">弊社より請求書を発行いたします</div></div>
-        <div class="step"><div class="step-n">4</div><div class="step-t">請求書受け取りから<strong>3営業日以内</strong>に成約手数料をお振込ください</div></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Block 9: PAGE2ラベル + 写真 -->
-  <div id="src-9">
-    <div class="page-label p2">PAGE 2　現場・会社の写真ご提供のお願い ＆ 管理画面へのご要望</div>
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">📷 現場・会社の写真ご提供のお願い</div>
-        <div class="sec-badge">弊社情報</div>
-      </div>
-      <div class="photo-box">
-        <div style="font-size:13px;line-height:1.8;margin-bottom:10px;color:var(--label)">
-          加盟店様の紹介ページ掲載にあたり、お客様が安心してご依頼いただけるよう<strong>現場・会社の雰囲気が伝わる写真</strong>をご提供ください。<br>
-          写真掲載により<strong>成約率・アポ率の向上</strong>が確認されています。スマホ撮影でも問題ありません（2〜5枚）。
-        </div>
-        <div style="font-size:11px;font-weight:600;color:var(--label);margin-bottom:6px">おすすめの写真例</div>
-        <div class="photo-examples">
-          <div class="photo-ex">施工中の様子</div>
-          <div class="photo-ex">会社外観・社内</div>
-          <div class="photo-ex">スタッフ集合写真</div>
-          <div class="photo-ex">社名入り車両</div>
-          <div class="photo-ex">看板</div>
-        </div>
-        <div class="url-line">▼ 写真アップロードフォーム<br><span id="p-photo-url">（URL未設定）</span></div>
-        <div class="url-line" style="margin-top:8px">▼ 加盟店紹介ページ<br><span id="p-store-url">（URL未設定）</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Block 10: 機能ご要望 -->
-  <div id="src-10">
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">💬 管理画面への追加機能ご要望</div>
-        <div class="sec-badge">弊社情報</div>
-      </div>
-      <div class="feature-box">
-        <div style="font-size:12px;color:var(--muted)">普段お使いのシステムや管理ツールで「こんな機能があれば便利なのに！」というご要望がございましたら、ぜひお聞かせください。</div>
-        <div id="p-feature-req" style="margin-top:8px;font-size:13px;color:var(--text);white-space:pre-wrap;min-height:20px"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Block 11: PAGE3ラベル + ローン -->
-  <div id="src-11">
-    <div class="page-label p3">PAGE 3　現調・成約に繋げるための施策</div>
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">💰 エンドユーザー向けローン導入のご案内</div>
-        <div class="sec-badge">弊社情報</div>
-      </div>
-      <div class="loan-wrap">
-        <div class="loan-head">【ローンについて】現調・成約率アップのための施策</div>
-        <div class="loan-body">
-          外壁・屋根工事は高額になりやすく、「金額で迷われる」「今は難しい」といった理由での失注防止のため、エンドユーザー様向けローンを導入しました。
-          <div class="pill-row">
-            <span class="pill">月々払いでのご提案が可能</span>
-            <span class="pill">予算で迷う顧客の後押し</span>
-            <span class="pill">ワンランク上の工事提案</span>
-            <span class="pill">加盟店様の費用・手数料負担なし</span>
-          </div>
-          <div style="margin-top:10px;font-size:11px;color:var(--muted)">※お客様に所定の審査がございます。</div>
-          <div class="url-line g" style="margin-top:10px">📄 媒体資料：<span id="p-loan-doc">（URL未設定）</span></div>
-          <div class="url-line g" style="margin-top:4px">📝 申込書：<span id="p-loan-apply">（URL未設定）</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Block 12: Amazonギフト -->
-  <div id="src-12">
-    <div class="sec">
-      <div class="sec-head">
-        <div class="sec-title">🎁 弊社からAmazonギフト券をお送りします！</div>
-        <div class="sec-badge">弊社情報</div>
-      </div>
-      <div class="green-box">
-        <div class="gb-t">現地調査・作業完了でAmazonギフト券プレゼント</div>
-        <div class="amz-grid">
-          <div class="amz-card">
-            <div class="amz-badge">Amazon Gift</div>
-            <div class="amz-amount">500円分</div>
-            <div class="amz-cond">現地調査完了 ＋ お見積書提示</div>
-            <div class="amz-url" id="p-gift-survey">（URL未設定）</div>
-          </div>
-          <div class="amz-card">
-            <div class="amz-badge">Amazon Gift</div>
-            <div class="amz-amount">作業金額 × 1%</div>
-            <div class="amz-cond">作業完了後</div>
-            <div class="amz-url" id="p-gift-work">（URL未設定）</div>
-          </div>
-        </div>
-        <div style="margin-top:12px;font-size:12px;color:var(--label);line-height:1.75">
-          <strong>営業トークへの活用方法：</strong><br>
-          「現地見積もりを受けていただくだけでAmazonギフト券500円分をプレゼントしています」とフックとして使い、まずは現調アポへ繋げてください。<br>
-          ギフト券は弊社から直接お客様へお送りします。
-        </div>
-      </div>
-    </div>
-  </div>
-
-</div><!-- /#content-source -->
-
-<!-- ══ アプリ本体 ══ -->
 <div class="app">
 
-<!-- 左ナビ -->
+<!-- ══ 左ナビ ══ -->
 <div class="nav">
   <div class="nav-logo">
     <a href="index.html" class="back-link">← 一覧へ戻る</a>
@@ -586,31 +197,272 @@ body {
   </div>
   <div class="nav-list">
     <div class="nav-section-label">ページ</div>
-    <button class="nav-item active" onclick="scrollToLogicalPage(0)" id="nav-page1">PAGE 1　確認事項</button>
-    <button class="nav-item" onclick="scrollToLogicalPage(1)" id="nav-page2">PAGE 2　写真・ご要望</button>
-    <button class="nav-item" onclick="scrollToLogicalPage(2)" id="nav-page3">PAGE 3　現調施策</button>
+    <button class="nav-item active" onclick="scrollToPage('p1')" id="nav-p1">P1　確認事項①〜④</button>
+    <button class="nav-item" onclick="scrollToPage('p2')" id="nav-p2">P2　確認事項⑤〜⑧</button>
+    <button class="nav-item" onclick="scrollToPage('p3')" id="nav-p3">P3　写真・ご要望</button>
+    <button class="nav-item" onclick="scrollToPage('p4')" id="nav-p4">P4　現調施策</button>
   </div>
 </div>
 
-<!-- プレビュー -->
+<!-- ══ プレビュー ══ -->
 <div class="preview" id="preview-scroll">
-  <div id="pages-container"></div>
-</div>
+<div id="pages-container">
 
-<!-- 右フォーム -->
+<!-- ━━━ PAGE 1 ━━━ -->
+<div class="a4-page" id="p1">
+  <div class="page-hbar">
+    <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">初回ガイダンス資料</span></div>
+    <div class="phb-r">PAGE 1 / 4</div>
+  </div>
+  <div class="doc-meta">
+    <div class="doc-recipient">宛先：<strong id="p-company">（会社名・担当者名）</strong> 様</div>
+    <div class="doc-issued" id="p-date"></div>
+  </div>
+  <div class="page-content">
+    <table class="doc-table">
+
+      <tr class="sh"><td colspan="2">① ご契約プランについて<span class="sh-badge">ご確認事項</span></td></tr>
+      <tr><td class="k">プラン</td><td class="v" id="p-plan">—</td></tr>
+      <tr>
+        <td class="k">月額費用（税抜）</td>
+        <td class="v"><span class="va" id="p-fee">—</span></td>
+      </tr>
+      <tr>
+        <td class="k">成約手数料</td>
+        <td class="v"><span class="va-sm" id="p-commission">—</span></td>
+      </tr>
+      <tr>
+        <td class="k">契約期間</td>
+        <td class="v"><span id="p-period">—</span><span class="sub-note">自動更新 / 退会は14日前に管理画面から申請</span></td>
+      </tr>
+      <tr><td class="k">月間紹介件数（想定）</td><td class="v" id="p-monthly">—</td></tr>
+      <tr><td class="k">6ヶ月紹介件数（想定）</td><td class="v" id="p-half">—</td></tr>
+      <tr>
+        <td class="k">最低補償件数</td>
+        <td class="v"><span class="va" id="p-guarantee">—</span><span class="sub-note">保証件数に満たない場合は6ヶ月後に返金対応</span></td>
+      </tr>
+
+      <tr class="gap"><td colspan="2"></td></tr>
+
+      <tr class="sh"><td colspan="2">② 対応エリア<span class="sh-badge">ご確認事項</span></td></tr>
+      <tr>
+        <td class="k">対応エリア</td>
+        <td class="v" id="p-areas"><span style="font-size:11px;color:var(--muted)">エリアが未設定です</span></td>
+      </tr>
+      <tr><td class="k">エリアポイント数</td><td class="v" id="p-area-points">—</td></tr>
+
+      <tr class="gap"><td colspan="2"></td></tr>
+
+      <tr class="sh"><td colspan="2">③ お支払いについて<span class="sh-badge">ご確認事項</span></td></tr>
+      <tr><td class="k">ステータス</td><td class="v" id="p-pay-status">—</td></tr>
+      <tr><td class="k">備考</td><td class="v" id="p-pay-note">—</td></tr>
+      <tr>
+        <td class="k">お支払い方法</td>
+        <td class="v note">月額料金のお支払いは原則<strong>クレジットカード払い</strong>となります。GMOサインより申込書ご記入の上、免許証画像の添付・クレジットカード情報のご登録をお願いいたします。</td>
+      </tr>
+
+      <tr class="gap"><td colspan="2"></td></tr>
+
+      <tr class="sh"><td colspan="2">④ 弊社の休業日について<span class="sh-badge">弊社情報</span></td></tr>
+      <tr>
+        <td class="k">休業日</td>
+        <td class="v note">弊社は基本的にカレンダー通りの営業となるため、<strong>土日祝日は営業しておりません</strong>。<br>配信内容の変更等を含め、ご連絡は<strong>平日 09:00〜19:00</strong> の間にお願いいたします。</td>
+      </tr>
+
+    </table>
+  </div>
+  <div class="page-footer">1 / 4</div>
+</div><!-- /p1 -->
+
+<!-- ━━━ PAGE 2 ━━━ -->
+<div class="a4-page" id="p2">
+  <div class="page-hbar">
+    <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">初回ガイダンス資料</span></div>
+    <div class="phb-r">PAGE 2 / 4</div>
+  </div>
+  <div class="page-content">
+    <table class="doc-table">
+
+      <tr class="sh"><td colspan="2">⑤ 除外となり得るお客様情報について<span class="sh-badge">弊社情報</span></td></tr>
+      <tr>
+        <td class="k">除外対象</td>
+        <td class="v note">以下に該当するお客様情報はカウント対象外となります。該当ケースを発見された際はご報告ください。<br><br>
+          ・30日以内の、同一人物からの重複申込<br>
+          ・使用されていない電話番号<br>
+          ・別人の人（例：山田 太郎 → 実際は異なる方）
+        </td>
+      </tr>
+
+      <tr class="gap"><td colspan="2"></td></tr>
+
+      <tr class="sh"><td colspan="2">⑥ 配信先メールアドレス・電話番号・LINEについて<span class="sh-badge">ご確認事項</span></td></tr>
+      <tr><td class="k">配信メールアドレス</td><td class="v" id="p-email">—</td></tr>
+      <tr><td class="k">配信電話番号</td><td class="v" id="p-phone">—</td></tr>
+      <tr><td class="k">LINE通知</td><td class="v" id="p-line">—</td></tr>
+      <tr>
+        <td class="k">補足</td>
+        <td class="v note">お客様情報はLINE・メールでリアルタイムに受け取れます。追加・変更がある場合はご連絡ください。</td>
+      </tr>
+
+      <tr class="gap"><td colspan="2"></td></tr>
+
+      <tr class="sh"><td colspan="2">⑦ 顧客管理システム ログイン情報<span class="sh-badge">ご確認事項</span></td></tr>
+      <tr>
+        <td class="k">ログイン情報</td>
+        <td class="v" style="padding:8px 10px">
+          <div class="login-box">
+            <div class="lb-row"><div class="lb-k">ログインURL</div><div class="lb-url" id="p-login-url">—</div></div>
+            <div class="lb-row"><div class="lb-k">ID</div><div class="lb-val" id="p-login-id">—</div></div>
+            <div class="lb-row"><div class="lb-k">パスワード</div><div class="lb-val" id="p-login-pass">—</div></div>
+          </div>
+        </td>
+      </tr>
+
+      <tr class="gap"><td colspan="2"></td></tr>
+
+      <tr class="sh"><td colspan="2">⑧ ご成約報告について<span class="sh-badge">弊社情報</span></td></tr>
+      <tr>
+        <td class="k">手順</td>
+        <td class="v">
+          <ol class="steps">
+            <li><span class="sn">1</span><span>お客様情報ページを開き、<strong>案件メモ下「新規登録」</strong>から成約報告を入力</span></li>
+            <li><span class="sn">2</span><span>お客様からの<strong>入金確認後</strong>、7営業日以内に報告</span></li>
+            <li><span class="sn">3</span><span>弊社より請求書を発行いたします</span></li>
+            <li><span class="sn">4</span><span>請求書受け取りから<strong>3営業日以内</strong>に成約手数料をお振込ください</span></li>
+          </ol>
+        </td>
+      </tr>
+
+    </table>
+  </div>
+  <div class="page-footer">2 / 4</div>
+</div><!-- /p2 -->
+
+<!-- ━━━ PAGE 3 ━━━ -->
+<div class="a4-page" id="p3">
+  <div class="page-hbar">
+    <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">現場・写真ご提供のお願い ＆ 管理画面へのご要望</span></div>
+    <div class="phb-r">PAGE 3 / 4</div>
+  </div>
+  <div class="page-content">
+    <table class="doc-table">
+
+      <tr class="sh"><td colspan="2">📷 現場・会社の写真ご提供のお願い<span class="sh-badge">弊社情報</span></td></tr>
+      <tr>
+        <td class="k">お願い内容</td>
+        <td class="v note">加盟店様の紹介ページ掲載にあたり、お客様が安心してご依頼いただけるよう<strong>現場・会社の雰囲気が伝わる写真</strong>をご提供ください。写真掲載により<strong>成約率・アポ率の向上</strong>が確認されています。スマホ撮影でも問題ありません（2〜5枚）。</td>
+      </tr>
+      <tr>
+        <td class="k">おすすめの写真例</td>
+        <td class="v">
+          <span class="photo-tag">📷 施工中の様子</span>
+          <span class="photo-tag">📷 会社外観・社内</span>
+          <span class="photo-tag">📷 スタッフ集合写真</span>
+          <span class="photo-tag">📷 社名入り車両</span>
+          <span class="photo-tag">📷 看板</span>
+        </td>
+      </tr>
+      <tr>
+        <td class="k">写真アップロード<br>フォームURL</td>
+        <td class="v"><span class="url-val" id="p-photo-url">（URL未設定）</span></td>
+      </tr>
+      <tr>
+        <td class="k">加盟店紹介<br>ページURL</td>
+        <td class="v"><span class="url-val" id="p-store-url">（URL未設定）</span></td>
+      </tr>
+
+      <tr class="gap"><td colspan="2"></td></tr>
+
+      <tr class="sh"><td colspan="2">💬 管理画面への追加機能ご要望<span class="sh-badge">弊社情報</span></td></tr>
+      <tr>
+        <td class="k">ご要望内容</td>
+        <td class="v" id="p-feature-req" style="min-height:72px;color:var(--muted);font-size:12px">（ご記入いただいた内容がここに表示されます）</td>
+      </tr>
+
+    </table>
+  </div>
+  <div class="page-footer">3 / 4</div>
+</div><!-- /p3 -->
+
+<!-- ━━━ PAGE 4 ━━━ -->
+<div class="a4-page" id="p4">
+  <div class="page-hbar">
+    <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">現調・成約に繋げるための施策</span></div>
+    <div class="phb-r">PAGE 4 / 4</div>
+  </div>
+  <div class="page-content">
+    <table class="doc-table">
+
+      <tr class="sh"><td colspan="2">💰 エンドユーザー向けローン導入のご案内<span class="sh-badge">弊社情報</span></td></tr>
+      <tr>
+        <td class="k">概要</td>
+        <td class="v note">外壁・屋根工事は高額になりやすく、「金額で迷われる」「今は難しい」といった理由での失注防止のため、エンドユーザー様向けローンを導入しました。
+          <div class="pill-row">
+            <span class="pill">月々払いでのご提案が可能</span>
+            <span class="pill">予算で迷う顧客の後押し</span>
+            <span class="pill">ワンランク上の工事提案</span>
+            <span class="pill">加盟店様の費用・手数料負担なし</span>
+          </div>
+          <div style="margin-top:6px;font-size:10px;color:var(--muted)">※お客様に所定の審査がございます。</div>
+        </td>
+      </tr>
+      <tr><td class="k">媒体資料URL</td><td class="v"><span class="url-val" id="p-loan-doc">（URL未設定）</span></td></tr>
+      <tr><td class="k">申込書URL</td><td class="v"><span class="url-val" id="p-loan-apply">（URL未設定）</span></td></tr>
+
+      <tr class="gap"><td colspan="2"></td></tr>
+
+      <tr class="sh"><td colspan="2">🎁 弊社からAmazonギフト券をお送りします！<span class="sh-badge">弊社情報</span></td></tr>
+      <tr>
+        <td class="k">特典内容</td>
+        <td class="v">
+          <div class="amz-grid">
+            <div class="amz-card">
+              <div class="amz-badge">Amazon Gift</div>
+              <div class="amz-amount"><span class="va">500円</span>分</div>
+              <div class="amz-cond">現地調査完了 ＋ お見積書提示</div>
+            </div>
+            <div class="amz-card">
+              <div class="amz-badge">Amazon Gift</div>
+              <div class="amz-amount"><span class="va">作業金額×1%</span></div>
+              <div class="amz-cond">作業完了後</div>
+            </div>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td class="k">現調完了<br>申請フォーム</td>
+        <td class="v"><span class="url-val" id="p-gift-survey">（URL未設定）</span></td>
+      </tr>
+      <tr>
+        <td class="k">作業完了<br>申請フォーム</td>
+        <td class="v"><span class="url-val" id="p-gift-work">（URL未設定）</span></td>
+      </tr>
+      <tr>
+        <td class="k">営業トーク例</td>
+        <td class="v note">「現地見積もりを受けていただくだけでAmazonギフト券500円分をプレゼントしています」とフックとして使い、まずは現調アポへ繋げてください。ギフト券は弊社から直接お客様へお送りします。</td>
+      </tr>
+
+    </table>
+  </div>
+  <div class="page-footer">4 / 4</div>
+</div><!-- /p4 -->
+
+</div><!-- /#pages-container -->
+</div><!-- /.preview -->
+
+<!-- ══ 右フォーム ══ -->
 <div class="form-pane">
   <div class="form-header">
     <div class="fh-title">フォーム入力</div>
     <div class="fh-sub">入力内容がリアルタイムで資料に反映されます</div>
   </div>
-
   <div class="page-tabs">
-    <button class="ptab active" onclick="switchFormPage('fp1')">P1 確認事項</button>
-    <button class="ptab" onclick="switchFormPage('fp2')">P2 写真・要望</button>
-    <button class="ptab" onclick="switchFormPage('fp3')">P3 現調施策</button>
+    <button class="ptab active" onclick="switchFormPage('fp1')">P1–2 確認事項</button>
+    <button class="ptab" onclick="switchFormPage('fp2')">P3 写真・要望</button>
+    <button class="ptab" onclick="switchFormPage('fp3')">P4 現調施策</button>
   </div>
-
   <div class="form-scroll">
+
     <div id="fp1">
       <div class="f-sec">担当者</div>
       <div class="field">
@@ -769,8 +621,8 @@ body {
         <input type="text" id="gift_work_url" placeholder="申請フォームURL" oninput="render()">
       </div>
     </div>
-  </div><!-- /form-scroll -->
 
+  </div><!-- /form-scroll -->
   <div class="form-actions">
     <button class="btn-pdf" onclick="window.print()">🖨️ PDF</button>
     <button class="btn-save" onclick="saveCase()">保存して一覧へ</button>
@@ -781,12 +633,7 @@ body {
 
 <script>
 const areas = [];
-let repaginateTimer = null;
 
-/* ── 論理ページ境界（src-N の block index） ── */
-const LOGICAL_PAGE_STARTS = [0, 9, 11]; // PAGE1→src-0, PAGE2→src-9, PAGE3→src-11
-
-/* ── フォームページ切替 ── */
 function switchFormPage(id) {
   ['fp1','fp2','fp3'].forEach(p => {
     document.getElementById(p).style.display = p === id ? '' : 'none';
@@ -794,32 +641,18 @@ function switchFormPage(id) {
   document.querySelectorAll('.ptab').forEach((btn, i) => {
     btn.classList.toggle('active', ['fp1','fp2','fp3'][i] === id);
   });
-  scrollToLogicalPage(['fp1','fp2','fp3'].indexOf(id));
+  const pageMap = {fp1:'p1', fp2:'p3', fp3:'p4'};
+  const el = document.getElementById(pageMap[id]);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
 }
 
-/* ── ナビクリック → 対応するA4ページへスクロール ── */
-function scrollToLogicalPage(logicalIdx) {
-  const pages = document.querySelectorAll('.a4-page');
-  if (!pages.length) return;
-  // 各ページが担当するblockのindexを確認してlogicalPageStartsと照合
-  const target = findPhysicalPageForLogical(logicalIdx);
-  if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-  document.querySelectorAll('.nav-item').forEach((btn, i) => {
-    btn.classList.toggle('active', i === logicalIdx);
-  });
+function scrollToPage(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+  document.getElementById('nav-' + id)?.classList.add('active');
 }
 
-function findPhysicalPageForLogical(logicalIdx) {
-  const startSrc = LOGICAL_PAGE_STARTS[logicalIdx];
-  const pages = document.querySelectorAll('.a4-page');
-  for (const page of pages) {
-    if (parseInt(page.dataset.firstSrc || '0') >= startSrc) return page;
-  }
-  return pages[pages.length - 1] || null;
-}
-
-/* ── プラン初期値 ── */
 function updatePlanDefaults() {
   const plan = document.getElementById('plan').value;
   const d = {
@@ -834,7 +667,6 @@ function updatePlanDefaults() {
   document.getElementById('half_est').value    = d.half;
 }
 
-/* ── エリア ── */
 function addArea() {
   const inp = document.getElementById('area-input');
   const val = inp.value.trim();
@@ -847,16 +679,16 @@ function addArea() {
 function removeArea(i) { areas.splice(i, 1); renderAreaTags(); render(); }
 function renderAreaTags() {
   document.getElementById('area-tags').innerHTML =
-    areas.map((a, i) => `<div class="area-tag">${a}<button onclick="removeArea(${i})">×</button></div>`).join('');
+    areas.map((a, i) => `<div class="area-tag">${esc(a)}<button onclick="removeArea(${i})">×</button></div>`).join('');
 }
 
 function v(id) { return (document.getElementById(id)?.value || '').trim(); }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-/* ── レンダー（ソース更新 → ページ再構築） ── */
 function render() {
   const planLabel = {light:'LIGHT（ライト）', basic:'BASIC（ベーシック）', pro:'PRO（プロ）'};
   set('p-company',    v('company') || '（会社名・担当者名）');
-  set('p-date',       '発行日：' + new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'long',day:'numeric'}));
+  set('p-date',       '発行日：' + new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'}));
   set('p-plan',       planLabel[v('plan')] || '—');
   set('p-fee',        v('monthly_fee') || '—');
   set('p-commission', v('commission') || '—');
@@ -867,28 +699,25 @@ function render() {
 
   const ap = document.getElementById('p-areas');
   ap.innerHTML = areas.length
-    ? areas.map(a => `<div class="tag">${a}</div>`).join('')
-    : '<span style="font-size:12px;color:var(--muted)">エリアが未設定です</span>';
-  set('p-area-points', v('area_points') ? '対応エリアポイント：' + v('area_points') : '');
+    ? areas.map(a => `<span class="tag">${esc(a)}</span>`).join('')
+    : '<span style="font-size:11px;color:var(--muted)">エリアが未設定です</span>';
+  set('p-area-points', v('area_points') || '—');
 
-  set('p-pay-status',  v('payment_status') || '—');
-  set('p-pay-note',    v('payment_note'));
-  set('p-email',       v('email') || '—');
-  set('p-phone',       v('phone') || '—');
-  set('p-line',        v('line_status') || '—');
-  set('p-login-url',   v('login_url') || '—');
-  set('p-login-id',    v('login_id') || '—');
-  set('p-login-pass',  v('login_pass') || '—');
-  set('p-photo-url',   v('photo_url') || '（URL未設定）');
-  set('p-store-url',   v('store_page_url') || '（URL未設定）');
+  set('p-pay-status', v('payment_status') || '—');
+  set('p-pay-note',   v('payment_note') || '—');
+  set('p-email',      v('email') || '—');
+  set('p-phone',      v('phone') || '—');
+  set('p-line',       v('line_status') || '—');
+  set('p-login-url',  v('login_url') || '—');
+  set('p-login-id',   v('login_id') || '—');
+  set('p-login-pass', v('login_pass') || '—');
+  set('p-photo-url',  v('photo_url') || '（URL未設定）');
+  set('p-store-url',  v('store_page_url') || '（URL未設定）');
   set('p-feature-req', v('feature_request') || '（ご記入いただいた内容がここに表示されます）');
-  set('p-loan-doc',    v('loan_doc_url') || '（URL未設定）');
-  set('p-loan-apply',  v('loan_apply_url') || '（URL未設定）');
-  set('p-gift-survey', v('gift_survey_url') || '（URL未設定）');
-  set('p-gift-work',   v('gift_work_url') || '（URL未設定）');
-
-  clearTimeout(repaginateTimer);
-  repaginateTimer = setTimeout(repaginate, 40);
+  set('p-loan-doc',   v('loan_doc_url') || '（URL未設定）');
+  set('p-loan-apply', v('loan_apply_url') || '（URL未設定）');
+  set('p-gift-survey',v('gift_survey_url') || '（URL未設定）');
+  set('p-gift-work',  v('gift_work_url') || '（URL未設定）');
 }
 
 function set(id, val) {
@@ -896,70 +725,6 @@ function set(id, val) {
   if (el) el.textContent = val;
 }
 
-/* ── A4自動ページ分割 ── */
-function repaginate() {
-  const A4_H       = 1123;
-  const PAD_TOP    = 40;
-  const PAD_BOTTOM = 72; // a4-inner の padding-bottom（フッター余白含む）
-  const MAX_H      = A4_H - PAD_TOP - PAD_BOTTOM; // 1011px
-
-  const TOTAL_BLOCKS = 13;
-
-  // プローブ（オフスクリーン）で各ブロックの高さを測定
-  const probe = document.createElement('div');
-  probe.className = 'a4-inner';
-  probe.style.cssText = 'position:fixed;top:-99999px;left:0;width:794px;visibility:hidden;pointer-events:none;z-index:-999;';
-  document.body.appendChild(probe);
-
-  const blockHeights = [];
-  for (let i = 0; i < TOTAL_BLOCKS; i++) {
-    const el = document.getElementById('src-' + i);
-    if (!el) { blockHeights.push(0); continue; }
-    probe.innerHTML = el.innerHTML;
-    blockHeights.push(probe.scrollHeight + 8); // +8 余白バッファ
-  }
-  document.body.removeChild(probe);
-
-  // ブロックをA4高さでページに詰める
-  const pages = [{ blocks: [], height: 0, firstSrc: 0 }];
-  for (let i = 0; i < TOTAL_BLOCKS; i++) {
-    const h = blockHeights[i];
-    const cur = pages[pages.length - 1];
-    if (cur.height + h > MAX_H && cur.blocks.length > 0) {
-      pages.push({ blocks: [], height: 0, firstSrc: i });
-    }
-    pages[pages.length - 1].blocks.push(i);
-    pages[pages.length - 1].height += h;
-  }
-
-  // 物理ページを描画
-  const container = document.getElementById('pages-container');
-  container.innerHTML = '';
-  const total = pages.length;
-
-  pages.forEach((pg, i) => {
-    const pageEl = document.createElement('div');
-    pageEl.className = 'a4-page';
-    pageEl.dataset.firstSrc = pg.firstSrc;
-
-    const inner = document.createElement('div');
-    inner.className = 'a4-inner';
-    inner.innerHTML = pg.blocks.map(idx => {
-      const el = document.getElementById('src-' + idx);
-      return el ? el.innerHTML.replace(/ id="[^"]*"/g, '') : '';
-    }).join('');
-
-    const footer = document.createElement('div');
-    footer.className = 'a4-footer';
-    footer.textContent = `${i + 1} / ${total}`;
-
-    pageEl.appendChild(inner);
-    pageEl.appendChild(footer);
-    container.appendChild(pageEl);
-  });
-}
-
-/* ── localStorage helpers ── */
 function getCases() {
   try { return JSON.parse(localStorage.getItem('gaiheki_cases') || '[]'); } catch(e) { return []; }
 }
@@ -974,47 +739,35 @@ function collectFormData() {
   return data;
 }
 
-/* ── 保存して一覧へ ── */
 function saveCase() {
   if (!v('company'))  { alert('会社名・担当者名を入力してください'); return; }
   if (!v('assignee')) { alert('担当者を選択してください'); return; }
-
   const editId = new URLSearchParams(location.search).get('id');
   const id = editId || 'case_' + Date.now();
   const existing = getCases();
   const existingCase = existing.find(c => c.id === id);
-
   const caseData = {
-    id,
-    assignee:  v('assignee'),
-    company:   v('company'),
-    plan:      v('plan'),
+    id, assignee: v('assignee'), company: v('company'), plan: v('plan'),
     createdAt: existingCase ? existingCase.createdAt : new Date().toISOString().split('T')[0],
-    formData:  collectFormData()
+    formData: collectFormData()
   };
-
   const cases = existing.filter(c => c.id !== id);
   cases.unshift(caseData);
   localStorage.setItem('gaiheki_cases', JSON.stringify(cases));
   location.href = 'index.html';
 }
 
-/* ── 初期化 ── */
 (function init() {
   const editId = new URLSearchParams(location.search).get('id');
   if (!editId) {
     const staffParam = new URLSearchParams(location.search).get('staff');
-    if (staffParam) {
-      const el = document.getElementById('assignee');
-      if (el) el.value = staffParam;
-    }
+    if (staffParam) { const el = document.getElementById('assignee'); if(el) el.value = staffParam; }
     updatePlanDefaults();
     render();
     return;
   }
   const c = getCases().find(c => c.id === editId);
   if (!c) { updatePlanDefaults(); render(); return; }
-
   const d = c.formData;
   ['assignee','company','plan','monthly_fee','commission','contract_period','guarantee',
    'monthly_est','half_est','area_points','payment_status','payment_note','email','phone',
