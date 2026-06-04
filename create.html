@@ -199,8 +199,7 @@ body {
     <div class="nav-section-label">ページ</div>
     <button class="nav-item active" onclick="scrollToPage('p1')" id="nav-p1">P1　確認事項①〜④</button>
     <button class="nav-item" onclick="scrollToPage('p2')" id="nav-p2">P2　確認事項⑤〜⑧</button>
-    <button class="nav-item" onclick="scrollToPage('p3')" id="nav-p3">P3　写真・ご要望</button>
-    <button class="nav-item" onclick="scrollToPage('p4')" id="nav-p4">P4　現調施策</button>
+    <button class="nav-item" onclick="scrollToPage('p3')" id="nav-p3">P3　写真・施策</button>
   </div>
 </div>
 
@@ -212,7 +211,7 @@ body {
 <div class="a4-page" id="p1">
   <div class="page-hbar">
     <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">初回ガイダンス資料</span></div>
-    <div class="phb-r">PAGE 1 / 4</div>
+    <div class="phb-r">PAGE 1 / 3</div>
   </div>
   <div class="doc-meta">
     <div class="doc-recipient">宛先：<strong id="p-company">（会社名・担当者名）</strong> 様</div>
@@ -271,14 +270,14 @@ body {
 
     </table>
   </div>
-  <div class="page-footer">1 / 4</div>
+  <div class="page-footer">1 / 3</div>
 </div><!-- /p1 -->
 
 <!-- ━━━ PAGE 2 ━━━ -->
 <div class="a4-page" id="p2">
   <div class="page-hbar">
     <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">初回ガイダンス資料</span></div>
-    <div class="phb-r">PAGE 2 / 4</div>
+    <div class="phb-r">PAGE 2 / 3</div>
   </div>
   <div class="page-content">
     <table class="doc-table">
@@ -331,14 +330,14 @@ body {
 
     </table>
   </div>
-  <div class="page-footer">2 / 4</div>
+  <div class="page-footer">2 / 3</div>
 </div><!-- /p2 -->
 
 <!-- ━━━ PAGE 3 ━━━ -->
 <div class="a4-page" id="p3">
   <div class="page-hbar">
-    <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">現場・写真ご提供のお願い ＆ 管理画面へのご要望</span></div>
-    <div class="phb-r">PAGE 3 / 4</div>
+    <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">写真ご提供のお願い・現調施策</span></div>
+    <div class="phb-r">PAGE 3 / 3</div>
   </div>
   <div class="page-content">
     <table class="doc-table">
@@ -371,23 +370,11 @@ body {
 
       <tr class="sh"><td colspan="2">💬 管理画面への追加機能ご要望</td></tr>
       <tr>
-        <td class="k">ご要望内容</td>
-        <td class="v" id="p-feature-req" style="min-height:72px;color:var(--muted);font-size:12px">（ご記入いただいた内容がここに表示されます）</td>
+        <td class="k">ご連絡方法</td>
+        <td class="v note">普段お使いのシステムで追加してほしい機能がございましたら、LINEにてご連絡ください。</td>
       </tr>
 
-    </table>
-  </div>
-  <div class="page-footer">3 / 4</div>
-</div><!-- /p3 -->
-
-<!-- ━━━ PAGE 4 ━━━ -->
-<div class="a4-page" id="p4">
-  <div class="page-hbar">
-    <div class="phb-l"><span class="phb-brand">gaiheki+</span><span class="phb-title">現調・成約に繋げるための施策</span></div>
-    <div class="phb-r">PAGE 4 / 4</div>
-  </div>
-  <div class="page-content">
-    <table class="doc-table">
+      <tr class="gap"><td colspan="2"></td></tr>
 
       <tr class="sh"><td colspan="2">💰 エンドユーザー向けローン導入のご案内</td></tr>
       <tr>
@@ -440,8 +427,8 @@ body {
 
     </table>
   </div>
-  <div class="page-footer">4 / 4</div>
-</div><!-- /p4 -->
+  <div class="page-footer">3 / 3</div>
+</div><!-- /p3 -->
 
 </div><!-- /#pages-container -->
 </div><!-- /.preview -->
@@ -454,8 +441,7 @@ body {
   </div>
   <div class="page-tabs">
     <button class="ptab active" onclick="switchFormPage('fp1')">P1–2 確認事項</button>
-    <button class="ptab" onclick="switchFormPage('fp2')">P3 写真・要望</button>
-    <button class="ptab" onclick="switchFormPage('fp3')">P4 現調施策</button>
+    <button class="ptab" onclick="switchFormPage('fp2')">P3 写真・施策</button>
   </div>
   <div class="form-scroll">
 
@@ -583,40 +569,11 @@ body {
     <div id="fp2" style="display:none">
       <div class="f-sec">写真提供依頼</div>
       <div class="field">
-        <label>写真アップロードフォームURL</label>
-        <input type="text" id="photo_url" placeholder="GoogleフォームのURL等" oninput="render()">
-      </div>
-      <div class="field">
         <label>加盟店紹介ページURL</label>
         <input type="text" id="store_page_url" placeholder="https://gaihekiplus.com/store/..." oninput="render()">
       </div>
-      <div class="f-sec">管理画面へのご要望</div>
-      <div class="field">
-        <label>ご要望・メモ</label>
-        <textarea id="feature_request" placeholder="例：他社管理システムにあるこの機能が欲しい、など" oninput="render()"></textarea>
-      </div>
     </div>
 
-    <div id="fp3" style="display:none">
-      <div class="f-sec">ローン導入</div>
-      <div class="field">
-        <label>媒体資料URL</label>
-        <input type="text" id="loan_doc_url" placeholder="Googleドライブ等のURL" oninput="render()">
-      </div>
-      <div class="field">
-        <label>申込書URL</label>
-        <input type="text" id="loan_apply_url" placeholder="Googleドライブ等のURL" oninput="render()">
-      </div>
-      <div class="f-sec">Amazonギフト</div>
-      <div class="field">
-        <label>現調完了ギフト申請フォームURL</label>
-        <input type="text" id="gift_survey_url" placeholder="申請フォームURL" oninput="render()">
-      </div>
-      <div class="field">
-        <label>作業完了ギフト申請フォームURL</label>
-        <input type="text" id="gift_work_url" placeholder="申請フォームURL" oninput="render()">
-      </div>
-    </div>
 
   </div><!-- /form-scroll -->
   <div class="form-actions">
@@ -660,13 +617,13 @@ function getSettings() {
 }
 
 function switchFormPage(id) {
-  ['fp1','fp2','fp3'].forEach(p => {
+  ['fp1','fp2'].forEach(p => {
     document.getElementById(p).style.display = p === id ? '' : 'none';
   });
   document.querySelectorAll('.ptab').forEach((btn, i) => {
-    btn.classList.toggle('active', ['fp1','fp2','fp3'][i] === id);
+    btn.classList.toggle('active', ['fp1','fp2'][i] === id);
   });
-  const pageMap = {fp1:'p1', fp2:'p3', fp3:'p4'};
+  const pageMap = {fp1:'p1', fp2:'p3'};
   const el = document.getElementById(pageMap[id]);
   if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
 }
@@ -741,14 +698,13 @@ function render() {
   set('p-login-url',  v('login_url') || '—');
   set('p-login-id',   v('login_id') || '—');
   set('p-login-pass', v('login_pass') || '—');
-  set('p-photo-url',  v('photo_url') || '（URL未設定）');
   set('p-store-url',  v('store_page_url') || '（URL未設定）');
-  set('p-feature-req', v('feature_request') || '（ご記入いただいた内容がここに表示されます）');
-  set('p-loan-doc',   v('loan_doc_url') || '（URL未設定）');
-  set('p-loan-apply', v('loan_apply_url') || '（URL未設定）');
-  set('p-gift-survey',v('gift_survey_url') || '（URL未設定）');
-  set('p-gift-work',  v('gift_work_url') || '（URL未設定）');
   const s = getSettings();
+  set('p-photo-url',   s.photoUrl || '（URL未設定）');
+  set('p-loan-doc',    s.loanDocUrl || '（URL未設定）');
+  set('p-loan-apply',  s.loanApplyUrl || '（URL未設定）');
+  set('p-gift-survey', s.giftSurveyUrl || '（URL未設定）');
+  set('p-gift-work',   s.giftWorkUrl || '（URL未設定）');
   set('p-holiday-text', s.holidayText);
   set('p-exclude-text', s.excludeText);
 }
@@ -764,8 +720,7 @@ function getCases() {
 function collectFormData() {
   const fields = ['assignee','company','plan','monthly_fee','commission','contract_period','guarantee',
     'monthly_est','half_est','area_points','payment_status','payment_note','email','phone',
-    'line_status','login_url','login_id','login_pass','photo_url','store_page_url',
-    'feature_request','loan_doc_url','loan_apply_url','gift_survey_url','gift_work_url'];
+    'line_status','login_url','login_id','login_pass','store_page_url'];
   const data = {};
   fields.forEach(f => { const el = document.getElementById(f); if(el) data[f] = el.value; });
   data.areas = [...areas];
@@ -797,9 +752,6 @@ function saveCase() {
   if (!editId) {
     const staffParam = new URLSearchParams(location.search).get('staff');
     if (staffParam) { const el = document.getElementById('assignee'); if(el) el.value = staffParam; }
-    const s = getSettings();
-    const urlMap = {photo_url:'photoUrl', loan_doc_url:'loanDocUrl', loan_apply_url:'loanApplyUrl', gift_survey_url:'giftSurveyUrl', gift_work_url:'giftWorkUrl'};
-    Object.entries(urlMap).forEach(([fid, key]) => { if (s[key]) document.getElementById(fid).value = s[key]; });
     updatePlanDefaults();
     render();
     return;
@@ -809,8 +761,7 @@ function saveCase() {
   const d = c.formData;
   ['assignee','company','plan','monthly_fee','commission','contract_period','guarantee',
    'monthly_est','half_est','area_points','payment_status','payment_note','email','phone',
-   'line_status','login_url','login_id','login_pass','photo_url','store_page_url',
-   'feature_request','loan_doc_url','loan_apply_url','gift_survey_url','gift_work_url'].forEach(f => {
+   'line_status','login_url','login_id','login_pass','store_page_url'].forEach(f => {
     const el = document.getElementById(f);
     if (el && d[f] !== undefined) el.value = d[f];
   });
