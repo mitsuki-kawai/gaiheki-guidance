@@ -24,12 +24,13 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
   height: 56px; display: flex; align-items: center; padding: 0 24px; gap: 12px;
   position: sticky; top: 0; z-index: 10;
 }
-.header-logo { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
+.header-logo, a.header-logo { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; text-decoration: none; color: var(--text); }
+a.header-logo:hover { opacity: 0.8; }
 .header-logo span { color: var(--main); }
 .header-divider { width: 1px; height: 18px; background: var(--border); }
 .header-title { font-size: 14px; font-weight: 600; color: var(--label); flex: 1; }
-.btn-back { font-size: 12px; color: var(--muted); text-decoration: none; padding: 6px 12px; border-radius: 4px; transition: all .12s; }
-.btn-back:hover { color: var(--main); background: var(--bg); }
+.btn-back { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; font-size: 16px; color: var(--muted); text-decoration: none; border-radius: 4px; transition: background .12s, color .12s; }
+.btn-back:hover { background: var(--bg); color: var(--main); }
 .btn-save {
   padding: 8px 20px; background: var(--main); color: var(--white);
   border: none; border-radius: 4px; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity .12s;
@@ -122,10 +123,10 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
 
 <!-- ヘッダー -->
 <div class="header">
-  <div class="header-logo">gaiheki<span>+</span></div>
+  <a href="index.html" class="header-logo">gaiheki<span>+</span></a>
   <div class="header-divider"></div>
   <div class="header-title">設定</div>
-  <a href="index.html" class="btn-back">← 一覧へ戻る</a>
+  <a href="index.html" class="btn-back" title="一覧へ戻る">←</a>
   <button class="btn-save" onclick="saveSettings()">保存</button>
 </div>
 
@@ -214,6 +215,7 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
         <div class="field"><label>現調完了ギフト申請フォームURL</label><input type="text" id="gift-survey-url" placeholder="申請フォームURL"></div>
         <div class="field"><label>作業完了ギフト申請フォームURL</label><input type="text" id="gift-work-url" placeholder="申請フォームURL"></div>
         <div class="field"><label>写真アップロードフォームURL</label><input type="text" id="photo-url" placeholder="GoogleフォームのURL等"></div>
+        <div class="field"><label>加盟店紹介ページURL</label><input type="text" id="store-page-url" placeholder="https://gaihekiplus.com/store/..."></div>
       </div>
     </div>
 
@@ -232,7 +234,7 @@ const DEFAULT_SETTINGS = {
   holidayText: '弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。\n配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。',
   excludeText: '以下に該当するお客様情報はカウント対象外となります。\n該当ケースを発見された際はご報告ください。\n\n・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人（例：山田 太郎 → 実際は異なる方）',
   staffList: ['恩田', '宏午', '皆川', '中村', '松本', '亀井', '穴澤', '染葉'],
-  loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '',
+  loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '',
 };
 
 function getSettings() {
@@ -304,6 +306,7 @@ function saveSettings() {
     giftSurveyUrl: document.getElementById('gift-survey-url').value.trim(),
     giftWorkUrl:   document.getElementById('gift-work-url').value.trim(),
     photoUrl:      document.getElementById('photo-url').value.trim(),
+    storePageUrl:  document.getElementById('store-page-url').value.trim(),
   };
 
   localStorage.setItem('gaiheki_settings', JSON.stringify(settings));
@@ -339,6 +342,7 @@ function escHtml(s) {
   document.getElementById('gift-survey-url').value= s.giftSurveyUrl;
   document.getElementById('gift-work-url').value  = s.giftWorkUrl;
   document.getElementById('photo-url').value      = s.photoUrl;
+  document.getElementById('store-page-url').value = s.storePageUrl;
 })();
 </script>
 </body>

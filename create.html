@@ -30,10 +30,11 @@ body {
 /* ── 左ナビ ── */
 .nav { background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
 .nav-logo { padding: 20px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.nav-logo .back-link { display: inline-block; font-size: 11px; color: var(--muted); text-decoration: none; margin-bottom: 10px; }
-.nav-logo .back-link:hover { color: var(--main); }
-.nav-logo .brand { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; }
-.nav-logo .brand span { color: var(--main); }
+.nav-logo .back-link { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; font-size: 16px; color: var(--muted); text-decoration: none; margin-bottom: 8px; border-radius: 4px; transition: background .12s, color .12s; }
+.nav-logo .back-link:hover { background: var(--bg); color: var(--main); }
+.nav-logo .brand, .nav-logo a.brand { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; text-decoration: none; color: var(--text); display: block; }
+.nav-logo .brand span, .nav-logo a.brand span { color: var(--main); }
+.nav-logo a.brand:hover { opacity: 0.8; }
 .nav-logo .sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
 .nav-list { padding: 16px 0; overflow-y: auto; flex: 1; }
 .nav-section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 0 20px 6px; }
@@ -125,7 +126,10 @@ body {
 .amz-cond { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
 /* URL表示 */
-.url-val { color: var(--main); font-size: 12px; word-break: break-all; }
+.url-val { color: var(--main); font-size: 12px; word-break: break-all; text-decoration: none; }
+a.url-val:hover { text-decoration: underline; }
+a.lb-url { color: #89b4fa; text-decoration: none; word-break: break-all; }
+a.lb-url:hover { text-decoration: underline; }
 
 /* ページフッター */
 .page-footer { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; font-size: 11px; color: var(--muted); letter-spacing: .06em; }
@@ -191,8 +195,8 @@ body {
 <!-- ══ 左ナビ ══ -->
 <div class="nav">
   <div class="nav-logo">
-    <a href="index.html" class="back-link">← 一覧へ戻る</a>
-    <div class="brand">gaiheki<span>+</span></div>
+    <a href="index.html" class="back-link" title="一覧へ戻る">←</a>
+    <a href="index.html" class="brand">gaiheki<span>+</span></a>
     <div class="sub">ガイダンス資料作成</div>
   </div>
   <div class="nav-list">
@@ -306,7 +310,7 @@ body {
         <td class="k">ログイン情報</td>
         <td class="v" style="padding:8px 10px">
           <div class="login-box">
-            <div class="lb-row"><div class="lb-k">ログインURL</div><div class="lb-url" id="p-login-url">—</div></div>
+            <div class="lb-row"><div class="lb-k">ログインURL</div><a class="lb-url" id="p-login-url" href="#" target="_blank">—</a></div>
             <div class="lb-row"><div class="lb-k">ID</div><div class="lb-val" id="p-login-id">—</div></div>
             <div class="lb-row"><div class="lb-k">パスワード</div><div class="lb-val" id="p-login-pass">—</div></div>
           </div>
@@ -359,11 +363,11 @@ body {
       </tr>
       <tr>
         <td class="k">写真アップロード<br>フォームURL</td>
-        <td class="v"><span class="url-val" id="p-photo-url">（URL未設定）</span></td>
+        <td class="v"><a class="url-val" id="p-photo-url" href="#" target="_blank">（URL未設定）</a></td>
       </tr>
       <tr>
         <td class="k">加盟店紹介<br>ページURL</td>
-        <td class="v"><span class="url-val" id="p-store-url">（URL未設定）</span></td>
+        <td class="v"><a class="url-val" id="p-store-url" href="#" target="_blank">（URL未設定）</a></td>
       </tr>
 
       <tr class="gap"><td colspan="2"></td></tr>
@@ -389,8 +393,8 @@ body {
           <div style="margin-top:6px;font-size:10px;color:var(--muted)">※お客様に所定の審査がございます。</div>
         </td>
       </tr>
-      <tr><td class="k">媒体資料URL</td><td class="v"><span class="url-val" id="p-loan-doc">（URL未設定）</span></td></tr>
-      <tr><td class="k">申込書URL</td><td class="v"><span class="url-val" id="p-loan-apply">（URL未設定）</span></td></tr>
+      <tr><td class="k">媒体資料URL</td><td class="v"><a class="url-val" id="p-loan-doc" href="#" target="_blank">（URL未設定）</a></td></tr>
+      <tr><td class="k">申込書URL</td><td class="v"><a class="url-val" id="p-loan-apply" href="#" target="_blank">（URL未設定）</a></td></tr>
 
       <tr class="gap"><td colspan="2"></td></tr>
 
@@ -414,11 +418,11 @@ body {
       </tr>
       <tr>
         <td class="k">現調完了<br>申請フォーム</td>
-        <td class="v"><span class="url-val" id="p-gift-survey">（URL未設定）</span></td>
+        <td class="v"><a class="url-val" id="p-gift-survey" href="#" target="_blank">（URL未設定）</a></td>
       </tr>
       <tr>
         <td class="k">作業完了<br>申請フォーム</td>
-        <td class="v"><span class="url-val" id="p-gift-work">（URL未設定）</span></td>
+        <td class="v"><a class="url-val" id="p-gift-work" href="#" target="_blank">（URL未設定）</a></td>
       </tr>
       <tr>
         <td class="k">営業トーク例</td>
@@ -438,10 +442,6 @@ body {
   <div class="form-header">
     <div class="fh-title">フォーム入力</div>
     <div class="fh-sub">入力内容がリアルタイムで資料に反映されます</div>
-  </div>
-  <div class="page-tabs">
-    <button class="ptab active" onclick="switchFormPage('fp1')">P1–2 確認事項</button>
-    <button class="ptab" onclick="switchFormPage('fp2')">P3 写真・施策</button>
   </div>
   <div class="form-scroll">
 
@@ -566,13 +566,6 @@ body {
       </div>
     </div>
 
-    <div id="fp2" style="display:none">
-      <div class="f-sec">写真提供依頼</div>
-      <div class="field">
-        <label>加盟店紹介ページURL</label>
-        <input type="text" id="store_page_url" placeholder="https://gaihekiplus.com/store/..." oninput="render()">
-      </div>
-    </div>
 
 
   </div><!-- /form-scroll -->
@@ -597,7 +590,7 @@ const DEFAULT_SETTINGS = {
   holidayText: '弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。\n配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。',
   excludeText: '以下に該当するお客様情報はカウント対象外となります。\n該当ケースを発見された際はご報告ください。\n\n・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人（例：山田 太郎 → 実際は異なる方）',
   staffList: ['恩田', '宏午', '皆川', '中村', '松本', '亀井', '穴澤', '染葉'],
-  loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '',
+  loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '',
 };
 
 function getSettings() {
@@ -616,17 +609,6 @@ function getSettings() {
   } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); }
 }
 
-function switchFormPage(id) {
-  ['fp1','fp2'].forEach(p => {
-    document.getElementById(p).style.display = p === id ? '' : 'none';
-  });
-  document.querySelectorAll('.ptab').forEach((btn, i) => {
-    btn.classList.toggle('active', ['fp1','fp2'][i] === id);
-  });
-  const pageMap = {fp1:'p1', fp2:'p3'};
-  const el = document.getElementById(pageMap[id]);
-  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
-}
 
 function scrollToPage(id) {
   const el = document.getElementById(id);
@@ -695,16 +677,16 @@ function render() {
   set('p-email',      v('email') || '—');
   set('p-phone',      v('phone') || '—');
   set('p-line',       v('line_status') || '—');
-  set('p-login-url',  v('login_url') || '—');
   set('p-login-id',   v('login_id') || '—');
   set('p-login-pass', v('login_pass') || '—');
-  set('p-store-url',  v('store_page_url') || '（URL未設定）');
   const s = getSettings();
-  set('p-photo-url',   s.photoUrl || '（URL未設定）');
-  set('p-loan-doc',    s.loanDocUrl || '（URL未設定）');
-  set('p-loan-apply',  s.loanApplyUrl || '（URL未設定）');
-  set('p-gift-survey', s.giftSurveyUrl || '（URL未設定）');
-  set('p-gift-work',   s.giftWorkUrl || '（URL未設定）');
+  setLink('p-photo-url',   s.photoUrl);
+  setLink('p-store-url',   s.storePageUrl);
+  setLink('p-loan-doc',    s.loanDocUrl);
+  setLink('p-loan-apply',  s.loanApplyUrl);
+  setLink('p-gift-survey', s.giftSurveyUrl);
+  setLink('p-gift-work',   s.giftWorkUrl);
+  setLink('p-login-url',   v('login_url'));
   set('p-holiday-text', s.holidayText);
   set('p-exclude-text', s.excludeText);
 }
@@ -714,13 +696,25 @@ function set(id, val) {
   if (el) el.textContent = val;
 }
 
+function setLink(id, url) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const valid = url && url.startsWith('http');
+  el.textContent = valid ? url : '（URL未設定）';
+  if (el.tagName === 'A') {
+    el.href = valid ? url : '#';
+    el.style.pointerEvents = valid ? '' : 'none';
+    el.style.opacity = valid ? '' : '0.5';
+  }
+}
+
 function getCases() {
   try { return JSON.parse(localStorage.getItem('gaiheki_cases') || '[]'); } catch(e) { return []; }
 }
 function collectFormData() {
   const fields = ['assignee','company','plan','monthly_fee','commission','contract_period','guarantee',
     'monthly_est','half_est','area_points','payment_status','payment_note','email','phone',
-    'line_status','login_url','login_id','login_pass','store_page_url'];
+    'line_status','login_url','login_id','login_pass'];
   const data = {};
   fields.forEach(f => { const el = document.getElementById(f); if(el) data[f] = el.value; });
   data.areas = [...areas];
@@ -761,7 +755,7 @@ function saveCase() {
   const d = c.formData;
   ['assignee','company','plan','monthly_fee','commission','contract_period','guarantee',
    'monthly_est','half_est','area_points','payment_status','payment_note','email','phone',
-   'line_status','login_url','login_id','login_pass','store_page_url'].forEach(f => {
+   'line_status','login_url','login_id','login_pass'].forEach(f => {
     const el = document.getElementById(f);
     if (el && d[f] !== undefined) el.value = d[f];
   });
