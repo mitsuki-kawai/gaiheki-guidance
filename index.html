@@ -72,13 +72,12 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 .card-delete{background:none;border:none;font-size:11px;color:var(--gray-text);cursor:pointer;padding:2px 6px;border-radius:4px;transition:all 0.12s;flex-shrink:0}
 .card-delete:hover{background:#fff0f0;color:#e53935}
 
-/* ── 空状態 ── */
-.empty{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:360px;color:var(--gray-text);gap:12px}
-.empty-icon{font-size:48px;opacity:0.4}
-.empty-text{font-size:14px;font-weight:500}
-.empty-sub{font-size:12px}
-.btn-new-empty{display:inline-flex;align-items:center;gap:5px;margin-top:8px;padding:10px 20px;background:var(--purple);color:var(--white);border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.13s}
-.btn-new-empty:hover{background:#6b4daf}
+/* ── 新規作成カード ── */
+.card-new{border:2px dashed var(--purple-mid);background:transparent;display:flex;align-items:center;justify-content:center;min-height:120px;border-radius:10px;text-decoration:none;transition:all 0.15s;color:inherit}
+.card-new:hover{border-color:var(--purple);background:var(--purple-light);transform:translateY(-1px)}
+.card-new-inner{display:flex;flex-direction:column;align-items:center;gap:6px}
+.card-new-icon{font-size:28px;font-weight:300;color:var(--purple);line-height:1}
+.card-new-label{font-size:13px;font-weight:600;color:var(--purple)}
 </style>
 </head>
 <body>
@@ -190,19 +189,10 @@ function renderCards() {
   subEl.textContent = filtered.length + '件';
 
   const grid = document.getElementById('card-grid');
+  const newUrl = currentFilter === 'all' ? 'create.html' : 'create.html?staff=' + encodeURIComponent(currentFilter);
+  const newCard = `<a href="${newUrl}" class="card-new"><div class="card-new-inner"><div class="card-new-icon">＋</div><div class="card-new-label">新規作成</div></div></a>`;
 
-  if (filtered.length === 0) {
-    grid.innerHTML = `
-      <div class="empty" style="grid-column:1/-1">
-        <div class="empty-icon">📋</div>
-        <div class="empty-text">案件がありません</div>
-        <div class="empty-sub">「＋ 新規作成」から初回ガイダンス資料を作成してください</div>
-        <a href="create.html" class="btn-new-empty">＋ 新規作成</a>
-      </div>`;
-    return;
-  }
-
-  grid.innerHTML = filtered.map(c => {
+  grid.innerHTML = newCard + filtered.map(c => {
     const plan = c.plan || 'basic';
     const areas = c.formData?.areas || [];
     const areaText = areas.length ? areas.join('・') : 'エリア未設定';
