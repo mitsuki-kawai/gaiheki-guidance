@@ -273,9 +273,9 @@ a.lb-url:hover { text-decoration: underline; }
       <tr class="sh"><td colspan="4">⑦ 顧客管理システムのログイン情報について</td></tr>
       <tr><td class="k">ログインURL</td><td class="v" colspan="3"><a class="url-val" id="p-login-url" href="#" target="_blank">—</a></td></tr>
       <tr>
-        <td class="k" style="vertical-align:middle">ID</td>
+        <td class="k" style="vertical-align:middle;width:150px!important;min-width:150px!important;max-width:150px!important">ID</td>
         <td class="v" id="p-login-id" style="vertical-align:middle">—</td>
-        <td class="k" style="vertical-align:middle">パスワード</td>
+        <td class="k" style="vertical-align:middle;width:150px!important;min-width:150px!important;max-width:150px!important">パスワード</td>
         <td class="v" id="p-login-pass" style="vertical-align:middle">—</td>
       </tr>
 
@@ -290,12 +290,15 @@ a.lb-url:hover { text-decoration: underline; }
 <!-- ━━━ PAGE 3 ━━━ -->
 <div class="a4-page" id="p2">
   <div class="page-hbar">
-    <div class="phb-l"><img src="gaiheki-logo.png" alt="gaiheki+" height="28" style="display:block;filter:brightness(0) invert(1)"><span class="phb-title">写真ご提供のお願い</span></div>
-    
+    <div class="phb-l"><img src="gaiheki-logo.png" alt="gaiheki+" height="28" style="display:block;filter:brightness(0) invert(1)"></div>
+    <div style="text-align:right;line-height:1.6">
+      <div style="font-size:12px;font-weight:700">宛先：<strong id="p-company2">（会社名・担当者名）</strong> 様</div>
+      <div style="font-size:10px;opacity:.85" id="p-date2"></div>
+    </div>
   </div>
   <div class="page-content" style="font-size:11.5px;color:var(--label);line-height:1.9">
 
-    <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:18px">現場・会社の写真ご提供のお願い</div>
+    <div style="font-size:13px;font-weight:700;color:var(--text);margin-top:40px;margin-bottom:18px">現場・会社の写真ご提供のお願い</div>
 
     <div style="margin-bottom:12px">ご担当者様</div>
 
@@ -314,7 +317,7 @@ a.lb-url:hover { text-decoration: underline; }
     </div>
 
     <div style="margin-bottom:12px">
-      <strong>実際に写真の掲載をお願いしている理由</strong><br>
+      <span style="display:inline-block;background:#e8e6f3;color:var(--main);font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:4px">実際に写真の掲載をお願いしている理由</span><br>
       ・実際に成約率やアポ率が高くなるというデータが出ている<br>
       ・施工の丁寧さや雰囲気が伝わりやすく満足度が上がる<br>
       ・結果的に利益が伸びる
@@ -331,7 +334,7 @@ a.lb-url:hover { text-decoration: underline; }
     </div>
 
     <div style="margin-bottom:12px">
-      <strong>【おすすめの写真例】</strong><br>
+      <span style="display:inline-block;background:#e8e6f3;color:var(--main);font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:4px">【おすすめの写真例】</span><br>
       ・施工中の様子（職人さんの手元や後ろ姿など）<br>
       ・会社外観や社内の様子<br>
       ・スタッフ集合写真、看板、車両など<br>
@@ -349,7 +352,7 @@ a.lb-url:hover { text-decoration: underline; }
     </div>
 
     <div style="margin-bottom:12px">
-      <strong>【管理画面へ追加で欲しい機能について】</strong><br>
+      <span style="display:inline-block;background:#e8e6f3;color:var(--main);font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:4px">【管理画面へ追加で欲しい機能について】</span><br>
       ・普段、使っている機能や管理システム等が弊社管理画面にもあれば便利なのに！！<br>
       のようなことがあればお願い致します！
     </div>
@@ -574,6 +577,7 @@ function render() {
   const co = v('company'), cn = v('contact_name');
   const recipient = co && cn ? co + '　' + cn : (co || cn || '（会社名・担当者名）');
   set('p-company', recipient);
+  set('p-company2', recipient);
   const dv = v('issue_date');
   let dateLabel;
   if (dv) {
@@ -583,6 +587,7 @@ function render() {
     dateLabel = new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});
   }
   set('p-date', '発行日：' + dateLabel);
+  set('p-date2', '発行日：' + dateLabel);
   set('p-plan',       planLabel[v('plan')] || '—');
   set('p-fee',        v('monthly_fee') || '—');
   set('p-commission', v('commission') || '—');
