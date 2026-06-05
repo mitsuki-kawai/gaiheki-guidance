@@ -281,7 +281,7 @@ a.lb-url:hover { text-decoration: underline; }
 
 
       <tr class="sh"><td colspan="2">⑤ 除外となり得るお客様情報について</td></tr>
-      <tr><td colspan="2" class="v note" id="p-exclude-text" style="white-space:pre-line;padding:12px 20px"></td></tr>
+      <tr><td colspan="2" class="v note" id="p-exclude-text" style="padding:12px 20px">・30日以内の、同一人物からの重複申込<br>・使用されていない電話番号<br>・別人の人（例：山田 太郎）<br>上記にあてはまるお客様情報については、お手数ですが私までご報告ください。</td></tr>
 
       <tr class="gap"><td colspan="2"></td></tr>
 
@@ -648,7 +648,6 @@ function render() {
   setLink('p-gift-work',   s.giftWorkUrl);
   setLink('p-login-url',   s.loginUrl);
   set('p-holiday-text', s.holidayText);
-  set('p-exclude-text', s.excludeText);
 }
 
 function set(id, val) {
