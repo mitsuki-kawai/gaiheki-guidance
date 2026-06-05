@@ -437,8 +437,12 @@ a.lb-url:hover { text-decoration: underline; }
       </div>
       <div class="f-sec">業者情報</div>
       <div class="field">
-        <label>会社名 / 担当者名<span class="req">*</span></label>
-        <input type="text" id="company" placeholder="例：株式会社〇〇塗装　山田様" oninput="render()">
+        <label>会社名</label>
+        <input type="text" id="company" placeholder="例：株式会社〇〇塗装" oninput="render()">
+      </div>
+      <div class="field">
+        <label>担当者名</label>
+        <input type="text" id="contact_name" placeholder="例：山田太郎" oninput="render()">
       </div>
       <div class="f-sec">契約プラン</div>
       <div class="field">
@@ -617,7 +621,9 @@ function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').re
 function render() {
   const planLabel = {light:'LIGHT（ライト）', basic:'BASIC（ベーシック）', pro:'PRO（プロ）'};
   const s = getSettings();
-  set('p-company',    v('company') || '（会社名・担当者名）');
+  const co = v('company'), cn = v('contact_name');
+  const recipient = co && cn ? co + '　' + cn : (co || cn || '（会社名・担当者名）');
+  set('p-company', recipient);
   set('p-date',       '発行日：' + new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'}));
   set('p-plan',       planLabel[v('plan')] || '—');
   set('p-fee',        v('monthly_fee') || '—');
@@ -671,7 +677,7 @@ function getCases() {
   try { return JSON.parse(localStorage.getItem('gaiheki_cases') || '[]'); } catch(e) { return []; }
 }
 function collectFormData() {
-  const fields = ['assignee','company','plan','monthly_fee','commission','guarantee',
+  const fields = ['assignee','company','contact_name','plan','monthly_fee','commission','guarantee',
     'monthly_est','half_est','area_points','payment_status','payment_note','email','phone',
     'line_status','login_id','login_pass'];
   const data = {};
@@ -681,14 +687,14 @@ function collectFormData() {
 }
 
 function saveCase() {
-  if (!v('company'))  { alert('会社名・担当者名を入力してください'); return; }
+  if (!v('company') && !v('contact_name')) { alert('会社名または担当者名を入力してください'); return; }
   if (!v('assignee')) { alert('担当者を選択してください'); return; }
   const editId = new URLSearchParams(location.search).get('id');
   const id = editId || 'case_' + Date.now();
   const existing = getCases();
   const existingCase = existing.find(c => c.id === id);
   const caseData = {
-    id, assignee: v('assignee'), company: v('company'), plan: v('plan'),
+    id, assignee: v('assignee'), company: v('company') || v('contact_name'), plan: v('plan'),
     createdAt: existingCase ? existingCase.createdAt : new Date().toISOString().split('T')[0],
     formData: collectFormData()
   };
@@ -712,7 +718,7 @@ function saveCase() {
   const c = getCases().find(c => c.id === editId);
   if (!c) { updatePlanDefaults(); render(); return; }
   const d = c.formData;
-  ['assignee','company','plan','monthly_fee','commission','guarantee',
+  ['assignee','company','contact_name','plan','monthly_fee','commission','guarantee',
    'monthly_est','half_est','area_points','payment_status','payment_note','email','phone',
    'line_status','login_id','login_pass'].forEach(f => {
     const el = document.getElementById(f);
