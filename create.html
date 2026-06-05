@@ -64,7 +64,7 @@ body {
 .page-content { padding: 18px 32px 52px; }
 
 /* ── 書類テーブル ── */
-.doc-table { width: 100%; border-collapse: collapse; }
+.doc-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .doc-table td { border: 1px solid var(--border); vertical-align: top; padding: 9px 12px; }
 
 /* セクションヘッダー行 */
@@ -80,7 +80,7 @@ body {
 .gap td { height: 8px; border: none; padding: 0; }
 
 /* キーセル */
-.k { background: var(--bg); color: var(--main); font-size: 11px; font-weight: 600; width: 148px; vertical-align: middle; }
+.k { background: var(--bg); color: var(--main); font-size: 11px; font-weight: 600; width: 160px; min-width: 160px; max-width: 160px; vertical-align: middle; white-space: nowrap; }
 
 /* バリューセル */
 .v { background: var(--white); color: var(--text); font-size: 12.5px; }
@@ -229,7 +229,7 @@ a.lb-url:hover { text-decoration: underline; }
       <tr>
         <td colspan="2" style="padding:0">
           <table style="width:100%;border-collapse:collapse;table-layout:fixed">
-            <colgroup><col style="width:90px"><col><col style="width:90px"><col></colgroup>
+            <colgroup><col style="width:160px"><col><col style="width:160px"><col></colgroup>
             <tr>
               <td class="k" style="border-top:none;border-left:none;vertical-align:middle;white-space:nowrap">月額費用<br>（税抜）</td>
               <td class="v" style="border-top:none;vertical-align:middle"><span class="va" id="p-fee">—</span></td>
@@ -246,7 +246,7 @@ a.lb-url:hover { text-decoration: underline; }
       <tr>
         <td colspan="2" style="padding:0">
           <table style="width:100%;border-collapse:collapse;table-layout:fixed">
-            <colgroup><col style="width:120px"><col><col style="width:120px"><col></colgroup>
+            <colgroup><col style="width:160px"><col><col style="width:160px"><col></colgroup>
             <tr>
               <td class="k" style="border-top:none;border-left:none;border-bottom:none;white-space:nowrap">紹介件数想定（月間）</td>
               <td class="v" id="p-monthly" style="border-top:none;border-bottom:none">—</td>
