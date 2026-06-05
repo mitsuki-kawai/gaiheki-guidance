@@ -30,7 +30,7 @@ body {
 /* ── 左ナビ ── */
 .nav { background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
 .nav-logo { padding: 20px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
-.nav-logo .back-link { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; font-size: 16px; color: var(--muted); text-decoration: none; margin-bottom: 8px; border-radius: 4px; transition: background .12s, color .12s; }
+.nav-logo .back-link { display: inline-block; font-size: 12px; font-weight: 600; color: var(--muted); text-decoration: none; margin-bottom: 8px; padding: 3px 8px; border-radius: 4px; transition: background .12s, color .12s; }
 .nav-logo .back-link:hover { background: var(--bg); color: var(--main); }
 .nav-logo .brand, .nav-logo a.brand { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; text-decoration: none; color: var(--text); display: block; }
 .nav-logo .brand span, .nav-logo a.brand span { color: var(--main); }
@@ -196,7 +196,7 @@ a.lb-url:hover { text-decoration: underline; }
 <!-- ══ 左ナビ ══ -->
 <div class="nav">
   <div class="nav-logo">
-    <a href="index.html" class="back-link" title="一覧へ戻る">←</a>
+    <a href="index.html" class="back-link">戻る</a>
     <a href="index.html" class="brand"><img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block"></a>
     <div class="sub">ガイダンス資料作成</div>
   </div>
