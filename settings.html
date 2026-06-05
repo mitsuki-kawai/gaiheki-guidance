@@ -82,29 +82,17 @@ a.header-logo:hover { opacity: 0.8; }
 .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
 /* ── 担当者リスト ── */
-.staff-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; min-height: 8px; }
-.staff-tag {
-  display: flex; align-items: center; gap: 6px;
-  background: #eeecf8; color: var(--main);
-  border-radius: 4px; padding: 5px 12px; font-size: 13px; font-weight: 500;
-}
-.staff-tag button {
-  background: none; border: none; color: var(--main);
-  cursor: pointer; font-size: 16px; line-height: 1; padding: 0; opacity: .5;
-}
-.staff-tag button:hover { opacity: 1; }
-.staff-add { display: flex; gap: 8px; }
-.staff-add input {
-  flex: 1; padding: 8px 12px; border: 1px solid var(--border);
-  border-radius: 4px; font-size: 13px; font-family: inherit;
-}
-.staff-add input:focus { outline: none; border-color: var(--main); }
-.staff-add button {
-  padding: 8px 18px; background: var(--main); color: var(--white);
-  border: none; border-radius: 4px; font-size: 13px; font-weight: 600;
-  cursor: pointer; white-space: nowrap; transition: opacity .12s;
-}
-.staff-add button:hover { opacity: .85; }
+.staff-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.staff-row { display: flex; align-items: center; gap: 8px; padding: 9px 14px; background: var(--white); border: 1px solid var(--border); border-radius: 6px; }
+.staff-row-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); }
+.staff-row input { flex: 1; padding: 5px 9px; border: 1px solid var(--main); border-radius: 4px; font-size: 13px; font-family: inherit; }
+.staff-row input:focus { outline: none; }
+.btn-edit { padding: 4px 12px; background: #eeecf8; color: var(--main); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
+.btn-save { padding: 4px 12px; background: var(--main); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
+.btn-del  { padding: 4px 12px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
+.btn-edit:hover, .btn-save:hover, .btn-del:hover { opacity: .8; }
+.btn-add-staff { width: 100%; padding: 10px; background: none; border: 1px dashed var(--border); border-radius: 6px; color: var(--label); font-size: 13px; cursor: pointer; transition: all .12s; }
+.btn-add-staff:hover { border-color: var(--main); color: var(--main); background: #f7f6fb; }
 
 /* ── URLグリッド ── */
 .url-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
@@ -187,11 +175,8 @@ a.header-logo:hover { opacity: 0.8; }
     <div class="section" id="sec-staff">
       <div class="section-title">担当者設定</div>
       <div class="section-desc">資料作成時の「担当者」ドロップダウンとトップページのフィルターに反映されます。</div>
-      <div class="staff-tags" id="staff-tags"></div>
-      <div class="staff-add">
-        <input type="text" id="new-staff" placeholder="担当者名を入力" onkeydown="if(event.key==='Enter')addStaff()">
-        <button onclick="addStaff()">追加</button>
-      </div>
+      <div class="staff-list" id="staff-list"></div>
+      <button class="btn-add-staff" onclick="addStaff()">＋ 担当者を追加</button>
     </div>
 
     <!-- ── テキスト設定 ── -->
@@ -266,25 +251,41 @@ function showSection(id, btn) {
   if (btn) btn.classList.add('active');
 }
 
-function renderStaffTags() {
-  document.getElementById('staff-tags').innerHTML = staffList.map((name, i) =>
-    `<div class="staff-tag">${escHtml(name)}<button onclick="removeStaff(${i})" title="削除">×</button></div>`
-  ).join('');
+function renderStaffList() {
+  document.getElementById('staff-list').innerHTML = staffList.map((name, i) => `
+    <div class="staff-row" id="staff-row-${i}">
+      <span class="staff-row-name">${escHtml(name)}</span>
+      <button class="btn-edit" onclick="editStaff(${i})">編集</button>
+      <button class="btn-del"  onclick="removeStaff(${i})">削除</button>
+    </div>`).join('');
+}
+
+function editStaff(i) {
+  const row = document.getElementById('staff-row-' + i);
+  row.innerHTML = `
+    <input type="text" id="staff-inp-${i}" value="${escHtml(staffList[i])}"
+      onkeydown="if(event.key==='Enter')saveStaff(${i})">
+    <button class="btn-save" onclick="saveStaff(${i})">保存</button>
+    <button class="btn-del"  onclick="removeStaff(${i})">削除</button>`;
+  document.getElementById('staff-inp-' + i).focus();
+}
+
+function saveStaff(i) {
+  const val = (document.getElementById('staff-inp-' + i)?.value || '').trim();
+  if (!val) { staffList.splice(i, 1); }
+  else { staffList[i] = val; }
+  renderStaffList();
 }
 
 function addStaff() {
-  const inp = document.getElementById('new-staff');
-  const name = inp.value.trim();
-  if (!name) return;
-  if (staffList.includes(name)) { inp.value = ''; return; }
-  staffList.push(name);
-  inp.value = '';
-  renderStaffTags();
+  staffList.push('');
+  renderStaffList();
+  editStaff(staffList.length - 1);
 }
 
 function removeStaff(i) {
   staffList.splice(i, 1);
-  renderStaffTags();
+  renderStaffList();
 }
 
 function saveSettings() {
@@ -340,7 +341,7 @@ function escHtml(s) {
   });
 
   staffList = [...s.staffList];
-  renderStaffTags();
+  renderStaffList();
 
   document.getElementById('holiday-text').value   = s.holidayText;
   document.getElementById('exclude-text').value   = s.excludeText;
