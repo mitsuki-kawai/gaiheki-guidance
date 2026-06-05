@@ -65,13 +65,13 @@ body {
 
 /* ── 書類テーブル ── */
 .doc-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.doc-table td { border: 1px solid var(--border); vertical-align: top; padding: 5px 12px; }
+.doc-table td { border: 1px solid var(--border); vertical-align: top; padding: 8px 12px; }
 
 /* セクションヘッダー行 */
 .sh td {
   background: #eeecf8; color: var(--main);
   font-size: 11.5px; font-weight: 700;
-  padding: 5px 12px; border-left: 3px solid var(--main);
+  padding: 8px 12px; border-left: 3px solid var(--main);
   letter-spacing: .02em;
 }
 .sh .sh-badge { float: right; font-weight: 400; font-size: 10px; color: #8a7fc7; margin-top: 1px; }
@@ -80,7 +80,7 @@ body {
 .gap td { height: 0; border: none; padding: 0; }
 
 /* キーセル */
-.k { background: var(--bg) !important; color: var(--main) !important; font-size: 11.5px !important; font-weight: 600 !important; width: 220px !important; min-width: 220px !important; max-width: 220px !important; vertical-align: middle !important; white-space: nowrap !important; padding: 5px 20px !important; }
+.k { background: var(--bg) !important; color: var(--main) !important; font-size: 11.5px !important; font-weight: 600 !important; width: 220px !important; min-width: 220px !important; max-width: 220px !important; vertical-align: middle !important; white-space: nowrap !important; padding: 8px 20px !important; }
 
 /* バリューセル */
 .v { background: var(--white); color: var(--text); font-size: 11.5px; }
@@ -221,95 +221,72 @@ a.lb-url:hover { text-decoration: underline; }
   </div>
   <div class="page-content">
     <table class="doc-table">
-      <colgroup><col style="width:220px"><col></colgroup>
+      <colgroup><col style="width:220px"><col><col style="width:220px"><col></colgroup>
 
-      <tr class="sh"><td colspan="2">① 料金について</td></tr>
-      <tr><td class="k">契約プラン</td><td class="v" id="p-plan">—</td></tr>
+      <tr class="sh"><td colspan="4">① 料金について</td></tr>
+      <tr><td class="k">契約プラン</td><td class="v" colspan="3" id="p-plan">—</td></tr>
       <tr>
-        <td colspan="2" style="padding:0">
-          <table style="width:100%;border-collapse:collapse;table-layout:fixed">
-            <colgroup><col style="width:220px"><col><col style="width:220px"><col></colgroup>
-            <tr>
-              <td class="k" style="border-top:none;border-left:none;vertical-align:middle;white-space:nowrap">月額費用（税抜）</td>
-              <td class="v" style="border-top:none;vertical-align:middle"><span class="va" id="p-fee">—</span></td>
-              <td class="k" style="border-top:none;white-space:nowrap;vertical-align:middle">成約手数料</td>
-              <td class="v" style="border-top:none;border-right:none;vertical-align:middle"><span class="va-sm" id="p-commission">—</span></td>
-            </tr>
-            <tr>
-              <td class="k" style="border-left:none;border-bottom:none;vertical-align:middle">契約期間</td>
-              <td class="v" colspan="3" style="border-right:none;border-bottom:none;vertical-align:middle"><span id="p-period">—</span><div style="font-size:10px;color:var(--muted);margin-top:2px">※ご契約は自動更新　※退会希望の場合、14日前に管理画面から申請が必要</div></td>
-            </tr>
-          </table>
-        </td>
+        <td class="k" style="vertical-align:middle;white-space:nowrap">月額費用（税抜）</td>
+        <td class="v" style="vertical-align:middle"><span class="va" id="p-fee">—</span></td>
+        <td class="k" style="vertical-align:middle;white-space:nowrap">成約手数料</td>
+        <td class="v" style="vertical-align:middle"><span class="va-sm" id="p-commission">—</span></td>
       </tr>
       <tr>
-        <td colspan="2" style="padding:0">
-          <table style="width:100%;border-collapse:collapse;table-layout:fixed">
-            <colgroup><col style="width:220px"><col><col style="width:220px"><col></colgroup>
-            <tr>
-              <td class="k" style="border-top:none;border-left:none;border-bottom:none;white-space:nowrap">紹介件数想定（月間）</td>
-              <td class="v" id="p-monthly" style="border-top:none;border-bottom:none">—</td>
-              <td class="k" style="border-top:none;border-bottom:none;white-space:nowrap">紹介件数想定（6ヶ月）</td>
-              <td class="v" id="p-half" style="border-top:none;border-right:none;border-bottom:none">—</td>
-            </tr>
-          </table>
-        </td>
+        <td class="k" style="vertical-align:middle">契約期間</td>
+        <td class="v" colspan="3" style="vertical-align:middle"><span id="p-period">—</span><div style="font-size:10px;color:var(--muted);margin-top:2px">※ご契約は自動更新　※退会希望の場合、14日前に管理画面から申請が必要</div></td>
+      </tr>
+      <tr>
+        <td class="k" style="white-space:nowrap">紹介件数想定（月間）</td>
+        <td class="v" id="p-monthly">—</td>
+        <td class="k" style="white-space:nowrap">紹介件数想定（6ヶ月）</td>
+        <td class="v" id="p-half">—</td>
       </tr>
       <tr>
         <td class="k">最低補償</td>
-        <td class="v"><span class="va" id="p-guarantee">—</span><span class="sub-note">※返金がある場合は６ヶ月後となります。</span></td>
+        <td class="v" colspan="3"><span class="va" id="p-guarantee">—</span><span class="sub-note">※返金がある場合は６ヶ月後となります。</span></td>
       </tr>
 
-      <tr class="gap"><td colspan="2"></td></tr>
+      <tr class="gap"><td colspan="4"></td></tr>
 
-      <tr class="sh"><td colspan="2">② 対応エリア</td></tr>
-      <tr><td colspan="2" class="v" id="p-areas" style="padding:5px 20px"><span style="font-size:11px;color:var(--muted)">エリアが未設定です</span></td></tr>
+      <tr class="sh"><td colspan="4">② 対応エリア</td></tr>
+      <tr><td colspan="4" class="v" id="p-areas" style="padding:8px 20px"><span style="font-size:11px;color:var(--muted)">エリアが未設定です</span></td></tr>
 
-      <tr class="gap"><td colspan="2"></td></tr>
+      <tr class="gap"><td colspan="4"></td></tr>
 
-      <tr class="sh"><td colspan="2">③ お支払いについて</td></tr>
-      <tr><td class="k">ステータス</td><td class="v" id="p-pay-status">—</td></tr>
-      <tr><td class="k">備考</td><td class="v" id="p-pay-note">—</td></tr>
+      <tr class="sh"><td colspan="4">③ お支払いについて</td></tr>
+      <tr><td class="k">ステータス</td><td class="v" colspan="3" id="p-pay-status">—</td></tr>
+      <tr><td class="k">備考</td><td class="v" colspan="3" id="p-pay-note">—</td></tr>
 
-      <tr class="gap"><td colspan="2"></td></tr>
+      <tr class="gap"><td colspan="4"></td></tr>
 
-      <tr class="sh"><td colspan="2">④ 休業日について</td></tr>
-      <tr><td colspan="2" class="v note" style="padding:5px 20px">弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。<br>配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。</td></tr>
+      <tr class="sh"><td colspan="4">④ 休業日について</td></tr>
+      <tr><td colspan="4" class="v note" style="padding:8px 20px">弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。<br>配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。</td></tr>
 
+      <tr class="gap"><td colspan="4"></td></tr>
 
-      <tr class="gap"><td colspan="2"></td></tr>
+      <tr class="sh"><td colspan="4">⑤ 除外となり得るお客様情報について</td></tr>
+      <tr><td colspan="4" class="v note" id="p-exclude-text" style="padding:8px 20px">・30日以内の、同一人物からの重複申込<br>・使用されていない電話番号<br>・別人の人（例：山田 太郎）<br>上記にあてはまるお客様情報については、お手数ですが私までご報告ください。</td></tr>
 
+      <tr class="gap"><td colspan="4"></td></tr>
 
-      <tr class="sh"><td colspan="2">⑤ 除外となり得るお客様情報について</td></tr>
-      <tr><td colspan="2" class="v note" id="p-exclude-text" style="padding:5px 20px">・30日以内の、同一人物からの重複申込<br>・使用されていない電話番号<br>・別人の人（例：山田 太郎）<br>上記にあてはまるお客様情報については、お手数ですが私までご報告ください。</td></tr>
+      <tr class="sh"><td colspan="4">⑥ 配信先メールアドレス・電話番号・LINEの追加について</td></tr>
+      <tr><td colspan="4" class="v note" style="padding:8px 12px">お客様情報は、LINE、メールで受け取ることができます。受信をご希望のメールアドレスをお伝えください。</td></tr>
 
-      <tr class="gap"><td colspan="2"></td></tr>
+      <tr class="gap"><td colspan="4"></td></tr>
 
-      <tr class="sh"><td colspan="2">⑥ 配信先メールアドレス・電話番号・LINEの追加について</td></tr>
-      <tr><td colspan="2" class="v note">お客様情報は、LINE、メールで受け取ることができます。受信をご希望のメールアドレスをお伝えください。</td></tr>
-
-      <tr class="gap"><td colspan="2"></td></tr>
-
-      <tr class="sh"><td colspan="2">⑦ 顧客管理システムのログイン情報について</td></tr>
-      <tr><td class="k">ログインURL</td><td class="v"><a class="url-val" id="p-login-url" href="#" target="_blank">—</a></td></tr>
+      <tr class="sh"><td colspan="4">⑦ 顧客管理システムのログイン情報について</td></tr>
+      <tr><td class="k">ログインURL</td><td class="v" colspan="3"><a class="url-val" id="p-login-url" href="#" target="_blank">—</a></td></tr>
       <tr>
-        <td colspan="2" style="padding:0">
-          <table style="width:100%;border-collapse:collapse;table-layout:fixed">
-            <colgroup><col style="width:150px"><col><col style="width:150px"><col></colgroup>
-            <tr>
-              <td class="k" style="border-top:none;border-left:none;border-bottom:none;width:150px;min-width:150px;max-width:150px">ID</td>
-              <td class="v" id="p-login-id" style="border-top:none;border-bottom:none">—</td>
-              <td class="k" style="border-top:none;border-bottom:none;width:150px;min-width:150px;max-width:150px">パスワード</td>
-              <td class="v" id="p-login-pass" style="border-top:none;border-right:none;border-bottom:none">—</td>
-            </tr>
-          </table>
-        </td>
+        <td class="k" style="vertical-align:middle">ID</td>
+        <td class="v" id="p-login-id" style="vertical-align:middle">—</td>
+        <td class="k" style="vertical-align:middle">パスワード</td>
+        <td class="v" id="p-login-pass" style="vertical-align:middle">—</td>
       </tr>
 
-      <tr class="gap"><td colspan="2"></td></tr>
+      <tr class="gap"><td colspan="4"></td></tr>
 
-      <tr class="sh"><td colspan="2">⑧ ご成約報告について</td></tr>
-      <tr><td colspan="2" class="v note" style="padding:5px 20px">①お客様情報→②案件メモ下→③新規登録から報告→④お客様からの入金確認後、成約手数料のお振込をお願い致します。</td></tr>
+      <tr class="sh"><td colspan="4">⑧ ご成約報告について</td></tr>
+      <tr><td colspan="4" class="v note" style="padding:8px 20px">①お客様情報→②案件メモ下→③新規登録から報告→④お客様からの入金確認後、成約手数料のお振込をお願い致します。</td></tr>
 
     </table>
   </div>
