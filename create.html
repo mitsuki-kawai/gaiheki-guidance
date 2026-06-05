@@ -61,17 +61,17 @@ body {
 .doc-issued { font-size: 11px; color: var(--muted); }
 
 /* ページコンテンツ */
-.page-content { padding: 18px 32px 52px; }
+.page-content { padding: 10px 32px 24px; }
 
 /* ── 書類テーブル ── */
 .doc-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-.doc-table td { border: 1px solid var(--border); vertical-align: top; padding: 9px 12px; }
+.doc-table td { border: 1px solid var(--border); vertical-align: top; padding: 5px 12px; }
 
 /* セクションヘッダー行 */
 .sh td {
   background: #eeecf8; color: var(--main);
-  font-size: 11px; font-weight: 700;
-  padding: 8px 12px; border-left: 3px solid var(--main);
+  font-size: 11.5px; font-weight: 700;
+  padding: 5px 12px; border-left: 3px solid var(--main);
   letter-spacing: .02em;
 }
 .sh .sh-badge { float: right; font-weight: 400; font-size: 10px; color: #8a7fc7; margin-top: 1px; }
@@ -80,10 +80,10 @@ body {
 .gap td { height: 0; border: none; padding: 0; }
 
 /* キーセル */
-.k { background: var(--bg) !important; color: var(--main) !important; font-size: 11px !important; font-weight: 600 !important; width: 220px !important; min-width: 220px !important; max-width: 220px !important; vertical-align: middle !important; white-space: nowrap !important; padding: 8px 20px !important; }
+.k { background: var(--bg) !important; color: var(--main) !important; font-size: 11.5px !important; font-weight: 600 !important; width: 220px !important; min-width: 220px !important; max-width: 220px !important; vertical-align: middle !important; white-space: nowrap !important; padding: 5px 20px !important; }
 
 /* バリューセル */
-.v { background: var(--white); color: var(--text); font-size: 12.5px; }
+.v { background: var(--white); color: var(--text); font-size: 11.5px; }
 
 /* アクセント値（オレンジ強調） */
 .va { color: var(--accent); font-weight: 700; font-size: 15px; }
@@ -124,7 +124,7 @@ body {
 .amz-cond { font-size: 10px; color: var(--muted); margin-top: 2px; }
 
 /* URL表示 */
-.url-val { color: var(--main); font-size: 12px; word-break: break-all; text-decoration: none; }
+.url-val { color: var(--main); font-size: 11.5px; word-break: break-all; text-decoration: none; }
 a.url-val:hover { text-decoration: underline; }
 a.lb-url { color: #89b4fa; text-decoration: none; word-break: break-all; }
 a.lb-url:hover { text-decoration: underline; }
@@ -142,12 +142,12 @@ a.lb-url:hover { text-decoration: underline; }
 .ptab.active { color: var(--main); border-bottom-color: var(--main); font-weight: 700; }
 .ptab:hover:not(.active) { color: var(--main); }
 .form-scroll { overflow-y: auto; flex: 1; padding: 16px 20px 24px; }
-.f-sec { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--main); margin: 20px 0 8px; padding-bottom: 4px; border-bottom: 1px solid #e8e5f4; }
+.f-sec { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--main); margin: 10px 0 5px; padding-bottom: 4px; border-bottom: 1px solid #e8e5f4; }
 .f-sec:first-child { margin-top: 0; }
-.field { margin-bottom: 12px; }
+.field { margin-bottom: 7px; }
 .field label { display: block; font-size: 11px; font-weight: 500; color: var(--label); margin-bottom: 4px; }
 .field label .req { color: var(--accent); margin-left: 2px; }
-.field input, .field select, .field textarea { width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--white); color: var(--text); font-family: inherit; transition: border-color .12s; appearance: none; -webkit-appearance: none; }
+.field input, .field select, .field textarea { width: 100%; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--white); color: var(--text); font-family: inherit; transition: border-color .12s; appearance: none; -webkit-appearance: none; }
 .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--main); }
 .field textarea { resize: vertical; min-height: 56px; }
 .field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999' d='M5 6L0 0h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
@@ -263,7 +263,7 @@ a.lb-url:hover { text-decoration: underline; }
       <tr class="gap"><td colspan="2"></td></tr>
 
       <tr class="sh"><td colspan="2">② 対応エリア</td></tr>
-      <tr><td colspan="2" class="v" id="p-areas" style="padding:12px 20px"><span style="font-size:11px;color:var(--muted)">エリアが未設定です</span></td></tr>
+      <tr><td colspan="2" class="v" id="p-areas" style="padding:5px 20px"><span style="font-size:11px;color:var(--muted)">エリアが未設定です</span></td></tr>
 
       <tr class="gap"><td colspan="2"></td></tr>
 
@@ -274,14 +274,14 @@ a.lb-url:hover { text-decoration: underline; }
       <tr class="gap"><td colspan="2"></td></tr>
 
       <tr class="sh"><td colspan="2">④ 休業日について</td></tr>
-      <tr><td colspan="2" class="v note" style="padding:12px 20px">弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。<br>配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。</td></tr>
+      <tr><td colspan="2" class="v note" style="padding:5px 20px">弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。<br>配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。</td></tr>
 
 
       <tr class="gap"><td colspan="2"></td></tr>
 
 
       <tr class="sh"><td colspan="2">⑤ 除外となり得るお客様情報について</td></tr>
-      <tr><td colspan="2" class="v note" id="p-exclude-text" style="padding:12px 20px">・30日以内の、同一人物からの重複申込<br>・使用されていない電話番号<br>・別人の人（例：山田 太郎）<br>上記にあてはまるお客様情報については、お手数ですが私までご報告ください。</td></tr>
+      <tr><td colspan="2" class="v note" id="p-exclude-text" style="padding:5px 20px">・30日以内の、同一人物からの重複申込<br>・使用されていない電話番号<br>・別人の人（例：山田 太郎）<br>上記にあてはまるお客様情報については、お手数ですが私までご報告ください。</td></tr>
 
       <tr class="gap"><td colspan="2"></td></tr>
 
@@ -309,7 +309,7 @@ a.lb-url:hover { text-decoration: underline; }
       <tr class="gap"><td colspan="2"></td></tr>
 
       <tr class="sh"><td colspan="2">⑧ ご成約報告について</td></tr>
-      <tr><td colspan="2" class="v note" style="padding:12px 20px">①お客様情報→②案件メモ下→③新規登録から報告→④お客様からの入金確認後、成約手数料のお振込をお願い致します。</td></tr>
+      <tr><td colspan="2" class="v note" style="padding:5px 20px">①お客様情報→②案件メモ下→③新規登録から報告→④お客様からの入金確認後、成約手数料のお振込をお願い致します。</td></tr>
 
     </table>
   </div>
@@ -488,10 +488,6 @@ a.lb-url:hover { text-decoration: underline; }
         <input type="text" id="area-input" placeholder="例：神奈川県横浜市" onkeydown="if(event.key==='Enter'){addArea()}">
         <button onclick="addArea()">追加</button>
       </div>
-      <div class="field" style="margin-top:10px">
-        <label>エリアポイント数</label>
-        <input type="text" id="area_points" placeholder="例：10ポイントまで" oninput="render()">
-      </div>
       <div class="f-sec">お支払い</div>
       <div class="field">
         <label>ステータス</label>
@@ -649,7 +645,6 @@ function render() {
   ap.innerHTML = areas.length
     ? areas.map(a => `<span class="tag">${esc(a)}</span>`).join('')
     : '<span style="font-size:11px;color:var(--muted)">エリアが未設定です</span>';
-  set('p-area-points', v('area_points') || '—');
 
   set('p-pay-status', v('payment_status') || '—');
   set('p-pay-note',   v('payment_note') || '—');
@@ -690,7 +685,7 @@ function getCases() {
 }
 function collectFormData() {
   const fields = ['assignee','company','contact_name','issue_date','plan','monthly_fee','commission','guarantee',
-    'monthly_est','half_est','area_points','payment_status','payment_note','email','phone',
+    'monthly_est','half_est','payment_status','payment_note','email','phone',
     'line_status','login_id','login_pass'];
   const data = {};
   fields.forEach(f => { const el = document.getElementById(f); if(el) data[f] = el.value; });
@@ -732,7 +727,7 @@ function saveCase() {
   if (!c) { updatePlanDefaults(); render(); return; }
   const d = c.formData;
   ['assignee','company','contact_name','issue_date','plan','monthly_fee','commission','guarantee',
-   'monthly_est','half_est','area_points','payment_status','payment_note','email','phone',
+   'monthly_est','half_est','payment_status','payment_note','email','phone',
    'line_status','login_id','login_pass'].forEach(f => {
     const el = document.getElementById(f);
     if (el && d[f] !== undefined) el.value = d[f];
