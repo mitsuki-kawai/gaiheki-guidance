@@ -88,9 +88,9 @@ a.header-logo:hover { opacity: 0.8; }
 .staff-row input { flex: 1; padding: 5px 9px; border: 1px solid var(--main); border-radius: 4px; font-size: 13px; font-family: inherit; }
 .staff-row input:focus { outline: none; }
 .btn-edit { padding: 4px 12px; background: #eeecf8; color: var(--main); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
-.btn-save { padding: 4px 12px; background: var(--main); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
+.btn-row-save { padding: 4px 12px; background: var(--main); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
 .btn-del  { padding: 4px 12px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
-.btn-edit:hover, .btn-save:hover, .btn-del:hover { opacity: .8; }
+.btn-edit:hover, .btn-row-save:hover, .btn-del:hover { opacity: .8; }
 .btn-add-staff { width: 100%; padding: 10px; background: none; border: 1px dashed var(--border); border-radius: 6px; color: var(--label); font-size: 13px; cursor: pointer; transition: all .12s; }
 .btn-add-staff:hover { border-color: var(--main); color: var(--main); background: #f7f6fb; }
 
@@ -112,9 +112,7 @@ a.header-logo:hover { opacity: 0.8; }
 <!-- ヘッダー -->
 <div class="header">
   <a href="index.html" class="header-logo"><img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block"></a>
-  <div class="header-divider"></div>
-  <div class="header-title">設定</div>
-  <a href="index.html" class="btn-back" title="一覧へ戻る">←</a>
+  <a href="index.html" class="btn-back" style="margin-left:auto" title="一覧へ戻る">←</a>
   <button class="btn-save" onclick="saveSettings()">保存</button>
 </div>
 
@@ -265,7 +263,7 @@ function editStaff(i) {
   row.innerHTML = `
     <input type="text" id="staff-inp-${i}" value="${escHtml(staffList[i])}"
       onkeydown="if(event.key==='Enter')saveStaff(${i})">
-    <button class="btn-save" onclick="saveStaff(${i})">保存</button>
+    <button class="btn-row-save" onclick="saveStaff(${i})">保存</button>
     <button class="btn-del"  onclick="removeStaff(${i})">削除</button>`;
   document.getElementById('staff-inp-' + i).focus();
 }
