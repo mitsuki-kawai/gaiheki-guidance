@@ -224,8 +224,8 @@ a.lb-url:hover { text-decoration: underline; }
   <div class="page-content">
     <table class="doc-table">
 
-      <tr class="sh"><td colspan="2">① ご契約プランについて</td></tr>
-      <tr><td class="k">プラン</td><td class="v" id="p-plan">—</td></tr>
+      <tr class="sh"><td colspan="2">① 料金について</td></tr>
+      <tr><td class="k">契約プラン</td><td class="v" id="p-plan">—</td></tr>
       <tr>
         <td colspan="2" style="padding:0">
           <table style="width:100%;border-collapse:collapse">
@@ -235,16 +235,26 @@ a.lb-url:hover { text-decoration: underline; }
               <td class="k" style="width:70px;border-top:none;border-bottom:none">成約手数料</td>
               <td class="v" style="border-top:none;border-bottom:none"><span class="va-sm" id="p-commission">—</span></td>
               <td class="k" style="width:70px;border-top:none;border-bottom:none">契約期間</td>
-              <td class="v" style="border-top:none;border-right:none;border-bottom:none"><span id="p-period">—</span></td>
+              <td class="v" style="border-top:none;border-right:none;border-bottom:none"><span id="p-period">—</span><div style="font-size:10px;color:var(--muted);margin-top:4px">※ご契約は自動更新　※退会希望の場合、14日前に管理画面から申請が必要</div></td>
             </tr>
           </table>
         </td>
       </tr>
-      <tr><td class="k">月間紹介件数（想定）</td><td class="v" id="p-monthly">—</td></tr>
-      <tr><td class="k">6ヶ月紹介件数（想定）</td><td class="v" id="p-half">—</td></tr>
       <tr>
-        <td class="k">最低補償件数</td>
-        <td class="v"><span class="va" id="p-guarantee">—</span><span class="sub-note">保証件数に満たない場合は6ヶ月後に返金対応</span></td>
+        <td colspan="2" style="padding:0">
+          <table style="width:100%;border-collapse:collapse">
+            <tr>
+              <td class="k" style="border-top:none;border-left:none;border-bottom:none">紹介件数想定（月間）</td>
+              <td class="v" id="p-monthly" style="border-top:none;border-bottom:none">—</td>
+              <td class="k" style="border-top:none;border-bottom:none">紹介件数想定（6ヶ月）</td>
+              <td class="v" id="p-half" style="border-top:none;border-right:none;border-bottom:none">—</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr>
+        <td class="k">最低補償</td>
+        <td class="v"><span class="va" id="p-guarantee">—</span><span class="sub-note">※返金がある場合は６ヶ月後となります。</span></td>
       </tr>
 
       <tr class="gap"><td colspan="2"></td></tr>
@@ -254,7 +264,6 @@ a.lb-url:hover { text-decoration: underline; }
         <td class="k">対応エリア</td>
         <td class="v" id="p-areas"><span style="font-size:11px;color:var(--muted)">エリアが未設定です</span></td>
       </tr>
-      <tr><td class="k">エリアポイント数</td><td class="v" id="p-area-points">—</td></tr>
 
       <tr class="gap"><td colspan="2"></td></tr>
 
@@ -295,18 +304,12 @@ a.lb-url:hover { text-decoration: underline; }
 
       <tr class="gap"><td colspan="2"></td></tr>
 
-      <tr class="sh"><td colspan="2">⑥ 配信先メールアドレス・電話番号・LINEについて</td></tr>
-      <tr><td class="k">配信メールアドレス</td><td class="v" id="p-email">—</td></tr>
-      <tr><td class="k">配信電話番号</td><td class="v" id="p-phone">—</td></tr>
-      <tr><td class="k">LINE通知</td><td class="v" id="p-line">—</td></tr>
-      <tr>
-        <td class="k">補足</td>
-        <td class="v note">お客様情報はLINE・メールでリアルタイムに受け取れます。追加・変更がある場合はご連絡ください。</td>
-      </tr>
+      <tr class="sh"><td colspan="2">⑥ 配信先メールアドレス・電話番号・LINEの追加について</td></tr>
+      <tr><td colspan="2" class="v note">お客様情報は、LINE、メールで受け取ることができます。受信をご希望のメールアドレスをお伝えください。</td></tr>
 
       <tr class="gap"><td colspan="2"></td></tr>
 
-      <tr class="sh"><td colspan="2">⑦ 顧客管理システム ログイン情報</td></tr>
+      <tr class="sh"><td colspan="2">⑦ 顧客管理システムのログイン情報について</td></tr>
       <tr><td class="k">ログインURL</td><td class="v"><a class="url-val" id="p-login-url" href="#" target="_blank">—</a></td></tr>
       <tr><td class="k">ID</td><td class="v" id="p-login-id">—</td></tr>
       <tr><td class="k">パスワード</td><td class="v" id="p-login-pass">—</td></tr>
@@ -316,14 +319,7 @@ a.lb-url:hover { text-decoration: underline; }
       <tr class="sh"><td colspan="2">⑧ ご成約報告について</td></tr>
       <tr>
         <td class="k">手順</td>
-        <td class="v">
-          <ol class="steps">
-            <li><span class="sn">1</span><span>お客様情報ページを開き、<strong>案件メモ下「新規登録」</strong>から成約報告を入力</span></li>
-            <li><span class="sn">2</span><span>お客様からの<strong>入金確認後</strong>、7営業日以内に報告</span></li>
-            <li><span class="sn">3</span><span>弊社より請求書を発行いたします</span></li>
-            <li><span class="sn">4</span><span>請求書受け取りから<strong>3営業日以内</strong>に成約手数料をお振込ください</span></li>
-          </ol>
-        </td>
+        <td class="v note">①お客様情報→②案件メモ下→③新規登録から報告→④お客様からの入金確認後、成約手数料のお振込をお願い致します。</td>
       </tr>
 
     </table>
@@ -474,7 +470,7 @@ a.lb-url:hover { text-decoration: underline; }
         </div>
       </div>
       <div class="field">
-        <label>最低補償件数</label>
+        <label>最低補償</label>
         <input type="text" id="guarantee" placeholder="25件" oninput="render()">
       </div>
       <div class="field-row">
@@ -561,7 +557,7 @@ const DEFAULT_SETTINGS = {
     pro:   { fee: '15万円', commission: '3%',  guarantee: '40件',  monthly: '65〜80件', half: '65〜80件', contractPeriod: '6ヶ月契約' },
   },
   holidayText: '弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。\n配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。',
-  excludeText: '以下に該当するお客様情報はカウント対象外となります。\n該当ケースを発見された際はご報告ください。\n\n・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人（例：山田 太郎 → 実際は異なる方）',
+  excludeText: '以下に該当するお客様情報はカウント対象外となります。\n\n・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人 (ex 山田太郎)\n\n上記にあてはまるお客様情報については、お手数ですが私までご報告ください。',
   staffList: ['恩田', '宏午', '皆川', '中村', '松本', '亀井', '穴澤', '染葉'],
   loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '', loginUrl: 'https://business.gaihekiplus.com/sign_in',
 };
