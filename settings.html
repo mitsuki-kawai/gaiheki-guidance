@@ -105,6 +105,33 @@ a.header-logo:hover { opacity: 0.8; }
   pointer-events: none;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* ── ブロックエディタ（設定） ── */
+.block-editor-s { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.block-item-s { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px; }
+.block-item-head-s { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.block-badge-s { font-size: 10px; padding: 1px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+.block-badge-s.text       { background: #eeecf8; color: #3F3277; }
+.block-badge-s.heading    { background: #fff3e0; color: #c45000; }
+.block-badge-s.subheading { background: #e8f0fe; color: #1a73e8; }
+.block-badge-s.gray-bg    { background: #f0f0f0; color: #555; }
+.block-badge-s.purple-bg  { background: #e8e6f3; color: #3F3277; }
+.block-badge-s.chip       { background: #e8f5e9; color: #2e7d32; }
+.block-actions-s { margin-left: auto; display: flex; gap: 3px; flex-shrink: 0; }
+.btn-bact-s { padding: 2px 5px; font-size: 11px; border: 1px solid var(--border); border-radius: 3px; cursor: pointer; background: none; color: var(--label); }
+.btn-bact-s:hover { background: var(--bg); }
+.block-textarea-s { width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; resize: vertical; min-height: 48px; font-family: inherit; line-height: 1.6; color: var(--text); }
+.block-urlinput-s { width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; color: var(--text); margin-top: 4px; }
+.block-urllabel-s { font-size: 10px; color: var(--muted); margin-top: 4px; display: block; }
+.block-textarea-s:focus, .block-urlinput-s:focus { outline: none; border-color: var(--main); }
+.block-add-area-s { margin-top: 4px; position: relative; }
+.btn-add-block-s { width: 100%; padding: 8px; border: 1px dashed var(--border); border-radius: 4px; background: none; cursor: pointer; font-size: 12px; color: var(--label); transition: all .12s; }
+.btn-add-block-s:hover { border-color: var(--main); color: var(--main); background: #f7f6fb; }
+.block-type-menu-s { position: absolute; bottom: calc(100% + 4px); left: 0; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,.12); z-index: 50; display: none; padding: 4px; }
+.block-type-menu-s.open { display: flex; flex-wrap: wrap; gap: 4px; }
+.block-type-menu-s button { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; background: none; cursor: pointer; font-size: 11px; color: var(--label); transition: all .12s; }
+.block-type-menu-s button:hover { background: var(--bg); color: var(--main); }
+.blocks-page-title { font-size: 13px; font-weight: 700; color: var(--main); margin: 16px 0 8px; padding-bottom: 6px; border-bottom: 2px solid var(--main); }
+
 .section-select { display: none; }
 
 /* ── Responsive ── */
@@ -191,11 +218,13 @@ a.header-logo:hover { opacity: 0.8; }
     <button class="sidenav-item" onclick="showSection('staff', this)">👤 担当者設定</button>
     <button class="sidenav-item" onclick="showSection('text', this)">📝 テキスト設定</button>
     <button class="sidenav-item" onclick="showSection('url', this)">🔗 URL設定</button>
+    <button class="sidenav-item" onclick="showSection('blocks', this)">📄 P2/P3テンプレート</button>
     <select id="section-select" class="section-select" onchange="showSectionById(this.value)">
       <option value="plan">📋 プラン設定</option>
       <option value="staff">👤 担当者設定</option>
       <option value="text">📝 テキスト設定</option>
       <option value="url">🔗 URL設定</option>
+      <option value="blocks">📄 P2/P3テンプレート</option>
     </select>
   </div>
 
@@ -263,6 +292,43 @@ a.header-logo:hover { opacity: 0.8; }
       </div>
     </div>
 
+
+    <!-- ── P2/P3テンプレート設定 ── -->
+    <div class="section" id="sec-blocks">
+      <div class="section-title">P2・P3テンプレート設定</div>
+      <div class="section-desc">「写真ご提供のお願い」「現調施策」ページの内容を編集します。保存すると全ての資料作成のデフォルト表示に反映されます。</div>
+
+      <div class="blocks-page-title">P2：写真ご提供のお願い</div>
+      <div id="block-editor-sp2" class="block-editor-s"></div>
+      <div class="block-add-area-s">
+        <button class="btn-add-block-s" onclick="sBToggleMenu('p2',this)">＋ ブロックを追加</button>
+        <div class="block-type-menu-s" id="sbmenu-p2">
+          <button onclick="sBAdd('p2','text');sBCloseMenu('p2')">📝 テキスト</button>
+          <button onclick="sBAdd('p2','heading');sBCloseMenu('p2')">H 見出し</button>
+          <button onclick="sBAdd('p2','subheading');sBCloseMenu('p2')">h サブ見出し</button>
+          <button onclick="sBAdd('p2','gray-bg');sBCloseMenu('p2')">⬜ グレー背景</button>
+          <button onclick="sBAdd('p2','purple-bg');sBCloseMenu('p2')">🟣 薄紫背景</button>
+          <button onclick="sBAdd('p2','chip');sBCloseMenu('p2')">🔗 チップリンク</button>
+          <button onclick="sBAdd('p2','text-link');sBCloseMenu('p2')">🔵 テキストリンク</button>
+        </div>
+      </div>
+
+      <div class="blocks-page-title" style="margin-top:24px">P3：現調 / 成約に繋げるための施策</div>
+      <div id="block-editor-sp3" class="block-editor-s"></div>
+      <div class="block-add-area-s">
+        <button class="btn-add-block-s" onclick="sBToggleMenu('p3',this)">＋ ブロックを追加</button>
+        <div class="block-type-menu-s" id="sbmenu-p3">
+          <button onclick="sBAdd('p3','text');sBCloseMenu('p3')">📝 テキスト</button>
+          <button onclick="sBAdd('p3','heading');sBCloseMenu('p3')">H 見出し</button>
+          <button onclick="sBAdd('p3','subheading');sBCloseMenu('p3')">h サブ見出し</button>
+          <button onclick="sBAdd('p3','gray-bg');sBCloseMenu('p3')">⬜ グレー背景</button>
+          <button onclick="sBAdd('p3','purple-bg');sBCloseMenu('p3')">🟣 薄紫背景</button>
+          <button onclick="sBAdd('p3','chip');sBCloseMenu('p3')">🔗 チップリンク</button>
+          <button onclick="sBAdd('p3','text-link');sBCloseMenu('p3')">🔵 テキストリンク</button>
+        </div>
+      </div>
+    </div>
+
     <!-- ── URL設定 ── -->
     <div class="section" id="sec-url">
       <div class="section-title">URL設定</div>
@@ -294,6 +360,7 @@ const DEFAULT_SETTINGS = {
   excludeText: '・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人（例：山田 太郎）\n上記にあてはまるお客様情報については、お手数ですが私までご報告ください。',
   staffList: ['恩田雅史', '鈴木宏午', '皆川進太', '中村元彌', '松本そよ', '穴澤萌花', '亀井翼', '染葉健介', '杉本山東'],
   loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '', loginUrl: 'https://business.gaihekiplus.com/sign_in',
+  p2Blocks: [], p3Blocks: [],
 };
 
 function getSettings() {
@@ -314,6 +381,118 @@ function getSettings() {
 
 let staffList = [];
 
+
+/* ── P2/P3ブロックエディタ（設定画面用） ── */
+const SB_TYPES = {
+  text:        { label: 'テキスト',       badge: 'text'       },
+  heading:     { label: '見出し',         badge: 'heading'    },
+  subheading:  { label: 'サブ見出し',     badge: 'subheading' },
+  'gray-bg':   { label: 'グレー背景',     badge: 'gray-bg'    },
+  'purple-bg': { label: '薄紫背景',       badge: 'purple-bg'  },
+  chip:        { label: 'チップリンク',   badge: 'chip'       },
+  'text-link': { label: 'テキストリンク', badge: 'chip'       },
+};
+
+let sBlocksP2 = [];
+let sBlocksP3 = [];
+let sbIdCnt = 0;
+const sbNewId = () => 'sb' + (++sbIdCnt) + '_' + Date.now();
+
+function sBDefaultP2() {
+  const s = getSettings();
+  return [
+    { id: sbNewId(), type: 'heading',    content: '現場・会社の写真ご提供のお願い' },
+    { id: sbNewId(), type: 'text',       content: 'ご担当者様\n\n平素よりお世話になっております。\ngaiheki+サポートデスクでございます。\n\ngaiheki+のサービス導入をご決断いただきまして、誠にありがとうございます。\n\n加盟店さまの紹介ページを掲載するにあたり、\nお客様が安心してご依頼できるよう「現場や会社の雰囲気」が分かる写真を掲載させていただきます。' },
+    { id: sbNewId(), type: 'purple-bg',  content: '実際に写真の掲載をお願いしている理由' },
+    { id: sbNewId(), type: 'text',       content: '・実際に成約率やアポ率が高くなるというデータが出ている\n・施工の丁寧さや雰囲気が伝わりやすく満足度が上がる\n・結果的に利益が伸びる' },
+    { id: sbNewId(), type: 'text',       content: 'スマホ撮影の写真でも問題ありませんので、\n下記フォームより2〜5枚ほどご提供をお願いいたします。' },
+    { id: sbNewId(), type: 'chip',       content: '▼写真アップロードフォーム', url: s.photoUrl || '' },
+    { id: sbNewId(), type: 'subheading', content: '【おすすめの写真例】' },
+    { id: sbNewId(), type: 'text',       content: '・施工中の様子（職人さんの手元や後ろ姿など）\n・会社外観や社内の様子\n・スタッフ集合写真、看板、車両など' },
+    { id: sbNewId(), type: 'text',       content: 'お手数おかけしてしまいますが、\nご協力のほど、どうぞよろしくお願いいたします。' },
+    { id: sbNewId(), type: 'chip',       content: '▼加盟店様の紹介ページ', url: s.storePageUrl || '' },
+    { id: sbNewId(), type: 'subheading', content: '【管理画面へ追加で欲しい機能について】' },
+    { id: sbNewId(), type: 'text',       content: '普段、使っている機能や管理システム等が弊社管理画面にもあれば便利なのに！！\nのようなことがあればお願い致します！' },
+  ];
+}
+
+function sBDefaultP3() {
+  return [
+    { id: sbNewId(), type: 'heading',    content: '＜現調 / 成約に繋げるための施策＞' },
+    { id: sbNewId(), type: 'purple-bg',  content: '【ローンについて】' },
+    { id: sbNewId(), type: 'text',       content: 'エンドユーザー様向けローンを導入することとなりました。\n外壁・屋根工事は高額になりやすく、「金額で迷われる」「今は難しいと言われる」といった理由で失注してしまうケースも少なくありません。\n\nローンが利用可能になることで、\n・月々払いでのご提案が可能\n・予算で迷われているお客様の後押し\n・ワンランク上の工事提案がしやすくなる\n→ 結果として成約率向上が期待できます。' },
+    { id: sbNewId(), type: 'text',       content: '【加盟店様の費用負担・手数料負担はございません。】\n※お客様にも所定の審査がございます。\n\n導入をご希望の加盟店様は、下記資料をお目通しいただけますと幸いです。' },
+    { id: sbNewId(), type: 'subheading', content: '【媒体資料】' },
+    { id: sbNewId(), type: 'chip',       content: '📄 【madoguchi様】業務協定契約のご提案_Ver2.0_20251201 (1) (1).pdf', url: 'https://drive.google.com/file/d/1eYcxVHQ9Bdwpe0sgHwFJ5QHvQeRa-9oX/view?usp=sharing' },
+    { id: sbNewId(), type: 'subheading', content: '【お申込書】' },
+    { id: sbNewId(), type: 'chip',       content: '📄 【アプラス】加盟店契約希望申出書.pdf', url: 'https://drive.google.com/file/d/1YWvqYl0y2YJdtkg9s-9Umu8nKb_xF_c8/view?usp=sharing' },
+    { id: sbNewId(), type: 'purple-bg',  content: '【下記、弊社からお支払いをさせて頂きます！】' },
+    { id: sbNewId(), type: 'text',       content: 'アマギフ500円　現地調査完了＆お見積書提示' },
+    { id: sbNewId(), type: 'chip',       content: 'アンケートフォーム（現調完了）', url: 'https://docs.google.com/forms/d/e/1FAIpQLSfRrZcyFszZbp4Qrb_HJ2NTVMfgzRu-NoAT2buCPvu8tWBvmQ/viewform?usp=dialog' },
+    { id: sbNewId(), type: 'text',       content: '作業金額の1%のアマギフ　作業完了後' },
+    { id: sbNewId(), type: 'chip',       content: 'アンケートフォーム（作業完了）', url: 'https://docs.google.com/forms/d/e/1FAIpQLSc6mL6HfKFGRqIBVfyBSCxbvmeMIZL9Jn6HeThZyb0G_nHV4w/viewform?usp=di' },
+    { id: sbNewId(), type: 'subheading', content: '＜使い方＞' },
+    { id: sbNewId(), type: 'text',       content: '現地調査完了でAmazonギフト500円分、作業完了でさらに金額の1％分のAmazonギフトをプレゼントさせていただきます。\nこれを営業トークのフックとして使っていただくことが可能なので、まずは現地見積もりにつなげるために「Amazonギフト券」をフックにして、現地見積もりのアポイントを打診してみてください。\nなお、Amazonギフト自体は弊社から直接お客様にお送りする形となります。' },
+  ];
+}
+
+function sBEscHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function sBRenderEditor(pageId) {
+  const blocks = pageId === 'p2' ? sBlocksP2 : sBlocksP3;
+  const container = document.getElementById('block-editor-s' + pageId);
+  if (!container) return;
+  container.innerHTML = blocks.map((b, i) => {
+    const info = SB_TYPES[b.type] || { label: b.type, badge: 'text' };
+    const ct = sBEscHtml(b.content || '');
+    const hasUrl = b.type === 'chip' || b.type === 'text-link';
+    const urlField = hasUrl
+      ? `<label class="block-urllabel-s">URL</label><input class="block-urlinput-s" type="text" value="${sBEscHtml(b.url||'')}" placeholder="https://..." oninput="sBUpdate('${pageId}',${i},'url',this.value)">`
+      : '';
+    const rows = (b.type === 'heading' || b.type === 'subheading') ? 1 : 3;
+    return `<div class="block-item-s">
+  <div class="block-item-head-s">
+    <span class="block-badge-s ${info.badge}">${info.label}</span>
+    <div class="block-actions-s">
+      <button class="btn-bact-s" onclick="sBMove('${pageId}',${i},-1)">↑</button>
+      <button class="btn-bact-s" onclick="sBMove('${pageId}',${i},1)">↓</button>
+      <button class="btn-bact-s" onclick="sBRemove('${pageId}',${i})">🗑️</button>
+    </div>
+  </div>
+  <textarea class="block-textarea-s" rows="${rows}" oninput="sBUpdate('${pageId}',${i},'content',this.value)">${ct}</textarea>
+  ${urlField}
+</div>`;
+  }).join('');
+}
+
+function sBAdd(pageId, type) {
+  const blocks = pageId === 'p2' ? sBlocksP2 : sBlocksP3;
+  blocks.push({ id: sbNewId(), type, content: '', url: '' });
+  sBRenderEditor(pageId);
+}
+function sBRemove(pageId, idx) {
+  const blocks = pageId === 'p2' ? sBlocksP2 : sBlocksP3;
+  blocks.splice(idx, 1); sBRenderEditor(pageId);
+}
+function sBMove(pageId, idx, dir) {
+  const blocks = pageId === 'p2' ? sBlocksP2 : sBlocksP3;
+  const to = idx + dir;
+  if (to < 0 || to >= blocks.length) return;
+  [blocks[idx], blocks[to]] = [blocks[to], blocks[idx]];
+  sBRenderEditor(pageId);
+}
+function sBUpdate(pageId, idx, field, value) {
+  const blocks = pageId === 'p2' ? sBlocksP2 : sBlocksP3;
+  if (blocks[idx]) blocks[idx][field] = value;
+}
+function sBToggleMenu(pageId, btn) {
+  document.getElementById('sbmenu-' + pageId)?.classList.toggle('open');
+}
+function sBCloseMenu(pageId) {
+  document.getElementById('sbmenu-' + pageId)?.classList.remove('open');
+}
 function showSection(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.sidenav-item').forEach(b => b.classList.remove('active'));
@@ -389,6 +568,8 @@ function saveSettings() {
     photoUrl:      document.getElementById('photo-url').value.trim(),
     storePageUrl:  document.getElementById('store-page-url').value.trim(),
     loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
+    p2Blocks:      JSON.parse(JSON.stringify(sBlocksP2)),
+    p3Blocks:      JSON.parse(JSON.stringify(sBlocksP3)),
   };
 
   localStorage.setItem('gaiheki_settings', JSON.stringify(settings));
@@ -427,6 +608,10 @@ function escHtml(s) {
   document.getElementById('photo-url').value      = s.photoUrl;
   document.getElementById('store-page-url').value = s.storePageUrl;
   document.getElementById('login-url').value      = s.loginUrl;
+  sBlocksP2 = (s.p2Blocks && s.p2Blocks.length) ? s.p2Blocks : sBDefaultP2();
+  sBlocksP3 = (s.p3Blocks && s.p3Blocks.length) ? s.p3Blocks : sBDefaultP3();
+  sBRenderEditor('p2');
+  sBRenderEditor('p3');
 })();
 </script>
 </body>

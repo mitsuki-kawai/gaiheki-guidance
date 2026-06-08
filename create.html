@@ -173,9 +173,6 @@ a.lb-url:hover { text-decoration: underline; }
 .btn-pdf { padding: 10px 14px; background: var(--accent); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; white-space: nowrap; }
 .btn-pdf:hover { opacity: .85; }
 /* ── ブロックエディタ ── */
-.block-editor { display: flex; flex-direction: column; gap: 6px; padding-bottom: 8px; }
-.block-item { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px; }
-.block-item-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
 .block-badge { font-size: 10px; padding: 1px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
 .block-badge.text     { background: #eeecf8; color: var(--main); }
 .block-badge.heading  { background: #fff3e0; color: #c45000; }
@@ -184,20 +181,6 @@ a.lb-url:hover { text-decoration: underline; }
 .block-badge.purple-bg { background: #e8e6f3; color: var(--main); }
 .block-badge.chip     { background: #e8f5e9; color: #2e7d32; }
 .block-badge.list     { background: #fff8e1; color: #c77700; }
-.block-actions { margin-left: auto; display: flex; gap: 3px; flex-shrink: 0; }
-.btn-bact { padding: 2px 5px; font-size: 11px; border: 1px solid var(--border); border-radius: 3px; cursor: pointer; background: none; color: var(--label); }
-.btn-bact:hover { background: var(--bg); }
-.block-textarea { width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 11.5px; resize: vertical; min-height: 52px; font-family: inherit; line-height: 1.6; color: var(--text); }
-.block-urlinput { width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 11.5px; font-family: inherit; color: var(--text); margin-top: 4px; }
-.block-urllabel { font-size: 10px; color: var(--muted); margin-top: 4px; display: block; }
-.block-textarea:focus, .block-urlinput:focus { outline: none; border-color: var(--main); }
-.block-add-area { margin-top: 4px; position: relative; }
-.btn-add-block { width: 100%; padding: 8px; border: 1px dashed var(--border); border-radius: 4px; background: none; cursor: pointer; font-size: 12px; color: var(--label); transition: all .12s; }
-.btn-add-block:hover { border-color: var(--main); color: var(--main); background: #f7f6fb; }
-.block-type-menu { position: absolute; bottom: calc(100% + 4px); left: 0; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,.12); z-index: 50; display: none; padding: 4px; }
-.block-type-menu.open { display: flex; flex-wrap: wrap; gap: 4px; }
-.block-type-menu button { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; background: none; cursor: pointer; font-size: 11px; color: var(--label); transition: all .12s; }
-.block-type-menu button:hover { background: var(--bg); color: var(--main); }
 
 /* ── 共有・閲覧モード ── */
 
@@ -528,11 +511,6 @@ a.lb-url:hover { text-decoration: underline; }
     <div class="fh-title">フォーム入力</div>
     <div class="fh-sub">入力内容がリアルタイムで資料に反映されます</div>
   </div>
-  <div class="page-tabs">
-    <button class="ptab active" onclick="switchTab('fp1')">確認事項</button>
-    <button class="ptab" onclick="switchTab('fp2')">P2</button>
-    <button class="ptab" onclick="switchTab('fp3')">P3</button>
-  </div>
   <div class="form-scroll">
 
     <div id="fp1">
@@ -653,34 +631,6 @@ a.lb-url:hover { text-decoration: underline; }
 
 
 
-    <div id="fp2" style="display:none">
-      <div id="block-editor-p2" class="block-editor"></div>
-      <div class="block-add-area">
-        <button class="btn-add-block" onclick="toggleBlockMenu('p2',this)">＋ ブロックを追加</button>
-        <div class="block-type-menu" id="bmenu-p2">
-          <button onclick="addBlock('p2','text');closeMenu('p2')">📝 テキスト</button>
-          <button onclick="addBlock('p2','heading');closeMenu('p2')">H 見出し</button>
-          <button onclick="addBlock('p2','subheading');closeMenu('p2')">h サブ見出し</button>
-          <button onclick="addBlock('p2','gray-bg');closeMenu('p2')">⬜ グレー背景</button>
-          <button onclick="addBlock('p2','purple-bg');closeMenu('p2')">🟣 薄紫背景</button>
-          <button onclick="addBlock('p2','chip');closeMenu('p2')">🔗 チップリンク</button>
-          <button onclick="addBlock('p2','list');closeMenu('p2')">• 箇条書き</button>
-        </div>
-      </div>
-    </div>
-    <div id="fp3" style="display:none">
-      <div id="block-editor-p3" class="block-editor"></div>
-      <div class="block-add-area">
-        <button class="btn-add-block" onclick="toggleBlockMenu('p3',this)">＋ ブロックを追加</button>
-        <div class="block-type-menu" id="bmenu-p3">
-          <button onclick="addBlock('p3','text');closeMenu('p3')">📝 テキスト</button>
-          <button onclick="addBlock('p3','heading');closeMenu('p3')">H 見出し</button>
-          <button onclick="addBlock('p3','subheading');closeMenu('p3')">h サブ見出し</button>
-          <button onclick="addBlock('p3','gray-bg');closeMenu('p3')">⬜ グレー背景</button>
-          <button onclick="addBlock('p3','purple-bg');closeMenu('p3')">🟣 薄紫背景</button>
-          <button onclick="addBlock('p3','chip');closeMenu('p3')">🔗 チップリンク</button>
-          <button onclick="addBlock('p3','list');closeMenu('p3')">• 箇条書き</button>
-        </div>
       </div>
     </div>
   </div><!-- /form-scroll -->
@@ -800,7 +750,7 @@ const BLOCK_TYPES = {
   'gray-bg': { label: 'グレー背景',   badge: 'gray-bg'   },
   'purple-bg':{ label: '薄紫背景',    badge: 'purple-bg' },
   chip:      { label: 'チップリンク', badge: 'chip'      },
-  list:      { label: '箇条書き',     badge: 'list'      },
+  'text-link': { label: 'テキストリンク', badge: 'chip'  },
 };
 
 let p2Blocks = [];
@@ -872,8 +822,12 @@ function renderBlockHTML(b) {
       }
       return `<div style="margin-bottom:8px;color:var(--muted)">${ct}</div>`;
     }
-    case 'list':
-      return `<div style="margin-bottom:4px">・${ct}</div>`;
+    case 'text-link': {
+      const url2 = b.url || '';
+      const valid2 = url2.startsWith('http');
+      if (valid2) return `<div style="margin-bottom:8px"><a href="${url2}" target="_blank" style="color:#1a73e8;text-decoration:underline;font-size:11.5px">${ct}</a></div>`;
+      return `<div style="margin-bottom:8px;color:var(--muted)">${ct}</div>`;
+    }
     default:
       return `<div style="margin-bottom:12px">${ct}</div>`;
   }
@@ -885,13 +839,7 @@ function renderBlocksPreview(pageId) {
   if (el) el.innerHTML = blocks.map(renderBlockHTML).join('');
 }
 
-/* ── エディタUI ── */
-function renderBlockEditor(pageId) {
-  const blocks = pageId === 'p2' ? p2Blocks : p3Blocks;
-  const container = document.getElementById('block-editor-' + pageId);
-  if (!container) return;
-  container.innerHTML = blocks.map((b, i) => {
-    const info = BLOCK_TYPES[b.type] || { label: b.type, badge: 'text' };
+/* ── エディタUI ── */;
     const ct = (b.content || '').replace(/"/g, '&quot;');
     const urlInput = b.type === 'chip'
       ? `<label class="block-urllabel">URL</label><input class="block-urlinput" type="text" value="${(b.url||'').replace(/"/g,'&quot;')}" placeholder="https://..." oninput="updateBlock('${pageId}',${i},'url',this.value)">`
@@ -912,47 +860,14 @@ function renderBlockEditor(pageId) {
   }).join('');
 }
 
-function refreshPage(pageId) {
-  renderBlocksPreview(pageId);
-  renderBlockEditor(pageId);
-}
 
-/* ── ブロック操作 ── */
-function addBlock(pageId, type) {
-  const blocks = pageId === 'p2' ? p2Blocks : p3Blocks;
-  blocks.push({ id: newBlockId(), type, content: '', url: '' });
+/* ── ブロック操作 ── */);
   refreshPage(pageId);
 }
-function removeBlock(pageId, idx) {
-  const blocks = pageId === 'p2' ? p2Blocks : p3Blocks;
-  if (blocks.length > 0) { blocks.splice(idx, 1); refreshPage(pageId); }
 }
-function moveBlock(pageId, idx, dir) {
-  const blocks = pageId === 'p2' ? p2Blocks : p3Blocks;
-  const to = idx + dir;
-  if (to < 0 || to >= blocks.length) return;
-  [blocks[idx], blocks[to]] = [blocks[to], blocks[idx]];
-  refreshPage(pageId);
-}
-function updateBlock(pageId, idx, field, value) {
-  const blocks = pageId === 'p2' ? p2Blocks : p3Blocks;
-  if (blocks[idx]) { blocks[idx][field] = value; renderBlocksPreview(pageId); }
-}
-function toggleBlockMenu(pageId, btn) {
-  const menu = document.getElementById('bmenu-' + pageId);
-  if (menu) menu.classList.toggle('open');
-}
-function closeMenu(pageId) {
-  const menu = document.getElementById('bmenu-' + pageId);
-  if (menu) menu.classList.remove('open');
 }
 
-/* ── フォームタブ切替 ── */
-function switchTab(id) {
-  ['fp1','fp2','fp3'].forEach(p => {
-    const el = document.getElementById(p);
-    if (el) el.style.display = p === id ? '' : 'none';
-  });
+/* ── フォームタブ切替 ── */);
   document.querySelectorAll('.ptab').forEach((btn, i) => {
     btn.classList.toggle('active', ['fp1','fp2','fp3'][i] === id);
   });
@@ -960,12 +875,12 @@ function switchTab(id) {
 
 /* ── ブロックデータ初期化 ── */
 function initBlocks(savedP2, savedP3) {
-  p2Blocks = savedP2 && savedP2.length ? savedP2 : DEFAULT_P2_BLOCKS();
-  p3Blocks = savedP3 && savedP3.length ? savedP3 : DEFAULT_P3_BLOCKS();
+  const s = getSettings();
+  // 設定に保存済みブロックがあればそれを使用
+  p2Blocks = (s.p2Blocks && s.p2Blocks.length) ? s.p2Blocks : DEFAULT_P2_BLOCKS();
+  p3Blocks = (s.p3Blocks && s.p3Blocks.length) ? s.p3Blocks : DEFAULT_P3_BLOCKS();
   renderBlocksPreview('p2');
   renderBlocksPreview('p3');
-  renderBlockEditor('p2');
-  renderBlockEditor('p3');
 }
 
 function scrollToPage(id) {
@@ -1097,8 +1012,6 @@ function collectFormData() {
   data.guidance_status = statusEl ? statusEl.value : '未実施';
   fields.forEach(f => { const el = document.getElementById(f); if(el) data[f] = el.value; });
   data.areas = [...areas];
-  data.p2Blocks = JSON.parse(JSON.stringify(p2Blocks));
-  data.p3Blocks = JSON.parse(JSON.stringify(p3Blocks));
   return data;
 }
 
@@ -1131,7 +1044,7 @@ function saveCase() {
     document.getElementById('issue_date').value = new Date().toISOString().split('T')[0];
     updatePlanDefaults();
     render();
-    initBlocks(null, null);
+    initBlocks();
     scalePreview();
     return;
   }
@@ -1150,7 +1063,7 @@ function saveCase() {
   }
   if (Array.isArray(d.areas)) { areas.push(...d.areas); renderAreaTags(); }
   render();
-  initBlocks(d.p2Blocks || null, d.p3Blocks || null);
+  initBlocks();
   scalePreview();
 })();
 </script>
