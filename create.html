@@ -172,6 +172,33 @@ a.lb-url:hover { text-decoration: underline; }
 .btn-save:hover { opacity: .85; }
 .btn-pdf { padding: 10px 14px; background: var(--accent); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; white-space: nowrap; }
 .btn-pdf:hover { opacity: .85; }
+/* ── ブロックエディタ ── */
+.block-editor { display: flex; flex-direction: column; gap: 6px; padding-bottom: 8px; }
+.block-item { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px; }
+.block-item-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.block-badge { font-size: 10px; padding: 1px 7px; border-radius: 10px; font-weight: 600; white-space: nowrap; }
+.block-badge.text     { background: #eeecf8; color: var(--main); }
+.block-badge.heading  { background: #fff3e0; color: #c45000; }
+.block-badge.subheading { background: #e8f0fe; color: #1a73e8; }
+.block-badge.gray-bg  { background: #f0f0f0; color: #555; }
+.block-badge.purple-bg { background: #e8e6f3; color: var(--main); }
+.block-badge.chip     { background: #e8f5e9; color: #2e7d32; }
+.block-badge.list     { background: #fff8e1; color: #c77700; }
+.block-actions { margin-left: auto; display: flex; gap: 3px; flex-shrink: 0; }
+.btn-bact { padding: 2px 5px; font-size: 11px; border: 1px solid var(--border); border-radius: 3px; cursor: pointer; background: none; color: var(--label); }
+.btn-bact:hover { background: var(--bg); }
+.block-textarea { width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 11.5px; resize: vertical; min-height: 52px; font-family: inherit; line-height: 1.6; color: var(--text); }
+.block-urlinput { width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 11.5px; font-family: inherit; color: var(--text); margin-top: 4px; }
+.block-urllabel { font-size: 10px; color: var(--muted); margin-top: 4px; display: block; }
+.block-textarea:focus, .block-urlinput:focus { outline: none; border-color: var(--main); }
+.block-add-area { margin-top: 4px; position: relative; }
+.btn-add-block { width: 100%; padding: 8px; border: 1px dashed var(--border); border-radius: 4px; background: none; cursor: pointer; font-size: 12px; color: var(--label); transition: all .12s; }
+.btn-add-block:hover { border-color: var(--main); color: var(--main); background: #f7f6fb; }
+.block-type-menu { position: absolute; bottom: calc(100% + 4px); left: 0; right: 0; background: var(--white); border: 1px solid var(--border); border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,.12); z-index: 50; display: none; padding: 4px; }
+.block-type-menu.open { display: flex; flex-wrap: wrap; gap: 4px; }
+.block-type-menu button { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; background: none; cursor: pointer; font-size: 11px; color: var(--label); transition: all .12s; }
+.block-type-menu button:hover { background: var(--bg); color: var(--main); }
+
 /* ── 共有・閲覧モード ── */
 
 
@@ -477,67 +504,7 @@ a.lb-url:hover { text-decoration: underline; }
       <div style="font-size:10px;opacity:.85" id="p-date2"></div>
     </div>
   </div>
-  <div class="page-content"><div style="max-width:760px;margin:0;font-size:11.5px;color:var(--label);line-height:1.9;padding:0 8px">
-
-    <div style="font-size:20px;font-weight:700;color:var(--text);margin-top:40px;margin-bottom:18px">現場・会社の写真ご提供のお願い</div>
-
-    <div style="line-height:1.4">
-      <div style="margin-bottom:4px">ご担当者様</div>
-      <div style="margin-bottom:12px">
-        平素よりお世話になっております。<br>
-        gaiheki+サポートデスクでございます。
-      </div>
-      <div style="margin-bottom:12px">
-        gaiheki+のサービス導入をご決断いただきまして、誠にありがとうございます。
-      </div>
-      <div style="margin-bottom:12px">
-        加盟店さまの紹介ページを掲載するにあたり、<br>
-        お客様が安心してご依頼できるよう「現場や会社の雰囲気」が分かる写真を掲載させていただきます。
-      </div>
-    </div>
-
-    <div style="margin-top:32px;margin-bottom:12px">
-      <span style="display:inline-block;background:#e8e6f3;color:var(--main);font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:4px">実際に写真の掲載をお願いしている理由</span><br>
-      ・実際に成約率やアポ率が高くなるというデータが出ている<br>
-      ・施工の丁寧さや雰囲気が伝わりやすく満足度が上がる<br>
-      ・結果的に利益が伸びる
-    </div>
-
-    <div style="margin-bottom:12px">
-      スマホ撮影の写真でも問題ありませんので、<br>
-      下記フォームより2〜5枚ほどご提供をお願いいたします。
-    </div>
-
-    <div style="margin-bottom:24px">
-      ▼写真アップロードフォーム<br>
-      <a class="url-val" id="p-photo-url" href="#" target="_blank">（URL未設定）</a>
-    </div>
-
-    <div style="margin-bottom:12px">
-      <strong>【おすすめの写真例】</strong><br>
-      ・施工中の様子（職人さんの手元や後ろ姿など）<br>
-      ・会社外観や社内の様子<br>
-      ・スタッフ集合写真、看板、車両など<br>
-      <span style="color:var(--muted)">※お送りいただいた素材は掲載前に確認のうえ、内容に問題のない範囲で使用いたします。</span>
-    </div>
-
-    <div style="margin-bottom:12px">
-      お手数おかけしてしまいますが、<br>
-      ご協力のほど、どうぞよろしくお願いいたします。
-    </div>
-
-    <div style="margin-bottom:48px">
-      ▼加盟店様の紹介ページ<br>
-      <a class="url-val" id="p-store-url" href="#" target="_blank">（URL未設定）</a>
-    </div>
-
-    <div style="margin-bottom:12px">
-      <strong>【管理画面へ追加で欲しい機能について】</strong><br>
-      普段、使っている機能や管理システム等が弊社管理画面にもあれば便利なのに！！<br>
-      のようなことがあればお願い致します！
-    </div>
-
-  </div></div>
+  <div class="page-content"><div id="p2-blocks-preview" style="max-width:760px;margin:0;font-size:11.5px;color:var(--label);line-height:1.9;padding:0 8px"></div></div>
 </div><!-- /p2 -->
 <!-- ━━━ PAGE 3 ━━━ -->
 <div class="a4-page" id="p3">
@@ -548,65 +515,7 @@ a.lb-url:hover { text-decoration: underline; }
       <div style="font-size:10px;opacity:.85" id="p-date3"></div>
     </div>
   </div>
-  <div class="page-content"><div style="max-width:760px;margin:0;font-size:11.5px;color:var(--label);line-height:1.9;padding:0 8px">
-
-    <div style="font-size:20px;font-weight:700;color:var(--text);margin-top:40px;margin-bottom:8px">＜現調 / 成約に繋げるための施策＞</div>
-
-    <div style="margin-top:8px;margin-bottom:12px">
-      <span style="display:inline-block;background:#e8e6f3;color:var(--main);font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:4px">【ローンについて】</span><br>
-      <strong>エンドユーザー様向けローン</strong>を導入することとなりました。<br>
-      外壁・屋根工事は高額になりやすく、<br>
-      「金額で迷われる」「今は難しいと言われる」<br>
-      といった理由で失注してしまうケースも少なくありません。
-    </div>
-
-    <div style="margin-bottom:12px">
-      ローンが利用可能になることで、<br>
-      ・月々払いでのご提案が可能<br>
-      ・予算で迷われているお客様の後押し<br>
-      ・ワンランク上の工事提案がしやすくなる<br>
-      → 結果として成約率向上が期待できます。
-    </div>
-
-    <div style="margin-bottom:12px">
-      <strong>【加盟店様の費用負担・手数料負担はございません。】</strong><br>
-      <span style="color:var(--muted)">※お客様にも所定の審査がございます。</span>
-    </div>
-
-    <div style="margin-bottom:4px">
-      導入をご希望の加盟店様は、<br>
-      下記資料をお目通しいただけますと幸いです。
-    </div>
-
-    <div style="margin-bottom:4px">
-      <div style="font-weight:600;margin-bottom:2px">【媒体資料】</div>
-      <a href="https://drive.google.com/file/d/1eYcxVHQ9Bdwpe0sgHwFJ5QHvQeRa-9oX/view?usp=sharing" target="_blank" style="display:inline-flex;align-items:center;gap:5px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:1px 6px;line-height:1.4;text-decoration:none;color:var(--text);font-size:13px;transition:background .12s" onmouseover="this.style.background='#e8eaed'" onmouseout="this.style.background='#f1f3f4'">📄 【madoguchi様】業務協定契約のご提案_Ver2.0_20251201 (1) (1).pdf</a>
-    </div>
-
-    <div style="margin-bottom:24px">
-      <div style="font-weight:600;margin-bottom:2px">【お申込書】</div>
-      <a href="https://drive.google.com/file/d/1YWvqYl0y2YJdtkg9s-9Umu8nKb_xF_c8/view?usp=sharing" target="_blank" style="display:inline-flex;align-items:center;gap:5px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:1px 6px;line-height:1.4;text-decoration:none;color:var(--text);font-size:13px;transition:background .12s" onmouseover="this.style.background='#e8eaed'" onmouseout="this.style.background='#f1f3f4'">📄 【アプラス】加盟店契約希望申出書.pdf</a>
-    </div>
-
-    <div style="margin-top:24px;margin-bottom:12px">
-      <span style="display:inline-block;background:#e8e6f3;color:var(--main);font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:8px">【下記、弊社からお支払いをさせて頂きます！】</span><br>
-      <strong>アマギフ500円　現地調査完了＆お見積書提示</strong><br>
-      <a class="url-val" href="https://docs.google.com/forms/d/e/1FAIpQLSfRrZcyFszZbp4Qrb_HJ2NTVMfgzRu-NoAT2buCPvu8tWBvmQ/viewform?usp=dialog" target="_blank">https://docs.google.com/forms/d/e/1FAIpQLSfRrZcyFszZbp4Qrb_HJ2NTVMfgzRu-NoAT2buCPvu8tWBvmQ/viewform?usp=dialog</a>
-    </div>
-
-    <div style="margin-bottom:24px">
-      <strong>作業金額の1%のアマギフ　作業完了後</strong><br>
-      <a class="url-val" href="https://docs.google.com/forms/d/e/1FAIpQLSc6mL6HfKFGRqIBVfyBSCxbvmeMIZL9Jn6HeThZyb0G_nHV4w/viewform?usp=di" target="_blank">https://docs.google.com/forms/d/e/1FAIpQLSc6mL6HfKFGRqIBVfyBSCxbvmeMIZL9Jn6HeThZyb0G_nHV4w/viewform?usp=di</a>
-    </div>
-
-    <div style="margin-bottom:12px">
-      <strong>＜使い方＞</strong><br>
-      現地調査完了でAmazonギフト500円分、作業完了でさらに金額の1％分のAmazonギフトをプレゼントさせていただきます。<br>
-      これを営業トークのフックとして使っていただくことが可能なので、まずは現地見積もりにつなげるために「Amazonギフト券」をフックにして、現地見積もりのアポイントを打診してみてください。<br>
-      なお、Amazonギフト自体は弊社から直接お客様にお送りする形となります。
-    </div>
-
-  </div></div>
+  <div class="page-content"><div id="p3-blocks-preview" style="max-width:760px;margin:0;font-size:11.5px;color:var(--label);line-height:1.9;padding:0 8px"></div></div>
 </div><!-- /p3 -->
 
 
@@ -618,6 +527,11 @@ a.lb-url:hover { text-decoration: underline; }
   <div class="form-header">
     <div class="fh-title">フォーム入力</div>
     <div class="fh-sub">入力内容がリアルタイムで資料に反映されます</div>
+  </div>
+  <div class="page-tabs">
+    <button class="ptab active" onclick="switchTab('fp1')">確認事項</button>
+    <button class="ptab" onclick="switchTab('fp2')">P2</button>
+    <button class="ptab" onclick="switchTab('fp3')">P3</button>
   </div>
   <div class="form-scroll">
 
@@ -739,6 +653,36 @@ a.lb-url:hover { text-decoration: underline; }
 
 
 
+    <div id="fp2" style="display:none">
+      <div id="block-editor-p2" class="block-editor"></div>
+      <div class="block-add-area">
+        <button class="btn-add-block" onclick="toggleBlockMenu('p2',this)">＋ ブロックを追加</button>
+        <div class="block-type-menu" id="bmenu-p2">
+          <button onclick="addBlock('p2','text');closeMenu('p2')">📝 テキスト</button>
+          <button onclick="addBlock('p2','heading');closeMenu('p2')">H 見出し</button>
+          <button onclick="addBlock('p2','subheading');closeMenu('p2')">h サブ見出し</button>
+          <button onclick="addBlock('p2','gray-bg');closeMenu('p2')">⬜ グレー背景</button>
+          <button onclick="addBlock('p2','purple-bg');closeMenu('p2')">🟣 薄紫背景</button>
+          <button onclick="addBlock('p2','chip');closeMenu('p2')">🔗 チップリンク</button>
+          <button onclick="addBlock('p2','list');closeMenu('p2')">• 箇条書き</button>
+        </div>
+      </div>
+    </div>
+    <div id="fp3" style="display:none">
+      <div id="block-editor-p3" class="block-editor"></div>
+      <div class="block-add-area">
+        <button class="btn-add-block" onclick="toggleBlockMenu('p3',this)">＋ ブロックを追加</button>
+        <div class="block-type-menu" id="bmenu-p3">
+          <button onclick="addBlock('p3','text');closeMenu('p3')">📝 テキスト</button>
+          <button onclick="addBlock('p3','heading');closeMenu('p3')">H 見出し</button>
+          <button onclick="addBlock('p3','subheading');closeMenu('p3')">h サブ見出し</button>
+          <button onclick="addBlock('p3','gray-bg');closeMenu('p3')">⬜ グレー背景</button>
+          <button onclick="addBlock('p3','purple-bg');closeMenu('p3')">🟣 薄紫背景</button>
+          <button onclick="addBlock('p3','chip');closeMenu('p3')">🔗 チップリンク</button>
+          <button onclick="addBlock('p3','list');closeMenu('p3')">• 箇条書き</button>
+        </div>
+      </div>
+    </div>
   </div><!-- /form-scroll -->
   <div class="form-actions">
     <button class="btn-pdf" onclick="printDoc()">🖨️ PDF</button>
@@ -847,6 +791,183 @@ function scalePreview() {
 }
 window.addEventListener('resize', scalePreview);
 
+
+/* ── ブロックエディタ ── */
+const BLOCK_TYPES = {
+  text:      { label: 'テキスト',     badge: 'text'      },
+  heading:   { label: '見出し',       badge: 'heading'   },
+  subheading:{ label: 'サブ見出し',   badge: 'subheading'},
+  'gray-bg': { label: 'グレー背景',   badge: 'gray-bg'   },
+  'purple-bg':{ label: '薄紫背景',    badge: 'purple-bg' },
+  chip:      { label: 'チップリンク', badge: 'chip'      },
+  list:      { label: '箇条書き',     badge: 'list'      },
+};
+
+let p2Blocks = [];
+let p3Blocks = [];
+let blockIdCounter = 0;
+const newBlockId = () => 'b' + (++blockIdCounter) + '_' + Date.now();
+
+const DEFAULT_P2_BLOCKS = () => {
+  const s = getSettings();
+  return [
+    { id: newBlockId(), type: 'heading',    content: '現場・会社の写真ご提供のお願い' },
+    { id: newBlockId(), type: 'text',       content: 'ご担当者様\n\n平素よりお世話になっております。\ngaiheki+サポートデスクでございます。\n\ngaiheki+のサービス導入をご決断いただきまして、誠にありがとうございます。\n\n加盟店さまの紹介ページを掲載するにあたり、\nお客様が安心してご依頼できるよう「現場や会社の雰囲気」が分かる写真を掲載させていただきます。' },
+    { id: newBlockId(), type: 'purple-bg',  content: '実際に写真の掲載をお願いしている理由' },
+    { id: newBlockId(), type: 'text',       content: '・実際に成約率やアポ率が高くなるというデータが出ている\n・施工の丁寧さや雰囲気が伝わりやすく満足度が上がる\n・結果的に利益が伸びる' },
+    { id: newBlockId(), type: 'text',       content: 'スマホ撮影の写真でも問題ありませんので、\n下記フォームより2〜5枚ほどご提供をお願いいたします。' },
+    { id: newBlockId(), type: 'chip',       content: '▼写真アップロードフォーム', url: s.photoUrl || '' },
+    { id: newBlockId(), type: 'subheading', content: '【おすすめの写真例】' },
+    { id: newBlockId(), type: 'list',       content: '施工中の様子（職人さんの手元や後ろ姿など）' },
+    { id: newBlockId(), type: 'list',       content: '会社外観や社内の様子' },
+    { id: newBlockId(), type: 'list',       content: 'スタッフ集合写真、看板、車両など' },
+    { id: newBlockId(), type: 'text',       content: 'お手数おかけしてしまいますが、\nご協力のほど、どうぞよろしくお願いいたします。' },
+    { id: newBlockId(), type: 'chip',       content: '▼加盟店様の紹介ページ', url: s.storePageUrl || '' },
+    { id: newBlockId(), type: 'subheading', content: '【管理画面へ追加で欲しい機能について】' },
+    { id: newBlockId(), type: 'text',       content: '普段、使っている機能や管理システム等が弊社管理画面にもあれば便利なのに！！\nのようなことがあればお願い致します！' },
+  ];
+};
+
+const DEFAULT_P3_BLOCKS = () => {
+  const s = getSettings();
+  return [
+    { id: newBlockId(), type: 'heading',    content: '＜現調 / 成約に繋げるための施策＞' },
+    { id: newBlockId(), type: 'purple-bg',  content: '【ローンについて】' },
+    { id: newBlockId(), type: 'text',       content: 'エンドユーザー様向けローンを導入することとなりました。\n外壁・屋根工事は高額になりやすく、\n「金額で迷われる」「今は難しいと言われる」\nといった理由で失注してしまうケースも少なくありません。\n\nローンが利用可能になることで、\n・月々払いでのご提案が可能\n・予算で迷われているお客様の後押し\n・ワンランク上の工事提案がしやすくなる\n→ 結果として成約率向上が期待できます。' },
+    { id: newBlockId(), type: 'text',       content: '【加盟店様の費用負担・手数料負担はございません。】\n※お客様にも所定の審査がございます。\n\n導入をご希望の加盟店様は、\n下記資料をお目通しいただけますと幸いです。' },
+    { id: newBlockId(), type: 'subheading', content: '【媒体資料】' },
+    { id: newBlockId(), type: 'chip',       content: '📄 【madoguchi様】業務協定契約のご提案_Ver2.0_20251201 (1) (1).pdf', url: 'https://drive.google.com/file/d/1eYcxVHQ9Bdwpe0sgHwFJ5QHvQeRa-9oX/view?usp=sharing' },
+    { id: newBlockId(), type: 'subheading', content: '【お申込書】' },
+    { id: newBlockId(), type: 'chip',       content: '📄 【アプラス】加盟店契約希望申出書.pdf', url: 'https://drive.google.com/file/d/1YWvqYl0y2YJdtkg9s-9Umu8nKb_xF_c8/view?usp=sharing' },
+    { id: newBlockId(), type: 'purple-bg',  content: '【下記、弊社からお支払いをさせて頂きます！】' },
+    { id: newBlockId(), type: 'text',       content: 'アマギフ500円　現地調査完了＆お見積書提示' },
+    { id: newBlockId(), type: 'chip',       content: 'アンケートフォーム（現調完了）', url: 'https://docs.google.com/forms/d/e/1FAIpQLSfRrZcyFszZbp4Qrb_HJ2NTVMfgzRu-NoAT2buCPvu8tWBvmQ/viewform?usp=dialog' },
+    { id: newBlockId(), type: 'text',       content: '作業金額の1%のアマギフ　作業完了後' },
+    { id: newBlockId(), type: 'chip',       content: 'アンケートフォーム（作業完了）', url: 'https://docs.google.com/forms/d/e/1FAIpQLSc6mL6HfKFGRqIBVfyBSCxbvmeMIZL9Jn6HeThZyb0G_nHV4w/viewform?usp=di' },
+    { id: newBlockId(), type: 'subheading', content: '＜使い方＞' },
+    { id: newBlockId(), type: 'text',       content: '現地調査完了でAmazonギフト500円分、作業完了でさらに金額の1％分のAmazonギフトをプレゼントさせていただきます。\nこれを営業トークのフックとして使っていただくことが可能なので、まずは現地見積もりにつなげるために「Amazonギフト券」をフックにして、現地見積もりのアポイントを打診してみてください。\nなお、Amazonギフト自体は弊社から直接お客様にお送りする形となります。' },
+  ];
+};
+
+/* ── ブロックHTMLレンダリング ── */
+function renderBlockHTML(b) {
+  const ct = esc(b.content || '');
+  const ctNL = (b.content || '').replace(/\n/g, '<br>');
+  switch(b.type) {
+    case 'heading':
+      return `<div style="font-size:20px;font-weight:700;color:var(--text);margin-top:40px;margin-bottom:18px">${ct}</div>`;
+    case 'subheading':
+      return `<div style="font-size:14px;font-weight:700;margin-bottom:8px;margin-top:16px">${ct}</div>`;
+    case 'text':
+      return `<div style="margin-bottom:12px;white-space:pre-line">${ct}</div>`;
+    case 'gray-bg':
+      return `<div style="background:#F3F3F3;padding:8px 12px;border-radius:4px;margin-bottom:12px;white-space:pre-line;font-size:11.5px">${ct}</div>`;
+    case 'purple-bg':
+      return `<div style="margin-bottom:12px"><span style="display:inline-block;background:#e8e6f3;color:var(--main);font-weight:700;padding:3px 10px;border-radius:3px">${ct}</span></div>`;
+    case 'chip': {
+      const url = b.url || '';
+      const valid = url.startsWith('http');
+      if (valid) {
+        return `<div style="margin-bottom:8px"><a href="${url}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:1px 6px;line-height:1.4;text-decoration:none;color:var(--text);font-size:13px" onmouseover="this.style.background='#e8eaed'" onmouseout="this.style.background='#f1f3f4'">${ct}</a></div>`;
+      }
+      return `<div style="margin-bottom:8px;color:var(--muted)">${ct}</div>`;
+    }
+    case 'list':
+      return `<div style="margin-bottom:4px">・${ct}</div>`;
+    default:
+      return `<div style="margin-bottom:12px">${ct}</div>`;
+  }
+}
+
+function renderBlocksPreview(pageId) {
+  const blocks = pageId === 'p2' ? p2Blocks : p3Blocks;
+  const el = document.getElementById(pageId + '-blocks-preview');
+  if (el) el.innerHTML = blocks.map(renderBlockHTML).join('');
+}
+
+/* ── エディタUI ── */
+function renderBlockEditor(pageId) {
+  const blocks = pageId === 'p2' ? p2Blocks : p3Blocks;
+  const container = document.getElementById('block-editor-' + pageId);
+  if (!container) return;
+  container.innerHTML = blocks.map((b, i) => {
+    const info = BLOCK_TYPES[b.type] || { label: b.type, badge: 'text' };
+    const ct = (b.content || '').replace(/"/g, '&quot;');
+    const urlInput = b.type === 'chip'
+      ? `<label class="block-urllabel">URL</label><input class="block-urlinput" type="text" value="${(b.url||'').replace(/"/g,'&quot;')}" placeholder="https://..." oninput="updateBlock('${pageId}',${i},'url',this.value)">`
+      : '';
+    const rows = b.type === 'heading' || b.type === 'subheading' || b.type === 'list' ? 2 : 3;
+    return `<div class="block-item">
+  <div class="block-item-head">
+    <span class="block-badge ${info.badge}">${info.label}</span>
+    <div class="block-actions">
+      <button class="btn-bact" onclick="moveBlock('${pageId}',${i},-1)" title="上へ">↑</button>
+      <button class="btn-bact" onclick="moveBlock('${pageId}',${i},1)" title="下へ">↓</button>
+      <button class="btn-bact" onclick="removeBlock('${pageId}',${i})" title="削除">🗑️</button>
+    </div>
+  </div>
+  <textarea class="block-textarea" rows="${rows}" oninput="updateBlock('${pageId}',${i},'content',this.value)">${ct}</textarea>
+  ${urlInput}
+</div>`;
+  }).join('');
+}
+
+function refreshPage(pageId) {
+  renderBlocksPreview(pageId);
+  renderBlockEditor(pageId);
+}
+
+/* ── ブロック操作 ── */
+function addBlock(pageId, type) {
+  const blocks = pageId === 'p2' ? p2Blocks : p3Blocks;
+  blocks.push({ id: newBlockId(), type, content: '', url: '' });
+  refreshPage(pageId);
+}
+function removeBlock(pageId, idx) {
+  const blocks = pageId === 'p2' ? p2Blocks : p3Blocks;
+  if (blocks.length > 0) { blocks.splice(idx, 1); refreshPage(pageId); }
+}
+function moveBlock(pageId, idx, dir) {
+  const blocks = pageId === 'p2' ? p2Blocks : p3Blocks;
+  const to = idx + dir;
+  if (to < 0 || to >= blocks.length) return;
+  [blocks[idx], blocks[to]] = [blocks[to], blocks[idx]];
+  refreshPage(pageId);
+}
+function updateBlock(pageId, idx, field, value) {
+  const blocks = pageId === 'p2' ? p2Blocks : p3Blocks;
+  if (blocks[idx]) { blocks[idx][field] = value; renderBlocksPreview(pageId); }
+}
+function toggleBlockMenu(pageId, btn) {
+  const menu = document.getElementById('bmenu-' + pageId);
+  if (menu) menu.classList.toggle('open');
+}
+function closeMenu(pageId) {
+  const menu = document.getElementById('bmenu-' + pageId);
+  if (menu) menu.classList.remove('open');
+}
+
+/* ── フォームタブ切替 ── */
+function switchTab(id) {
+  ['fp1','fp2','fp3'].forEach(p => {
+    const el = document.getElementById(p);
+    if (el) el.style.display = p === id ? '' : 'none';
+  });
+  document.querySelectorAll('.ptab').forEach((btn, i) => {
+    btn.classList.toggle('active', ['fp1','fp2','fp3'][i] === id);
+  });
+}
+
+/* ── ブロックデータ初期化 ── */
+function initBlocks(savedP2, savedP3) {
+  p2Blocks = savedP2 && savedP2.length ? savedP2 : DEFAULT_P2_BLOCKS();
+  p3Blocks = savedP3 && savedP3.length ? savedP3 : DEFAULT_P3_BLOCKS();
+  renderBlocksPreview('p2');
+  renderBlocksPreview('p3');
+  renderBlockEditor('p2');
+  renderBlockEditor('p3');
+}
+
 function scrollToPage(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
@@ -931,8 +1052,6 @@ function render() {
   setVal('p-phone',      v('phone'));
   setVal('p-line',       v('line_status'));
   setVal('p-login-id',   v('login_id'));
-  setLink('p-photo-url',   s.photoUrl);
-  setLink('p-store-url',   s.storePageUrl);
   setLink('p-loan-doc',    s.loanDocUrl);
   setLink('p-loan-apply',  s.loanApplyUrl);
   setLink('p-gift-survey', s.giftSurveyUrl);
@@ -978,6 +1097,8 @@ function collectFormData() {
   data.guidance_status = statusEl ? statusEl.value : '未実施';
   fields.forEach(f => { const el = document.getElementById(f); if(el) data[f] = el.value; });
   data.areas = [...areas];
+  data.p2Blocks = JSON.parse(JSON.stringify(p2Blocks));
+  data.p3Blocks = JSON.parse(JSON.stringify(p3Blocks));
   return data;
 }
 
@@ -1010,6 +1131,7 @@ function saveCase() {
     document.getElementById('issue_date').value = new Date().toISOString().split('T')[0];
     updatePlanDefaults();
     render();
+    initBlocks(null, null);
     scalePreview();
     return;
   }
@@ -1028,6 +1150,7 @@ function saveCase() {
   }
   if (Array.isArray(d.areas)) { areas.push(...d.areas); renderAreaTags(); }
   render();
+  initBlocks(d.p2Blocks || null, d.p3Blocks || null);
   scalePreview();
 })();
 </script>
