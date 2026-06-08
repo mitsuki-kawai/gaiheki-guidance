@@ -372,6 +372,8 @@ a.lb-url:hover { text-decoration: underline; }
   @page { size: A4; margin: 10mm; }
 }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <div class="app">
@@ -749,7 +751,7 @@ a.lb-url:hover { text-decoration: underline; }
 
   </div><!-- /form-scroll -->
   <div class="form-actions">
-    <button class="btn-pdf" onclick="printDoc()">🖨️ PDF</button>
+    <button class="btn-pdf" id="btn-pdf" onclick="generatePDF()">🖨️ PDF</button>
     <button class="btn-save" onclick="saveCase()">保存して一覧へ</button>
   </div>
 </div>
@@ -792,6 +794,78 @@ function getSettings() {
 
 
 /* ── 共有URL生成 ── */
+
+
+async function generatePDF() {
+  const btn = document.getElementById('btn-pdf');
+  if (!btn) return;
+  const origText = btn.textContent;
+  btn.textContent = '⏳ 生成中...';
+  btn.disabled = true;
+
+  // SP フォームモード中はプレビューを表示
+  const wasFormMode = document.body.classList.contains('sp-form-mode');
+  if (wasFormMode) {
+    document.body.classList.remove('sp-form-mode');
+    const tb = document.getElementById('sp-toggle-btn');
+    if (tb) tb.textContent = '📝';
+  }
+
+  const container = document.getElementById('pages-container');
+  const pages = document.querySelectorAll('.a4-page');
+
+  // transform / minHeight を一時リセット（フル解像度キャプチャ用）
+  const savedTransform = container.style.transform;
+  const savedMB = container.style.marginBottom;
+  container.style.transform = 'none';
+  container.style.marginBottom = '0';
+  const savedMH = [];
+  pages.forEach((p, i) => { savedMH[i] = p.style.minHeight; p.style.minHeight = ''; });
+
+  await new Promise(r => setTimeout(r, 120)); // レイアウト安定待ち
+
+  try {
+    const { jsPDF } = window.jspdf;
+    const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const A4W = 210, A4H = 297;
+
+    for (let i = 0; i < pages.length; i++) {
+      const canvas = await html2canvas(pages[i], {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true,
+        logging: false,
+        backgroundColor: '#ffffff',
+      });
+      const ratio = A4W / (canvas.width / 2); // CSS px → mm
+      const h = Math.min((canvas.height / 2) * ratio, A4H);
+      if (i > 0) pdf.addPage();
+      pdf.addImage(canvas.toDataURL('image/jpeg', 0.93), 'JPEG', 0, 0, A4W, h);
+    }
+
+    // ファイル名: 会社名_ガイダンス資料_YYYYMMDD.pdf
+    const co = (v('company') || v('contact_name') || '会社名').replace(/[/\\:*?"<>|]/g, '_');
+    const dt = new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g, '');
+    pdf.save(`${co}_ガイダンス資料_${dt}.pdf`);
+
+  } catch(e) {
+    console.error('PDF generation error:', e);
+    alert('PDF生成に失敗しました: ' + e.message);
+  } finally {
+    // 元の状態に戻す
+    container.style.transform = savedTransform;
+    container.style.marginBottom = savedMB;
+    pages.forEach((p, i) => { p.style.minHeight = savedMH[i] || ''; });
+    if (wasFormMode) {
+      document.body.classList.add('sp-form-mode');
+      const tb = document.getElementById('sp-toggle-btn');
+      if (tb) tb.textContent = '📄';
+    }
+    scalePreview();
+    btn.textContent = origText;
+    btn.disabled = false;
+  }
+}
 
 function printDoc() {
   const wasFormMode = document.body.classList.contains('sp-form-mode');
