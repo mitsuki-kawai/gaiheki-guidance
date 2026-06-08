@@ -43,10 +43,10 @@ body {
 
 /* ── プレビュー ── */
 .preview { overflow-y: auto; overflow-x: auto; padding: 24px 0 40px; background: #d8d8d8; }
-#pages-container { display: flex; flex-direction: column; align-items: center; gap: 16px; }
+#pages-container { display: flex; flex-direction: column; align-items: stretch; gap: 16px; padding: 0 16px; }
 
 /* ── A4ページ ── */
-.a4-page { width: 794px; min-height: 1123px; background: var(--white); position: relative; flex-shrink: 0; }
+.a4-page { width: 100%; min-height: 1123px; background: var(--white); position: relative; flex-shrink: 0; }
 
 /* ページヘッダーバー */
 .page-hbar { background: var(--main); color: var(--white); padding: 13px 32px; display: flex; justify-content: space-between; align-items: center; }
@@ -177,8 +177,8 @@ a.lb-url:hover { text-decoration: underline; }
 @media (max-width: 1023px) {
   :root { --nav-w: 120px; --form-w: 300px; }
   .nav-item { padding: 8px 12px; font-size: 11px; }
-  .a4-page { width: 100%; min-height: auto; }
-  #pages-container { align-items: stretch; padding: 0 8px; }
+  .a4-page { min-height: auto; }
+  #pages-container { padding: 0 8px; }
 }
 @media (max-width: 767px) {
   body { overflow: hidden; }
@@ -247,7 +247,7 @@ a.lb-url:hover { text-decoration: underline; }
     overflow: auto;
     padding: 12px 0;
   }
-  .a4-page { width: 794px; min-height: auto; }
+  .a4-page { width: 100%; min-height: auto; }
   .form-actions { padding: 8px 16px; }
   .btn-save, .btn-pdf { min-height: 44px; }
   .f-sec:first-child { margin-top: 0; }
