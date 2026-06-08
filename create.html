@@ -342,16 +342,23 @@ a.lb-url:hover { text-decoration: underline; }
   body { overflow: visible; background: white; }
   .app { display: block; height: auto; }
   .nav, .form-pane { display: none !important; }
-  .preview { overflow: visible; padding: 0; background: white; display: block !important; }
+  /* プレビューエリア: transform リセット・フル幅 */
+  .preview { overflow: visible; padding: 0; background: white; display: block !important;
+             width: 100%; transform: none !important; }
+  #pages-container { gap: 0; padding: 0; display: block;
+                     transform: none !important; width: 100% !important;
+                     margin-bottom: 0 !important; }
   /* SP印刷: sp-form-mode の上書き */
   body.sp-form-mode .preview { display: block !important; }
   body.sp-form-mode .form-pane { display: none !important; }
   body.sp-form-mode .app { height: auto !important; overflow: visible !important; }
-  #pages-container { gap: 0; padding: 0; display: block; }
-  .a4-page { width: 210mm; min-height: 297mm; margin: 0; page-break-after: always; break-after: page; }
-  .page-hbar { padding: 13px 16mm; }
-  .doc-meta { padding: 11px 16mm 10px; }
-  .page-content { padding: 18px 16mm 20mm; }
+  /* A4ページ: @page margin 分を引いた幅でフル印刷 */
+  .a4-page { width: 100%; min-height: auto; margin: 0;
+             page-break-after: always; break-after: page;
+             transform: none !important; }
+  .page-hbar { padding: 8px 10mm; }
+  .doc-meta { padding: 6px 10mm 6px; }
+  .page-content { padding: 10px 10mm 16px; }
   .page-footer { display: none; }
   /* セル途中ページ切れ防止 */
   .doc-table tr { page-break-inside: avoid; break-inside: avoid; }
@@ -360,7 +367,7 @@ a.lb-url:hover { text-decoration: underline; }
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .doc-table td { border: 1px solid #d0d0d0 !important; }
   .sh td { border-top: 1px solid #d0d0d0 !important; border-left: 1px solid #d0d0d0 !important; }
-  @page { size: A4; margin: 0; }
+  @page { size: A4; margin: 10mm; }
 }
 </style>
 </head>
