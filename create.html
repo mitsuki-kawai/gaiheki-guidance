@@ -253,9 +253,7 @@ a.lb-url:hover { text-decoration: underline; }
     overflow: auto;
     padding: 12px 0;
   }
-  .a4-page { width: 100% !important; min-height: 100%; word-break: break-word; }
-  #pages-container { width: 100% !important; overflow-x: hidden; }
-  .preview { overflow-x: hidden; }
+  .a4-page { min-height: auto; }
   .form-actions { padding: 8px 16px; }
   .btn-save, .btn-pdf { min-height: 44px; }
   .f-sec:first-child { margin-top: 0; }
@@ -825,25 +823,18 @@ function scalePreview() {
   const preview = document.querySelector('.preview');
   const container = document.getElementById('pages-container');
   if (!preview || !container) return;
-  // SP版(767px以下)ではtransformを使わずwidth:100%で表示
-  if (window.innerWidth <= 767) {
-    container.style.transform = '';
-    container.style.transformOrigin = '';
-    container.style.marginBottom = '';
-    return;
-  }
+  // 一旦リセットして自然な高さを計測
+  container.style.transform = '';
+  container.style.marginBottom = '';
   const NATURAL_W = 794;
-  const availW = preview.clientWidth - 32; // 16px × 2
+  const availW = preview.clientWidth - 32;
   const scale = Math.min(1, availW / NATURAL_W);
   if (scale < 1) {
+    const naturalH = container.scrollHeight; // transform前に計測
     container.style.transform = 'scale(' + scale + ')';
     container.style.transformOrigin = 'top center';
-    const naturalH = container.scrollHeight;
+    // scale後の実表示高さに合わせてmarginBottomで余白を補正
     container.style.marginBottom = (-naturalH * (1 - scale)) + 'px';
-  } else {
-    container.style.transform = '';
-    container.style.transformOrigin = '';
-    container.style.marginBottom = '';
   }
 }
 window.addEventListener('resize', scalePreview);
