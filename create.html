@@ -827,8 +827,14 @@ function scalePreview() {
   container.style.transform = '';
   container.style.marginBottom = '';
   const NATURAL_W = 794;
+  const NATURAL_H = 1123; // A4の自然な高さ
   const availW = preview.clientWidth - 32;
   const scale = Math.min(1, availW / NATURAL_W);
+  // 各ページのmin-heightをscale後のA4高さに設定
+  const scaledMinH = Math.floor(NATURAL_H * scale);
+  document.querySelectorAll('.a4-page').forEach(page => {
+    page.style.minHeight = scaledMinH + 'px';
+  });
   if (scale < 1) {
     const naturalH = container.scrollHeight; // transform前に計測
     container.style.transform = 'scale(' + scale + ')';
