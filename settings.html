@@ -105,19 +105,6 @@ a.header-logo:hover { opacity: 0.8; }
   pointer-events: none;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-/* ── P2/P3プレビュー（設定） ── */
-.blocks-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: start; }
-.blocks-preview-col { position: sticky; top: 72px; }
-.blocks-preview-page { background: #fff; border: 1px solid #d0d0d0; border-radius: 4px; overflow: hidden; font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; font-size: 11.5px; }
-.bp-hbar { background: #3F3277; color: #fff; padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-.bp-brand { font-weight: 800; font-size: 15px; letter-spacing: -0.5px; flex-shrink: 0; }
-.bp-meta { font-size: 10px; opacity: .85; text-align: right; line-height: 1.5; }
-.bp-content { padding: 14px 20px 20px; color: #555555; line-height: 1.9; max-width: 100%; overflow-wrap: break-word; }
-@media (max-width: 767px) {
-  .blocks-layout { grid-template-columns: 1fr; }
-  .blocks-preview-col { position: static; }
-}
-
 /* ── ブロックエディタ（設定） ── */
 .block-editor-s { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
 .block-item-s { background: var(--white); border: 1px solid var(--border); border-radius: 4px; padding: 8px 10px; }
@@ -312,58 +299,32 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">「写真ご提供のお願い」「現調施策」ページの内容を編集します。保存すると全ての資料作成のデフォルト表示に反映されます。</div>
 
       <div class="blocks-page-title">P2：写真ご提供のお願い</div>
-      <div class="blocks-layout">
-        <div class="blocks-editor-col">
-          <div id="block-editor-sp2" class="block-editor-s"></div>
-          <div class="block-add-area-s">
-            <button class="btn-add-block-s" onclick="sBToggleMenu('p2',this)">＋ ブロックを追加</button>
-            <div class="block-type-menu-s" id="sbmenu-p2">
-              <button onclick="sBAdd('p2','text');sBCloseMenu('p2')">📝 テキスト</button>
-              <button onclick="sBAdd('p2','heading');sBCloseMenu('p2')">H 見出し</button>
-              <button onclick="sBAdd('p2','subheading');sBCloseMenu('p2')">h サブ見出し</button>
-              <button onclick="sBAdd('p2','gray-bg');sBCloseMenu('p2')">⬜ グレー背景</button>
-              <button onclick="sBAdd('p2','purple-bg');sBCloseMenu('p2')">🟣 薄紫背景</button>
-              <button onclick="sBAdd('p2','chip');sBCloseMenu('p2')">🔗 チップリンク</button>
-              <button onclick="sBAdd('p2','text-link');sBCloseMenu('p2')">🔵 テキストリンク</button>
-            </div>
-          </div>
-        </div>
-        <div class="blocks-preview-col">
-          <div class="blocks-preview-page">
-            <div class="bp-hbar">
-              <span class="bp-brand">gaiheki+</span>
-              <div class="bp-meta">宛先：（会社名・担当者名） 様<br>発行日：—</div>
-            </div>
-            <div class="bp-content" id="sp2-preview"></div>
-          </div>
+      <div id="block-editor-sp2" class="block-editor-s"></div>
+      <div class="block-add-area-s">
+        <button class="btn-add-block-s" onclick="sBToggleMenu('p2',this)">＋ ブロックを追加</button>
+        <div class="block-type-menu-s" id="sbmenu-p2">
+          <button onclick="sBAdd('p2','text');sBCloseMenu('p2')">📝 テキスト</button>
+          <button onclick="sBAdd('p2','heading');sBCloseMenu('p2')">H 見出し</button>
+          <button onclick="sBAdd('p2','subheading');sBCloseMenu('p2')">h サブ見出し</button>
+          <button onclick="sBAdd('p2','gray-bg');sBCloseMenu('p2')">⬜ グレー背景</button>
+          <button onclick="sBAdd('p2','purple-bg');sBCloseMenu('p2')">🟣 薄紫背景</button>
+          <button onclick="sBAdd('p2','chip');sBCloseMenu('p2')">🔗 チップリンク</button>
+          <button onclick="sBAdd('p2','text-link');sBCloseMenu('p2')">🔵 テキストリンク</button>
         </div>
       </div>
 
       <div class="blocks-page-title" style="margin-top:24px">P3：現調 / 成約に繋げるための施策</div>
-      <div class="blocks-layout">
-        <div class="blocks-editor-col">
-          <div id="block-editor-sp3" class="block-editor-s"></div>
-          <div class="block-add-area-s">
-            <button class="btn-add-block-s" onclick="sBToggleMenu('p3',this)">＋ ブロックを追加</button>
-            <div class="block-type-menu-s" id="sbmenu-p3">
-              <button onclick="sBAdd('p3','text');sBCloseMenu('p3')">📝 テキスト</button>
-              <button onclick="sBAdd('p3','heading');sBCloseMenu('p3')">H 見出し</button>
-              <button onclick="sBAdd('p3','subheading');sBCloseMenu('p3')">h サブ見出し</button>
-              <button onclick="sBAdd('p3','gray-bg');sBCloseMenu('p3')">⬜ グレー背景</button>
-              <button onclick="sBAdd('p3','purple-bg');sBCloseMenu('p3')">🟣 薄紫背景</button>
-              <button onclick="sBAdd('p3','chip');sBCloseMenu('p3')">🔗 チップリンク</button>
-              <button onclick="sBAdd('p3','text-link');sBCloseMenu('p3')">🔵 テキストリンク</button>
-            </div>
-          </div>
-        </div>
-        <div class="blocks-preview-col">
-          <div class="blocks-preview-page">
-            <div class="bp-hbar">
-              <span class="bp-brand">gaiheki+</span>
-              <div class="bp-meta">宛先：（会社名・担当者名） 様<br>発行日：—</div>
-            </div>
-            <div class="bp-content" id="sp3-preview"></div>
-          </div>
+      <div id="block-editor-sp3" class="block-editor-s"></div>
+      <div class="block-add-area-s">
+        <button class="btn-add-block-s" onclick="sBToggleMenu('p3',this)">＋ ブロックを追加</button>
+        <div class="block-type-menu-s" id="sbmenu-p3">
+          <button onclick="sBAdd('p3','text');sBCloseMenu('p3')">📝 テキスト</button>
+          <button onclick="sBAdd('p3','heading');sBCloseMenu('p3')">H 見出し</button>
+          <button onclick="sBAdd('p3','subheading');sBCloseMenu('p3')">h サブ見出し</button>
+          <button onclick="sBAdd('p3','gray-bg');sBCloseMenu('p3')">⬜ グレー背景</button>
+          <button onclick="sBAdd('p3','purple-bg');sBCloseMenu('p3')">🟣 薄紫背景</button>
+          <button onclick="sBAdd('p3','chip');sBCloseMenu('p3')">🔗 チップリンク</button>
+          <button onclick="sBAdd('p3','text-link');sBCloseMenu('p3')">🔵 テキストリンク</button>
         </div>
       </div>
     </div>
@@ -479,47 +440,6 @@ function sBEscHtml(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-
-function sBEscP(str) {
-  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-function sBRenderBlockHTML(b) {
-  const ct = sBEscP(b.content || '');
-  const ctNL = (b.content || '').replace(/\n/g, '<br>');
-  switch(b.type) {
-    case 'heading':
-      return `<div style="font-size:20px;font-weight:700;color:#1a1a1a;margin-top:32px;margin-bottom:14px">${ct}</div>`;
-    case 'subheading':
-      return `<div style="font-size:14px;font-weight:700;margin-bottom:8px;margin-top:14px">${ct}</div>`;
-    case 'text':
-      return `<div style="margin-bottom:12px;white-space:pre-line">${ct}</div>`;
-    case 'gray-bg':
-      return `<div style="background:#F3F3F3;padding:8px 12px;border-radius:4px;margin-bottom:12px;white-space:pre-line">${ct}</div>`;
-    case 'purple-bg':
-      return `<div style="margin-bottom:12px"><span style="display:inline-block;background:#e8e6f3;color:#3F3277;font-weight:700;padding:3px 10px;border-radius:3px">${ct}</span></div>`;
-    case 'chip': {
-      const url = b.url || '';
-      if (url.startsWith('http')) {
-        return `<div style="margin-bottom:8px"><a href="${url}" target="_blank" style="display:inline-flex;align-items:center;gap:5px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:1px 6px;line-height:1.4;text-decoration:none;color:#1a1a1a;font-size:13px">${ct}</a></div>`;
-      }
-      return `<div style="margin-bottom:8px;color:#999">${ct}</div>`;
-    }
-    case 'text-link': {
-      const url2 = b.url || '';
-      if (url2.startsWith('http')) {
-        return `<div style="margin-bottom:8px"><a href="${url2}" target="_blank" style="color:#1a73e8;text-decoration:underline;font-size:11.5px">${ct}</a></div>`;
-      }
-      return `<div style="margin-bottom:8px;color:#999">${ct}</div>`;
-    }
-    default: return `<div style="margin-bottom:12px">${ct}</div>`;
-  }
-}
-function sBRenderPreview(pageId) {
-  const blocks = pageId === 'p2' ? sBlocksP2 : sBlocksP3;
-  const el = document.getElementById('sp' + pageId.replace('p','') + '-preview');
-  if (el) el.innerHTML = blocks.map(sBRenderBlockHTML).join('');
-}
-
 function sBRenderEditor(pageId) {
   const blocks = pageId === 'p2' ? sBlocksP2 : sBlocksP3;
   const container = document.getElementById('block-editor-s' + pageId);
@@ -550,22 +470,22 @@ function sBRenderEditor(pageId) {
 function sBAdd(pageId, type) {
   const blocks = pageId === 'p2' ? sBlocksP2 : sBlocksP3;
   blocks.push({ id: sbNewId(), type, content: '', url: '' });
-  sBRenderEditor(pageId); sBRenderPreview(pageId);
+  sBRenderEditor(pageId);
 }
 function sBRemove(pageId, idx) {
   const blocks = pageId === 'p2' ? sBlocksP2 : sBlocksP3;
-  blocks.splice(idx, 1); sBRenderEditor(pageId); sBRenderPreview(pageId);
+  blocks.splice(idx, 1); sBRenderEditor(pageId);
 }
 function sBMove(pageId, idx, dir) {
   const blocks = pageId === 'p2' ? sBlocksP2 : sBlocksP3;
   const to = idx + dir;
   if (to < 0 || to >= blocks.length) return;
   [blocks[idx], blocks[to]] = [blocks[to], blocks[idx]];
-  sBRenderEditor(pageId); sBRenderPreview(pageId);
+  sBRenderEditor(pageId);
 }
 function sBUpdate(pageId, idx, field, value) {
   const blocks = pageId === 'p2' ? sBlocksP2 : sBlocksP3;
-  if (blocks[idx]) { blocks[idx][field] = value; sBRenderPreview(pageId); }
+  if (blocks[idx]) blocks[idx][field] = value;
 }
 function sBToggleMenu(pageId, btn) {
   document.getElementById('sbmenu-' + pageId)?.classList.toggle('open');
@@ -692,8 +612,6 @@ function escHtml(s) {
   sBlocksP3 = (s.p3Blocks && s.p3Blocks.length) ? s.p3Blocks : sBDefaultP3();
   sBRenderEditor('p2');
   sBRenderEditor('p3');
-  sBRenderPreview('p2');
-  sBRenderPreview('p3');
 })();
 </script>
 </body>
