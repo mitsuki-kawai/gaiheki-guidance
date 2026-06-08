@@ -177,6 +177,7 @@ a.lb-url:hover { text-decoration: underline; }
 
 .sp-toggle-btn { display: none; }
 .sp-nav-right { display: none; }
+.sp-logo { display: none; }
 .pc-back-link { display: inline-block; }
 
 /* ── Responsive ── */
@@ -308,6 +309,8 @@ a.lb-url:hover { text-decoration: underline; }
   .nav-logo .brand { flex: 1; }
   .nav-logo .back-link { margin-bottom: 0; }
   .pc-back-link { display: none; }
+  .sp-logo { display: block; }
+  .nav-logo .brand:not(.sp-logo) { display: none; }
   .sp-nav-right {
     display: flex;
     align-items: center;
@@ -365,8 +368,9 @@ a.lb-url:hover { text-decoration: underline; }
 <div class="nav">
   <div class="nav-logo">
     <a href="index.html" class="back-link pc-back-link">戻る</a>
-
+    <a href="index.html" class="brand"><img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block"></a>
     <div class="sub">ガイダンス資料作成</div>
+    <a href="index.html" class="brand sp-logo"><img src="gaiheki-logo.png" alt="gaiheki+" height="28" style="display:block"></a>
     <div class="sp-nav-right">
       <button class="sp-toggle-btn" id="sp-toggle-btn" onclick="toggleSPView()" aria-label="フォーム表示切替">📝</button>
       <a href="index.html" class="back-link">戻る</a>
