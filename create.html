@@ -574,9 +574,12 @@ function render() {
   const planLabel = {light:'LIGHT（ライト）', basic:'BASIC（ベーシック）', pro:'PRO（プロ）'};
   const s = getSettings();
   const co = v('company'), cn = v('contact_name');
+  const isDefault = !co && !cn;
   const recipient = co && cn ? co + '　' + cn : (co || cn || '（会社名・担当者名）');
-  set('p-company', recipient);
-  set('p-company2', recipient);
+  ['p-company','p-company2'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = recipient; el.style.color = isDefault ? 'var(--muted)' : ''; }
+  });
   const dv = v('issue_date');
   let dateLabel;
   if (dv) {
@@ -587,26 +590,26 @@ function render() {
   }
   set('p-date', '発行日：' + dateLabel);
   set('p-date2', '発行日：' + dateLabel);
-  set('p-plan',       planLabel[v('plan')] || '—');
-  set('p-fee',        v('monthly_fee') || '—');
-  set('p-commission', v('commission') || '—');
-  set('p-period',     (s.plans[v('plan')] || s.plans.basic).contractPeriod || '—');
-  set('p-monthly',    v('monthly_est') || '—');
-  set('p-half',       v('half_est') || '—');
-  set('p-guarantee',  v('guarantee') || '—');
+  setVal('p-plan',       planLabel[v('plan')]);
+  setVal('p-fee',        v('monthly_fee'));
+  setVal('p-commission', v('commission'));
+  setVal('p-period',     (s.plans[v('plan')] || s.plans.basic).contractPeriod);
+  setVal('p-monthly',    v('monthly_est'));
+  setVal('p-half',       v('half_est'));
+  setVal('p-guarantee',  v('guarantee'));
 
   const ap = document.getElementById('p-areas');
   ap.innerHTML = areas.length
     ? areas.map(a => `<span class="tag">${esc(a)}</span>`).join('')
     : '<span style="font-size:11px;color:var(--muted)">エリアが未設定です</span>';
 
-  set('p-pay-status', v('payment_status') || '—');
-  set('p-pay-note',   v('payment_note') || '—');
-  set('p-email',      v('email') || '—');
-  set('p-phone',      v('phone') || '—');
-  set('p-line',       v('line_status') || '—');
-  set('p-login-id',   v('login_id') || '—');
-  set('p-login-pass', v('login_pass') || '—');
+  setVal('p-pay-status', v('payment_status'));
+  setVal('p-pay-note',   v('payment_note'));
+  setVal('p-email',      v('email'));
+  setVal('p-phone',      v('phone'));
+  setVal('p-line',       v('line_status'));
+  setVal('p-login-id',   v('login_id'));
+  setVal('p-login-pass', v('login_pass'));
   setLink('p-photo-url',   s.photoUrl);
   setLink('p-store-url',   s.storePageUrl);
   setLink('p-loan-doc',    s.loanDocUrl);
@@ -622,6 +625,14 @@ function set(id, val) {
   if (el) el.textContent = val;
 }
 
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const empty = !val;
+  el.textContent = empty ? '—' : val;
+  el.style.color = empty ? 'var(--muted)' : '';
+}
+
 function setLink(id, url) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -630,7 +641,7 @@ function setLink(id, url) {
   if (el.tagName === 'A') {
     el.href = valid ? url : '#';
     el.style.pointerEvents = valid ? '' : 'none';
-    el.style.opacity = valid ? '' : '0.5';
+    el.style.color = valid ? '' : 'var(--muted)';
   }
 }
 
