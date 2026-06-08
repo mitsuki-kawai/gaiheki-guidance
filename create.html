@@ -161,9 +161,9 @@ a.lb-url:hover { text-decoration: underline; }
 .area-tag button:hover { opacity: 1; }
 .area-add { display: flex; gap: 6px; }
 .radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
-.radio-option { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 6px 12px; border: 1px solid var(--border); border-radius: 20px; font-size: 12px; color: var(--label); transition: all .12s; }
-.radio-option:has(input:checked) { border-color: var(--main); background: #f0eefa; color: var(--main); font-weight: 600; }
-.radio-option input[type="radio"] { width: 14px; height: 14px; accent-color: var(--main); }
+.radio-option { display: inline-flex; align-items: center; cursor: pointer; padding: 6px 14px; border: 1px solid #ccc; border-radius: 20px; font-size: 12px; color: #999; background: var(--white); transition: all .12s; user-select: none; }
+.radio-option:has(input:checked) { border-color: var(--main); background: var(--main); color: var(--white); font-weight: 600; }
+.radio-option input[type="radio"] { display: none; }
 .area-add input { flex: 1; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; }
 .area-add button { padding: 7px 12px; background: var(--main); color: var(--white); border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; white-space: nowrap; transition: opacity .12s; }
 .area-add button:hover { opacity: .85; }
