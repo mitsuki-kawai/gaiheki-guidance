@@ -172,18 +172,21 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
   </div>
   <div class="filter-bar">
     <select id="f-status" onchange="renderCards()">
-      <option value="all">実施状況：すべて</option>
+      <option disabled style="color:#aaa">── 実施状況 ──</option>
+      <option value="all">すべて</option>
       <option value="未実施" selected>未実施</option>
       <option value="実施済み">実施済み</option>
     </select>
     <select id="f-plan" onchange="renderCards()">
-      <option value="all">プラン：すべて</option>
+      <option disabled style="color:#aaa">── 契約プラン ──</option>
+      <option value="all">すべて</option>
       <option value="light">ライト</option>
       <option value="basic">ベーシック</option>
       <option value="pro">プロ</option>
     </select>
     <select id="f-payment" onchange="renderCards()">
-      <option value="all">お支払い：すべて</option>
+      <option disabled style="color:#aaa">── お支払い状況 ──</option>
+      <option value="all">すべて</option>
       <option value="確認済み ✓">確認済み</option>
       <option value="クレジットカード登録待ち">クレジットカード登録待ち</option>
       <option value="請求書払い対応">請求書払い対応</option>
