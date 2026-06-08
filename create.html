@@ -172,21 +172,18 @@ a.lb-url:hover { text-decoration: underline; }
 .btn-save:hover { opacity: .85; }
 .btn-pdf { padding: 10px 14px; background: var(--accent); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; white-space: nowrap; }
 .btn-pdf:hover { opacity: .85; }
+/* ── 印刷ヒントモーダル ── */
+#print-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.45); z-index: 1000; align-items: center; justify-content: center; }
+#print-modal.show { display: flex; }
+.print-modal-box { background: var(--white); border-radius: 10px; padding: 28px 28px 20px; max-width: 360px; width: 90%; box-shadow: 0 8px 32px rgba(0,0,0,0.18); }
+.print-modal-icon { font-size: 28px; margin-bottom: 10px; }
+.print-modal-title { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 10px; }
+.print-modal-body { font-size: 12.5px; color: var(--label); line-height: 1.7; margin-bottom: 20px; }
+.print-modal-body strong { color: var(--main); }
+.print-modal-btn { width: 100%; padding: 10px; background: var(--main); color: var(--white); border: none; border-radius: 6px; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity .12s; }
+.print-modal-btn:hover { opacity: .85; }
+
 /* ── 共有・閲覧モード ── */
-.btn-share { padding: 10px 14px; background: var(--white); color: var(--main); border: 1px solid var(--main); border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: all .12s; white-space: nowrap; }
-.btn-share:hover { background: var(--main); color: var(--white); }
-.share-toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px); background: #1a1a1a; color: #fff; padding: 10px 24px; border-radius: 6px; font-size: 13px; font-weight: 500; opacity: 0; transition: opacity .25s, transform .25s; pointer-events: none; z-index: 999; }
-.share-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-#view-header { display: none; background: var(--white); border-bottom: 1px solid var(--border); height: 56px; padding: 0 24px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; flex-shrink: 0; }
-body.view-mode #view-header { display: flex; }
-body.view-mode .app { display: flex !important; flex-direction: column; height: 100vh; overflow: hidden; }
-body.view-mode .nav { display: none !important; }
-body.view-mode .form-pane { display: none !important; }
-body.view-mode .preview { flex: 1; overflow-y: auto; overflow-x: hidden; }
-/* 閲覧モード: サイドバー・ナビ・設定リンクを完全非表示 */
-body.view-mode a[href="index.html"] { pointer-events: none; opacity: 0; width: 0; overflow: hidden; }
-body.view-mode .btn-share { display: none !important; }
-body.view-mode .btn-save  { display: none !important; }
 
 
 /* ── 印刷（A4） ── */
@@ -388,13 +385,18 @@ body.view-mode .btn-save  { display: none !important; }
 </style>
 </head>
 <body>
-<!-- ══ 閲覧モードヘッダー ══ -->
-<div id="view-header">
-  <img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block">
-  <button class="btn-pdf" onclick="printDoc()">🖨️ PDF保存</button>
+<div id="print-modal">
+  <div class="print-modal-box">
+    <div class="print-modal-icon">📄</div>
+    <div class="print-modal-title">PDFとして保存する方法</div>
+    <div class="print-modal-body">
+      印刷ダイアログが開いたら、<br>
+      送信先を <strong>「Googleドライブに保存」</strong> に変更することで<br>
+      Googleドライブに直接保存できます。
+    </div>
+    <button class="print-modal-btn" onclick="confirmPrint()">OK — 印刷ダイアログを開く</button>
+  </div>
 </div>
-
-<div id="share-toast" class="share-toast"></div>
 
 <div class="app">
 
@@ -771,8 +773,7 @@ body.view-mode .btn-save  { display: none !important; }
 
   </div><!-- /form-scroll -->
   <div class="form-actions">
-    <button class="btn-pdf" onclick="printDoc()">🖨️ PDF</button>
-    <button class="btn-share" onclick="generateShareURL()">🔗 共有</button>
+    <button class="btn-pdf" onclick="showPrintModal()">🖨️ PDF</button>
     <button class="btn-save" onclick="saveCase()">保存して一覧へ</button>
   </div>
 </div>
@@ -815,79 +816,13 @@ function getSettings() {
 
 
 /* ── 共有URL生成 ── */
-function generateShareURL() {
-  const d = collectFormData();
-  // P2/P3用のsettings URLも含める
-  const s = getSettings();
-  d._s = {
-    photoUrl:       s.photoUrl,
-    storePageUrl:   s.storePageUrl,
-    loanDocUrl:     s.loanDocUrl,
-    loanApplyUrl:   s.loanApplyUrl,
-    giftSurveyUrl:  s.giftSurveyUrl,
-    giftWorkUrl:    s.giftWorkUrl,
-    loginUrl:       s.loginUrl,
-    contractPeriod: (s.plans[d.plan || 'basic'] || s.plans.basic).contractPeriod,
-  };
-  try {
-    const json = JSON.stringify(d);
-    const encoded = btoa(unescape(encodeURIComponent(json)));
-    const url = location.origin + location.pathname + '?data=' + encoded;
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(url).then(() => showToast('コピーしました！'));
-    } else {
-      const ta = document.createElement('textarea');
-      ta.value = url; document.body.appendChild(ta);
-      ta.select(); document.execCommand('copy');
-      document.body.removeChild(ta);
-      showToast('コピーしました！');
-    }
-  } catch(e) { showToast('生成に失敗しました'); }
-}
 
-function showToast(msg) {
-  const t = document.getElementById('share-toast');
-  if (!t) return;
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2500);
+function showPrintModal() {
+  document.getElementById('print-modal').classList.add('show');
 }
-
-function enterViewMode(encoded) {
-  try {
-    const json = decodeURIComponent(escape(atob(encoded)));
-    const d = JSON.parse(json);
-    // フォームに値を反映
-    ['assignee','company','contact_name','issue_date','plan','monthly_fee','commission','guarantee',
-     'monthly_est','half_est','payment_status','payment_note','email','phone',
-     'line_status','login_id','login_pass'].forEach(f => {
-      const el = document.getElementById(f);
-      if (el && d[f] !== undefined) el.value = d[f];
-    });
-    if (d.guidance_status) {
-      const r = document.querySelector(`input[name="guidance_status"][value="${d.guidance_status}"]`);
-      if (r) r.checked = true;
-    }
-    if (Array.isArray(d.areas)) { areas.push(...d.areas); renderAreaTags(); }
-    updatePlanDefaults();
-    render();
-    // P2/P3のURLを共有データで上書き
-    if (d._s) {
-      const ss = d._s;
-      if (ss.photoUrl)      setLink('p-photo-url',   ss.photoUrl);
-      if (ss.storePageUrl)  setLink('p-store-url',   ss.storePageUrl);
-      if (ss.loanDocUrl)    setLink('p-loan-doc',    ss.loanDocUrl);
-      if (ss.loanApplyUrl)  setLink('p-loan-apply',  ss.loanApplyUrl);
-      if (ss.giftSurveyUrl) setLink('p-gift-survey', ss.giftSurveyUrl);
-      if (ss.giftWorkUrl)   setLink('p-gift-work',   ss.giftWorkUrl);
-      if (ss.loginUrl)      setLink('p-login-url',   ss.loginUrl);
-      if (ss.contractPeriod) setVal('p-period',       ss.contractPeriod);
-    }
-    document.body.classList.add('view-mode');
-    scalePreview();
-  } catch(e) {
-    console.error('Invalid share data', e);
-    updatePlanDefaults(); render(); scalePreview();
-  }
+function confirmPrint() {
+  document.getElementById('print-modal').classList.remove('show');
+  printDoc();
 }
 
 function printDoc() {
@@ -1103,10 +1038,6 @@ function saveCase() {
 
 (function init() {
   populateAssigneeSelect();
-
-  // 閲覧モード: ?data= パラメータがある場合
-  const dataParam = new URLSearchParams(location.search).get('data');
-  if (dataParam) { enterViewMode(dataParam); return; }
 
   const editId = new URLSearchParams(location.search).get('id');
   if (!editId) {
