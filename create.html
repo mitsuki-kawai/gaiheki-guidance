@@ -183,6 +183,10 @@ body.view-mode .app { display: flex !important; flex-direction: column; height: 
 body.view-mode .nav { display: none !important; }
 body.view-mode .form-pane { display: none !important; }
 body.view-mode .preview { flex: 1; overflow-y: auto; overflow-x: hidden; }
+/* 閲覧モード: サイドバー・ナビ・設定リンクを完全非表示 */
+body.view-mode a[href="index.html"] { pointer-events: none; opacity: 0; width: 0; overflow: hidden; }
+body.view-mode .btn-share { display: none !important; }
+body.view-mode .btn-save  { display: none !important; }
 
 
 /* ── 印刷（A4） ── */
@@ -386,7 +390,7 @@ body.view-mode .preview { flex: 1; overflow-y: auto; overflow-x: hidden; }
 <body>
 <!-- ══ 閲覧モードヘッダー ══ -->
 <div id="view-header">
-  <a href="index.html"><img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block"></a>
+  <img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block">
   <button class="btn-pdf" onclick="printDoc()">🖨️ PDF保存</button>
 </div>
 
@@ -813,6 +817,18 @@ function getSettings() {
 /* ── 共有URL生成 ── */
 function generateShareURL() {
   const d = collectFormData();
+  // P2/P3用のsettings URLも含める
+  const s = getSettings();
+  d._s = {
+    photoUrl:       s.photoUrl,
+    storePageUrl:   s.storePageUrl,
+    loanDocUrl:     s.loanDocUrl,
+    loanApplyUrl:   s.loanApplyUrl,
+    giftSurveyUrl:  s.giftSurveyUrl,
+    giftWorkUrl:    s.giftWorkUrl,
+    loginUrl:       s.loginUrl,
+    contractPeriod: (s.plans[d.plan || 'basic'] || s.plans.basic).contractPeriod,
+  };
   try {
     const json = JSON.stringify(d);
     const encoded = btoa(unescape(encodeURIComponent(json)));
@@ -854,6 +870,18 @@ function enterViewMode(encoded) {
     if (Array.isArray(d.areas)) { areas.push(...d.areas); renderAreaTags(); }
     updatePlanDefaults();
     render();
+    // P2/P3のURLを共有データで上書き
+    if (d._s) {
+      const ss = d._s;
+      if (ss.photoUrl)      setLink('p-photo-url',   ss.photoUrl);
+      if (ss.storePageUrl)  setLink('p-store-url',   ss.storePageUrl);
+      if (ss.loanDocUrl)    setLink('p-loan-doc',    ss.loanDocUrl);
+      if (ss.loanApplyUrl)  setLink('p-loan-apply',  ss.loanApplyUrl);
+      if (ss.giftSurveyUrl) setLink('p-gift-survey', ss.giftSurveyUrl);
+      if (ss.giftWorkUrl)   setLink('p-gift-work',   ss.giftWorkUrl);
+      if (ss.loginUrl)      setLink('p-login-url',   ss.loginUrl);
+      if (ss.contractPeriod) setVal('p-period',       ss.contractPeriod);
+    }
     document.body.classList.add('view-mode');
     scalePreview();
   } catch(e) {
