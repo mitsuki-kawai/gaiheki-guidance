@@ -160,6 +160,10 @@ a.lb-url:hover { text-decoration: underline; }
 .area-tag button { background: none; border: none; color: var(--main); cursor: pointer; font-size: 14px; line-height: 1; padding: 0; opacity: .6; }
 .area-tag button:hover { opacity: 1; }
 .area-add { display: flex; gap: 6px; }
+.radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.radio-option { display: flex; align-items: center; gap: 6px; cursor: pointer; padding: 6px 12px; border: 1px solid var(--border); border-radius: 20px; font-size: 12px; color: var(--label); transition: all .12s; }
+.radio-option:has(input:checked) { border-color: var(--main); background: #f0eefa; color: var(--main); font-weight: 600; }
+.radio-option input[type="radio"] { width: 14px; height: 14px; accent-color: var(--main); }
 .area-add input { flex: 1; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; }
 .area-add button { padding: 7px 12px; background: var(--main); color: var(--white); border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; white-space: nowrap; transition: opacity .12s; }
 .area-add button:hover { opacity: .85; }
@@ -608,6 +612,13 @@ a.lb-url:hover { text-decoration: underline; }
   <div class="form-scroll">
 
     <div id="fp1">
+      <div class="f-sec">ガイダンスステータス</div>
+      <div class="field">
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="guidance_status" id="status_pending" value="未実施" checked> 未実施</label>
+          <label class="radio-option"><input type="radio" name="guidance_status" id="status_done" value="実施済み"> 実施済み</label>
+        </div>
+      </div>
       <div class="f-sec">担当者</div>
       <div class="field">
         <label>担当者<span class="req">*</span></label>
@@ -918,10 +929,12 @@ function getCases() {
   try { return JSON.parse(localStorage.getItem('gaiheki_cases') || '[]'); } catch(e) { return []; }
 }
 function collectFormData() {
+  const statusEl = document.querySelector('input[name="guidance_status"]:checked');
   const fields = ['assignee','company','contact_name','issue_date','plan','monthly_fee','commission','guarantee',
     'monthly_est','half_est','payment_status','payment_note','email','phone',
     'line_status','login_id','login_pass'];
   const data = {};
+  data.guidance_status = statusEl ? statusEl.value : '未実施';
   fields.forEach(f => { const el = document.getElementById(f); if(el) data[f] = el.value; });
   data.areas = [...areas];
   return data;
@@ -936,6 +949,7 @@ function saveCase() {
   const existingCase = existing.find(c => c.id === id);
   const caseData = {
     id, assignee: v('assignee'), company: v('company') || v('contact_name'), plan: v('plan'),
+    guidance_status: (document.querySelector('input[name="guidance_status"]:checked') || {}).value || '未実施',
     createdAt: existingCase ? existingCase.createdAt : new Date().toISOString().split('T')[0],
     formData: collectFormData()
   };
@@ -967,6 +981,10 @@ function saveCase() {
     const el = document.getElementById(f);
     if (el && d[f] !== undefined) el.value = d[f];
   });
+  if (d.guidance_status) {
+    const r = document.querySelector(`input[name="guidance_status"][value="${d.guidance_status}"]`);
+    if (r) r.checked = true;
+  }
   if (Array.isArray(d.areas)) { areas.push(...d.areas); renderAreaTags(); }
   render();
   scalePreview();

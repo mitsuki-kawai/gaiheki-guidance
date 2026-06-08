@@ -72,6 +72,9 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 .card-areas{font-size:11px;color:var(--mid);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:1;margin-right:8px}
 .card-delete{background:none;border:none;font-size:11px;color:var(--gray-text);cursor:pointer;padding:2px 6px;border-radius:4px;transition:all 0.12s;flex-shrink:0}
 .card-delete:hover{background:#fff0f0;color:#e53935}
+.card-status{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.card-status.pending{background:#f3f3f3;color:#999}
+.card-status.done{background:#e6f7ef;color:#2a7a50}
 
 /* ── 新規作成カード ── */
 .card-new{border:2px dashed var(--purple-mid);background:transparent;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all 0.15s;color:inherit;min-height:130px}
@@ -266,6 +269,8 @@ function renderCards() {
     const areas = c.formData?.areas || [];
     const areaText = areas.length ? areas.join('・') : 'エリア未設定';
     const dateStr = c.createdAt ? c.createdAt.replace(/-/g, '/') : '—';
+    const status = c.guidance_status || '未実施';
+    const statusClass = status === '実施済み' ? 'done' : 'pending';
     return `
       <a href="create.html?id=${c.id}" class="card">
         <div class="card-top">
@@ -274,6 +279,7 @@ function renderCards() {
         </div>
         <div class="card-meta">
           <div class="card-assignee">👤 ${escHtml(c.assignee || '—')}</div>
+          <span class="card-status ${statusClass}">${escHtml(status)}</span>
           <div class="card-date">${dateStr}</div>
         </div>
         <div class="card-footer">
