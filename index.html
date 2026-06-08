@@ -73,7 +73,6 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 .card-delete:hover{background:#fff0f0;color:#e53935}
 
 /* ── 新規作成カード ── */
-#sp-filter-select { display: none; }
 .card-new{border:2px dashed var(--purple-mid);background:transparent;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all 0.15s;color:inherit;min-height:130px}
 .card-new:hover{border-color:var(--purple);background:var(--purple-light);transform:translateY(-1px)}
 .card-new-inner{display:flex;flex-direction:column;align-items:center;gap:6px}
@@ -98,39 +97,37 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
     grid-column: 1;
     grid-row: 2;
     display: flex;
+    flex-direction: row;
     align-items: center;
-    padding: 8px 16px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 6px 12px;
     border-right: none;
     border-bottom: 1px solid var(--gray-border);
-    background: var(--white);
+    gap: 4px;
+    flex-wrap: nowrap;
+    min-height: 0;
   }
   .sidebar-section { display: none; }
-  #filter-list { display: none; }
-  #sp-filter-select {
-    display: block;
-    width: 100%;
-    padding: 8px 12px;
-    border: 1px solid var(--gray-border);
-    border-radius: 8px;
-    font-size: 13px;
-    font-family: inherit;
-    background: var(--white);
-    color: var(--dark);
-    appearance: none;
-    -webkit-appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 12px center;
-    padding-right: 32px;
-    cursor: pointer;
-    min-height: 44px;
+  #filter-list {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    flex-wrap: nowrap;
+  }
+  .filter-item {
+    white-space: nowrap;
+    border-radius: 20px;
+    padding: 8px 14px;
+    flex-shrink: 0;
+    min-height: 36px;
+    margin-bottom: 0;
   }
   .main { grid-column: 1; grid-row: 3; padding: 16px; }
   .card-grid { grid-template-columns: 1fr; }
   .btn-new, .btn-settings { min-height: 44px; }
   .header-logo .sub { display: none; }
   .main-bar { margin-bottom: 12px; }
-  .card-new { display: none !important; }
 }
 </style>
 </head>
@@ -150,9 +147,6 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 <div class="sidebar">
   <div class="sidebar-section">担当者フィルター</div>
   <div id="filter-list"></div>
-  <select id="sp-filter-select" style="display:none" onchange="setFilter(this.value)">
-    <option value="all">すべて</option>
-  </select>
 </div>
 
 <!-- ── メインエリア ── -->
@@ -211,13 +205,6 @@ function renderSidebar() {
   const members = getSettings().staffList;
   const list = document.getElementById('filter-list');
   list.innerHTML = '';
-  // SP ドロップダウン更新
-  const sel = document.getElementById('sp-filter-select');
-  if (sel) {
-    sel.innerHTML = '<option value="all">すべて</option>' +
-      members.map(m => `<option value="${m}" ${currentFilter===m?'selected':''>${escHtml(m)}</option>`).join('');
-    sel.value = currentFilter;
-  }
 
   const allBtn = document.createElement('button');
   allBtn.className = 'filter-item' + (currentFilter === 'all' ? ' active' : '');
