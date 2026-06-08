@@ -172,6 +172,7 @@ a.lb-url:hover { text-decoration: underline; }
 /* ── 印刷（A4） ── */
 
 .sp-toggle-btn { display: none; }
+.sp-nav-right { display: none; }
 
 /* ── Responsive ── */
 @media (max-width: 1023px) {
@@ -255,13 +256,17 @@ a.lb-url:hover { text-decoration: underline; }
   .form-pane { display: none; }
   .preview { flex: 1; order: 1; }
   /* フォームモード時 */
+  body.sp-form-mode .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
   body.sp-form-mode .form-pane {
     display: flex;
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    height: 100vh;
-    z-index: 100;
+    flex: 1;
     flex-direction: column;
+    min-height: 0;
   }
   body.sp-form-mode .preview { display: none; }
   body.sp-form-mode .nav-list { display: none; }
@@ -277,13 +282,15 @@ a.lb-url:hover { text-decoration: underline; }
     gap: 0;
   }
   .nav-logo .brand { flex: 1; }
-  .nav-logo .back-link {
-    order: 4;
-    margin-bottom: 0;
-    margin-left: 8px;
+  .nav-logo .back-link { margin-bottom: 0; }
+  .sp-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
   }
-  .sp-toggle-btn { order: 3; }
   .nav-logo .sub { display: none; }
+  .sp-nav-right { display: flex; }
   .sp-toggle-btn {
     display: flex;
     align-items: center;
@@ -332,10 +339,12 @@ a.lb-url:hover { text-decoration: underline; }
 <!-- ══ 左ナビ ══ -->
 <div class="nav">
   <div class="nav-logo">
-    <a href="index.html" class="back-link">戻る</a>
     <a href="index.html" class="brand"><img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block"></a>
     <div class="sub">ガイダンス資料作成</div>
-    <button class="sp-toggle-btn" id="sp-toggle-btn" onclick="toggleSPView()" aria-label="フォーム表示切替">📝</button>
+    <div class="sp-nav-right">
+      <button class="sp-toggle-btn" id="sp-toggle-btn" onclick="toggleSPView()" aria-label="フォーム表示切替">📝</button>
+      <a href="index.html" class="back-link">戻る</a>
+    </div>
   </div>
   <div class="nav-list">
     <button class="nav-item active" onclick="scrollToPage('p1')" id="nav-p1">ご確認事項</button>
