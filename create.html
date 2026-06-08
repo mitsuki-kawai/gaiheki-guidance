@@ -205,6 +205,7 @@ a.lb-url:hover { text-decoration: underline; }
   <div class="nav-list">
     <button class="nav-item active" onclick="scrollToPage('p1')" id="nav-p1">P1</button>
     <button class="nav-item" onclick="scrollToPage('p2')" id="nav-p2">P2</button>
+    <button class="nav-item" onclick="scrollToPage('p3')" id="nav-p3">P3</button>
   </div>
 </div>
 
@@ -358,6 +359,58 @@ a.lb-url:hover { text-decoration: underline; }
 
   </div></div>
 </div><!-- /p2 -->
+<!-- ━━━ PAGE 3 ━━━ -->
+<div class="a4-page" id="p3">
+  <div class="page-hbar">
+    <div class="phb-l"><img src="gaiheki-logo.png" alt="gaiheki+" height="28" style="display:block;filter:brightness(0) invert(1)"></div>
+    <div style="text-align:right;line-height:1.6">
+      <div style="font-size:12px;font-weight:700">宛先：<strong id="p-company3">（会社名・担当者名）</strong> 様</div>
+      <div style="font-size:10px;opacity:.85" id="p-date3"></div>
+    </div>
+  </div>
+  <div class="page-content"><div style="max-width:640px;margin:0 auto;font-size:11.5px;color:var(--label);line-height:1.9;padding-left:24px">
+
+    <div style="font-size:20px;font-weight:700;color:var(--text);margin-top:40px;margin-bottom:18px">＜現調 / 成約に繋げるための施策＞</div>
+
+    <div style="margin-top:32px;margin-bottom:12px">
+      <span style="display:inline-block;background:#e8e6f3;color:var(--main);font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:4px">【ローンについて】</span><br>
+      エンドユーザー様向けローンを導入することとなりました。<br>
+      外壁・屋根工事は高額になりやすく、<br>
+      「金額で迷われる」「今は難しいと言われる」<br>
+      といった理由で失注してしまうケースも少なくありません。
+    </div>
+
+    <div style="margin-bottom:12px">
+      ローンが利用可能になることで、<br>
+      ・月々払いでのご提案が可能<br>
+      ・予算で迷われているお客様の後押し<br>
+      ・ワンランク上の工事提案がしやすくなる<br>
+      → 結果として成約率向上が期待できます。
+    </div>
+
+    <div style="margin-bottom:12px">
+      <strong>【加盟店様の費用負担・手数料負担はございません。】</strong><br>
+      <span style="color:var(--muted)">※お客様にも所定の審査がございます。</span>
+    </div>
+
+    <div style="margin-bottom:24px">
+      導入をご希望の加盟店様は、<br>
+      下記資料をお目通しいただけますと幸いです。
+    </div>
+
+    <div style="margin-bottom:12px">
+      <strong>【媒体資料】</strong><br>
+      <a class="url-val" href="https://drive.google.com/file/d/1eYcxVHQ9Bdwpe0sgHwFJ5QHvQeRa-9oX/view?usp=sharing" target="_blank">https://drive.google.com/file/d/1eYcxVHQ9Bdwpe0sgHwFJ5QHvQeRa-9oX/view?usp=sharing</a>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <strong>【お申込書】</strong><br>
+      <a class="url-val" href="https://drive.google.com/file/d/1YWvqYl0y2YJdtkg9s-9Umu8nKb_xF_c8/view?usp=sharing" target="_blank">https://drive.google.com/file/d/1YWvqYl0y2YJdtkg9s-9Umu8nKb_xF_c8/view?usp=sharing</a>
+    </div>
+
+  </div></div>
+</div><!-- /p3 -->
+
 
 </div><!-- /#pages-container -->
 </div><!-- /.preview -->
@@ -576,7 +629,7 @@ function render() {
   const co = v('company'), cn = v('contact_name');
   const isDefault = !co && !cn;
   const recipient = co && cn ? co + '　' + cn : (co || cn || '（会社名・担当者名）');
-  ['p-company','p-company2'].forEach(id => {
+  ['p-company','p-company2','p-company3'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.textContent = recipient; el.style.color = isDefault ? 'var(--muted)' : ''; }
   });
@@ -590,6 +643,7 @@ function render() {
   }
   set('p-date', '発行日：' + dateLabel);
   set('p-date2', '発行日：' + dateLabel);
+  set('p-date3', '発行日：' + dateLabel);
   setVal('p-plan',       planLabel[v('plan')]);
   setVal('p-fee',        v('monthly_fee'));
   setVal('p-commission', v('commission'));
