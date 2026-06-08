@@ -171,6 +171,8 @@ a.lb-url:hover { text-decoration: underline; }
 
 /* ── 印刷（A4） ── */
 
+.sp-toggle-btn { display: none; }
+
 /* ── Responsive ── */
 @media (max-width: 1023px) {
   :root { --nav-w: 120px; --form-w: 300px; }
@@ -249,6 +251,45 @@ a.lb-url:hover { text-decoration: underline; }
   .form-actions { padding: 8px 16px; }
   .btn-save, .btn-pdf { min-height: 44px; }
   .f-sec:first-child { margin-top: 0; }
+
+  /* SP: デフォルトはプレビュー表示 */
+  .form-pane { display: none; }
+  .preview { flex: 1; order: 1; }
+  /* フォームモード時 */
+  body.sp-form-mode .form-pane { display: flex; flex: 1; order: 1; }
+  body.sp-form-mode .preview { display: none; }
+  body.sp-form-mode .nav-list { display: none; }
+  /* SP ヘッダー: ロゴ左・ボタン右 */
+  .nav-logo {
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    padding: 8px 16px !important;
+  }
+  .nav-logo .back-link { order: 3; margin-bottom: 0; }
+  .nav-logo .brand { order: 1; }
+  .nav-logo .sub { display: none; }
+  .sp-toggle-btn {
+    order: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .12s;
+    line-height: 1;
+  }
+  .sp-toggle-btn:hover { background: #e8e5f4; }
+  /* nav-listはSPでは非表示(ページジャンプ不要)にしてもよいが残す */
+  .nav-list { display: none; }
+
 }
 
 @media print {
@@ -282,6 +323,7 @@ a.lb-url:hover { text-decoration: underline; }
     <a href="index.html" class="back-link">戻る</a>
     <a href="index.html" class="brand"><img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block"></a>
     <div class="sub">ガイダンス資料作成</div>
+    <button class="sp-toggle-btn" id="sp-toggle-btn" onclick="toggleSPView()" aria-label="フォーム表示切替">✏️</button>
   </div>
   <div class="nav-list">
     <button class="nav-item active" onclick="scrollToPage('p1')" id="nav-p1">ご確認事項</button>
@@ -677,6 +719,12 @@ function getSettings() {
   } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); }
 }
 
+
+function toggleSPView() {
+  const isFormMode = document.body.classList.toggle('sp-form-mode');
+  const btn = document.getElementById('sp-toggle-btn');
+  if (btn) btn.textContent = isFormMode ? '📄' : '✏️';
+}
 
 function scrollToPage(id) {
   const el = document.getElementById(id);
