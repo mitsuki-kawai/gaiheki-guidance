@@ -256,16 +256,29 @@ a.lb-url:hover { text-decoration: underline; }
   .form-pane { display: none; }
   .preview { flex: 1; order: 1; }
   /* フォームモード時 */
+  body.sp-form-mode {
+    overflow-y: auto;
+  }
   body.sp-form-mode .app {
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    overflow: hidden;
+    height: auto;
+    overflow: visible;
+    min-height: 100vh;
   }
   body.sp-form-mode .form-pane {
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    height: auto;
+    overflow: visible;
+  }
+  body.sp-form-mode .form-scroll {
+    overflow: visible;
+    flex: none;
+    height: auto;
+  }
+  body.sp-form-mode .form-actions {
+    position: static;
   }
   body.sp-form-mode .preview { display: none; }
   body.sp-form-mode .nav-list { display: none; }
@@ -744,17 +757,8 @@ function toggleSPView() {
   const isFormMode = document.body.classList.toggle('sp-form-mode');
   const btn = document.getElementById('sp-toggle-btn');
   if (btn) btn.textContent = isFormMode ? '📄' : '📝';
-  const formPane = document.querySelector('.form-pane');
-  if (!formPane) return;
-  if (isFormMode) {
-    const nav = document.querySelector('.nav');
-    const navH = nav ? nav.getBoundingClientRect().height : 52;
-    formPane.style.height = 'calc(100vh - ' + navH + 'px)';
-    formPane.style.overflowY = 'hidden';
-  } else {
-    formPane.style.height = '';
-    formPane.style.overflowY = '';
-  }
+  // フォーム表示時はページ先頭にスクロール
+  if (isFormMode) window.scrollTo(0, 0);
 }
 
 
