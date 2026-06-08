@@ -264,9 +264,8 @@ a.lb-url:hover { text-decoration: underline; }
   }
   body.sp-form-mode .form-pane {
     display: flex;
-    flex: 1;
     flex-direction: column;
-    min-height: 0;
+    overflow: hidden;
   }
   body.sp-form-mode .preview { display: none; }
   body.sp-form-mode .nav-list { display: none; }
@@ -745,6 +744,17 @@ function toggleSPView() {
   const isFormMode = document.body.classList.toggle('sp-form-mode');
   const btn = document.getElementById('sp-toggle-btn');
   if (btn) btn.textContent = isFormMode ? '📄' : '📝';
+  const formPane = document.querySelector('.form-pane');
+  if (!formPane) return;
+  if (isFormMode) {
+    const nav = document.querySelector('.nav');
+    const navH = nav ? nav.getBoundingClientRect().height : 52;
+    formPane.style.height = 'calc(100vh - ' + navH + 'px)';
+    formPane.style.overflowY = 'hidden';
+  } else {
+    formPane.style.height = '';
+    formPane.style.overflowY = '';
+  }
 }
 
 
