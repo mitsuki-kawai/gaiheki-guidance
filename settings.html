@@ -21,7 +21,7 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
 /* ── ヘッダー ── */
 .header {
   background: var(--white); border-bottom: 1px solid var(--border);
-  height: 56px; display: flex; align-items: center; padding: 0 24px; gap: 12px;
+  height: 56px; display: flex; align-items: center; padding: 0 24px; gap: 16px;
   position: sticky; top: 0; z-index: 10;
 }
 .header-logo, a.header-logo { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; text-decoration: none; color: var(--text); }
@@ -114,7 +114,7 @@ a.header-logo:hover { opacity: 0.8; }
 }
 @media (max-width: 767px) {
   body { overflow-x: hidden; }
-  .header { padding: 0 16px; height: auto; min-height: 56px; flex-wrap: wrap; gap: 8px; padding-top: 8px; padding-bottom: 8px; }
+  .header { height: 56px; padding: 0 16px; gap: 12px; }
   .header-divider { display: none; }
   .body { flex-direction: column; height: auto; overflow: visible; }
   .sidenav {

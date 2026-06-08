@@ -26,7 +26,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 .app{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:56px 1fr;height:100vh;overflow:hidden}
 
 /* ── ヘッダー ── */
-.header{grid-column:1/-1;background:var(--white);border-bottom:1px solid var(--gray-border);display:flex;align-items:center;padding:0 24px;gap:16px;position:sticky;top:0;z-index:10}
+.header{grid-column:1/-1;background:var(--white);border-bottom:1px solid var(--gray-border);display:flex;align-items:center;height:56px;padding:0 24px;gap:16px;position:sticky;top:0;z-index:10}
 .header-logo{font-size:18px;font-weight:800;letter-spacing:-0.5px;margin-right:auto}
 .header-logo span{color:var(--purple)}
 .header-logo .sub{font-size:10px;color:var(--gray-text);font-weight:400;margin-left:6px;letter-spacing:0}
@@ -100,7 +100,8 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
     grid-template-rows: 56px auto 1fr;
     height: 100vh;
   }
-  .header { grid-column: 1 / -1; }
+  .header { grid-column: 1 / -1; height: 56px; padding: 0 16px; gap: 12px; }
+  .header-logo img { height: 28px; }
   .sidebar {
     grid-column: 1;
     grid-row: 2;
