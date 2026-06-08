@@ -105,6 +105,7 @@ a.header-logo:hover { opacity: 0.8; }
   pointer-events: none;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.section-select { display: none; }
 
 /* ── Responsive ── */
 @media (max-width: 1023px) {
@@ -146,6 +147,29 @@ a.header-logo:hover { opacity: 0.8; }
   .btn-save { min-height: 44px; }
   .btn-back { min-height: 44px; min-width: 44px; }
   .section { max-width: 100%; }
+  /* sidenav → dropdown on SP */
+  .sidenav { padding: 8px 12px; }
+  .sidenav-item { display: none; }
+  .sidenav-label { display: none; }
+  .section-select {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    background: var(--white);
+    color: var(--text);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    min-height: 44px;
+  }
 }
 </style>
 </head>
@@ -167,6 +191,12 @@ a.header-logo:hover { opacity: 0.8; }
     <button class="sidenav-item" onclick="showSection('staff', this)">👤 担当者設定</button>
     <button class="sidenav-item" onclick="showSection('text', this)">📝 テキスト設定</button>
     <button class="sidenav-item" onclick="showSection('url', this)">🔗 URL設定</button>
+    <select id="section-select" class="section-select" onchange="showSectionById(this.value)">
+      <option value="plan">📋 プラン設定</option>
+      <option value="staff">👤 担当者設定</option>
+      <option value="text">📝 テキスト設定</option>
+      <option value="url">🔗 URL設定</option>
+    </select>
   </div>
 
   <!-- メインコンテンツ -->
@@ -289,6 +319,11 @@ function showSection(id, btn) {
   document.querySelectorAll('.sidenav-item').forEach(b => b.classList.remove('active'));
   document.getElementById('sec-' + id).classList.add('active');
   if (btn) btn.classList.add('active');
+  const sel = document.getElementById('section-select');
+  if (sel) sel.value = id;
+}
+function showSectionById(id) {
+  showSection(id, null);
 }
 
 function renderStaffList() {
