@@ -170,6 +170,87 @@ a.lb-url:hover { text-decoration: underline; }
 .btn-pdf:hover { opacity: .85; }
 
 /* ── 印刷（A4） ── */
+
+/* ── Responsive ── */
+@media (max-width: 1023px) {
+  :root { --nav-w: 120px; --form-w: 300px; }
+  .nav-item { padding: 8px 12px; font-size: 11px; }
+  .a4-page { width: 100%; min-height: auto; }
+  #pages-container { align-items: stretch; padding: 0 8px; }
+}
+@media (max-width: 767px) {
+  body { overflow: hidden; }
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  /* ナビ → 上部水平タブ */
+  .nav {
+    flex-direction: row;
+    height: auto;
+    flex-shrink: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .nav-logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 12px;
+    gap: 8px;
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .nav-logo .back-link { margin-bottom: 0; font-size: 11px; padding: 2px 6px; }
+  .nav-logo a.brand { font-size: 14px; }
+  .nav-logo .sub { display: none; }
+  .nav-list {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    overflow-x: auto;
+    flex: 1;
+    align-items: stretch;
+    gap: 0;
+  }
+  .nav-item {
+    padding: 10px 12px;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    font-size: 10px;
+    flex-shrink: 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-item.active { border-bottom-color: var(--main); border-left-color: transparent; }
+  /* フォーム → 上、プレビュー → 下 */
+  .form-pane {
+    order: 1;
+    border-left: none;
+    border-bottom: 1px solid var(--border);
+    flex: 0 0 auto;
+    max-height: 45vh;
+    overflow-y: auto;
+  }
+  .preview {
+    order: 2;
+    flex: 1;
+    overflow: auto;
+    padding: 12px 0;
+  }
+  .a4-page { width: 794px; min-height: auto; }
+  .form-actions { padding: 8px 16px; }
+  .btn-save, .btn-pdf { min-height: 44px; }
+  .f-sec:first-child { margin-top: 0; }
+}
+
 @media print {
   body { overflow: visible; background: white; }
   .app { display: block; height: auto; }
