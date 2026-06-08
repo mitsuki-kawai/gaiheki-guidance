@@ -136,8 +136,10 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
   .btn-new, .btn-settings { min-height: 44px; }
   .header-logo .sub { display: none; }
   .main-bar { margin-bottom: 8px; }
-  .filter-bar { gap: 6px; }
-  .filter-bar select { flex: 1; min-width: 0; font-size: 11px; }
+  .filter-bar { gap: 6px; flex-wrap: nowrap; }
+  .filter-group { flex: 1; min-width: 0; }
+  .filter-bar select { width: 100%; font-size: 11px; padding: 4px 22px 4px 6px; min-height: 28px; background-position: right 6px center; }
+  .filter-label { font-size: 10px; }
   .card-new { display: none !important; }
   #filter-list { display: none; }
   .filter-select { display: block; }
