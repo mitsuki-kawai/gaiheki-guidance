@@ -42,11 +42,11 @@ body {
 .nav-item.active { color: var(--main); border-left-color: var(--main); font-weight: 600; }
 
 /* ── プレビュー ── */
-.preview { overflow-y: auto; overflow-x: auto; padding: 24px 0 40px; background: #d8d8d8; }
-#pages-container { display: flex; flex-direction: column; align-items: stretch; gap: 16px; padding: 0 16px; }
+.preview { overflow-y: auto; overflow-x: hidden; padding: 0; background: #d8d8d8; }
+#pages-container { display: flex; flex-direction: column; align-items: center; gap: 16px; padding: 24px 0 40px; }
 
 /* ── A4ページ ── */
-.a4-page { width: 100%; min-height: 1123px; background: var(--white); position: relative; flex-shrink: 0; }
+.a4-page { width: 794px; min-height: 1123px; background: var(--white); position: relative; flex-shrink: 0; }
 
 /* ページヘッダーバー */
 .page-hbar { background: var(--main); color: var(--white); padding: 13px 32px; display: flex; justify-content: space-between; align-items: center; }
@@ -178,7 +178,6 @@ a.lb-url:hover { text-decoration: underline; }
   :root { --nav-w: 120px; --form-w: 300px; }
   .nav-item { padding: 8px 12px; font-size: 11px; }
   .a4-page { min-height: auto; }
-  #pages-container { padding: 0 8px; }
 }
 @media (max-width: 767px) {
   body { overflow: hidden; }
@@ -247,7 +246,7 @@ a.lb-url:hover { text-decoration: underline; }
     overflow: auto;
     padding: 12px 0;
   }
-  .a4-page { width: 100%; min-height: auto; }
+  .a4-page { min-height: auto; }
   .form-actions { padding: 8px 16px; }
   .btn-save, .btn-pdf { min-height: 44px; }
   .f-sec:first-child { margin-top: 0; }
@@ -739,6 +738,29 @@ function toggleSPView() {
   if (btn) btn.textContent = isFormMode ? '📄' : '📝';
 }
 
+
+/* ── プレビュースケーリング ── */
+function scalePreview() {
+  const preview = document.querySelector('.preview');
+  const container = document.getElementById('pages-container');
+  if (!preview || !container) return;
+  const NATURAL_W = 794;
+  const availW = preview.clientWidth - 32; // 16px × 2
+  const scale = Math.min(1, availW / NATURAL_W);
+  if (scale < 1) {
+    container.style.transform = 'scale(' + scale + ')';
+    container.style.transformOrigin = 'top center';
+    // 縮小分の余白を補正
+    const naturalH = container.scrollHeight;
+    container.style.marginBottom = (-naturalH * (1 - scale)) + 'px';
+  } else {
+    container.style.transform = '';
+    container.style.transformOrigin = '';
+    container.style.marginBottom = '';
+  }
+}
+window.addEventListener('resize', scalePreview);
+
 function scrollToPage(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
@@ -900,6 +922,7 @@ function saveCase() {
     document.getElementById('issue_date').value = new Date().toISOString().split('T')[0];
     updatePlanDefaults();
     render();
+    scalePreview();
     return;
   }
   const c = getCases().find(c => c.id === editId);
@@ -913,6 +936,7 @@ function saveCase() {
   });
   if (Array.isArray(d.areas)) { areas.push(...d.areas); renderAreaTags(); }
   render();
+  scalePreview();
 })();
 </script>
 </body>
