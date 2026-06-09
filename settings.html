@@ -105,6 +105,27 @@ a.header-logo:hover { opacity: 0.8; }
   pointer-events: none;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* ── CS担当者設定 ── */
+.cs-staff-list { display: flex; flex-direction: column; gap: 12px; }
+.cs-staff-item { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.cs-staff-view { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+.cs-staff-thumb { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--main); flex-shrink: 0; background: #eeecf8; display: flex; align-items: center; justify-content: center; color: var(--main); font-size: 20px; }
+.cs-staff-thumb img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+.cs-staff-view-name { font-weight: 600; flex: 1; font-size: 14px; }
+.cs-staff-view-sub { font-size: 11px; color: var(--muted); }
+.cs-staff-edit { background: var(--bg); padding: 14px 16px; border-top: 1px solid var(--border); display: none; }
+.cs-staff-edit.open { display: block; }
+.cs-img-row { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
+.cs-img-block { display: flex; flex-direction: column; gap: 6px; align-items: center; }
+.cs-img-preview { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #eeecf8; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 28px; overflow: hidden; }
+.cs-img-preview.qr { border-radius: 6px; }
+.cs-img-preview img { width: 100%; height: 100%; object-fit: cover; }
+.cs-img-label { font-size: 10px; color: var(--muted); }
+.cs-img-btn { font-size: 11px; padding: 3px 10px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: var(--white); }
+.cs-img-btn:hover { background: var(--bg); }
+.btn-cs-add { margin-top: 8px; width: 100%; padding: 10px; border: 1px dashed var(--border); border-radius: 6px; background: none; cursor: pointer; font-size: 13px; color: var(--label); }
+.btn-cs-add:hover { border-color: var(--main); color: var(--main); background: #f7f6fb; }
+
 .section-select { display: none; }
 
 /* ── Responsive ── */
@@ -191,11 +212,13 @@ a.header-logo:hover { opacity: 0.8; }
     <button class="sidenav-item" onclick="showSection('staff', this)">👤 担当者設定</button>
     <button class="sidenav-item" onclick="showSection('text', this)">📝 テキスト設定</button>
     <button class="sidenav-item" onclick="showSection('url', this)">🔗 URL設定</button>
+    <button class="sidenav-item" onclick="showSection('cs', this)">👤 CS担当者情報</button>
     <select id="section-select" class="section-select" onchange="showSectionById(this.value)">
       <option value="plan">📋 プラン設定</option>
       <option value="staff">👤 担当者設定</option>
       <option value="text">📝 テキスト設定</option>
       <option value="url">🔗 URL設定</option>
+      <option value="cs">👤 CS担当者情報</option>
     </select>
   </div>
 
@@ -263,6 +286,14 @@ a.header-logo:hover { opacity: 0.8; }
       </div>
     </div>
 
+
+    <!-- ── CS担当者情報 ── -->
+    <div class="section" id="sec-cs">
+      <div class="section-title">CS担当者情報</div>
+      <div class="section-desc">名刺カードに表示するCS担当者の情報を設定します。</div>
+      <div class="cs-staff-list" id="cs-staff-list"></div>
+      <button class="btn-cs-add" onclick="csAdd()">＋ CS担当者を追加</button>
+    </div>
     <!-- ── URL設定 ── -->
     <div class="section" id="sec-url">
       <div class="section-title">URL設定</div>
@@ -294,6 +325,11 @@ const DEFAULT_SETTINGS = {
   excludeText: '・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人（例：山田 太郎）\n上記にあてはまるお客様情報については、お手数ですが私までご報告ください。',
   staffList: ['恩田雅史', '鈴木宏午', '皆川進太', '中村元彌', '松本そよ', '穴澤萌花', '亀井翼', '染葉健介', '杉本山東'],
   loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '', loginUrl: 'https://business.gaihekiplus.com/sign_in',
+  csStaff: [
+    { id:'cs1', name:'飯塚来己',  photo:'', bio:'', phone:'', lineQr:'' },
+    { id:'cs2', name:'留木涼花',  photo:'', bio:'', phone:'', lineQr:'' },
+    { id:'cs3', name:'手光菜津美',photo:'', bio:'', phone:'', lineQr:'' },
+  ],
 };
 
 function getSettings() {
@@ -313,6 +349,110 @@ function getSettings() {
 }
 
 let staffList = [];
+
+
+/* ── CS担当者管理 ── */
+let csStaff = [];
+let csEditingId = null;
+let csIdCnt = 0;
+const csNewId = () => 'cs_' + (++csIdCnt) + '_' + Date.now();
+
+function csEsc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function csRenderList() {
+  const list = document.getElementById('cs-staff-list');
+  if (!list) return;
+  list.innerHTML = csStaff.map(st => {
+    const photoHtml = st.photo
+      ? `<div class="cs-staff-thumb"><img src="${st.photo}" alt=""></div>`
+      : `<div class="cs-staff-thumb">👤</div>`;
+    const isOpen = csEditingId === st.id;
+    const qrPreview = st.lineQr ? `<img src="${st.lineQr}" alt="QR">` : '📷';
+    const phPreview = st.photo ? `<img src="${st.photo}" alt="">` : '👤';
+    return `<div class="cs-staff-item" id="csitem-${st.id}">
+  <div class="cs-staff-view">
+    ${photoHtml}
+    <div style="flex:1">
+      <div class="cs-staff-view-name">${csEsc(st.name || '（名前未設定）')}</div>
+      <div class="cs-staff-view-sub">${csEsc(st.phone || '')}${st.bio ? ' · ' + st.bio.slice(0,20) + '…' : ''}</div>
+    </div>
+    <button class="btn-bact-s" onclick="csToggleEdit('${st.id}')">${isOpen ? '閉じる' : '編集'}</button>
+    <button class="btn-bact-s" onclick="csDelete('${st.id}')" style="margin-left:4px">🗑️</button>
+  </div>
+  <div class="cs-staff-edit ${isOpen ? 'open' : ''}">
+    <div class="field"><label>名前</label>
+      <input type="text" value="${csEsc(st.name)}" oninput="csUpdate('${st.id}','name',this.value)" placeholder="例：飯塚来己">
+    </div>
+    <div class="field"><label>紹介文</label>
+      <textarea rows="3" oninput="csUpdate('${st.id}','bio',this.value)">${csEsc(st.bio)}</textarea>
+    </div>
+    <div class="field"><label>電話番号</label>
+      <input type="text" value="${csEsc(st.phone)}" oninput="csUpdate('${st.id}','phone',this.value)" placeholder="090-0000-0000">
+    </div>
+    <div class="cs-img-row" style="margin-top:8px">
+      <div class="cs-img-block">
+        <div class="cs-img-preview">${phPreview}</div>
+        <div class="cs-img-label">顔写真</div>
+        <label class="cs-img-btn">📷 選択<input type="file" accept="image/*" style="display:none" onchange="csHandleImage('${st.id}','photo',this)"></label>
+      </div>
+      <div class="cs-img-block">
+        <div class="cs-img-preview qr">${qrPreview}</div>
+        <div class="cs-img-label">LINE QR</div>
+        <label class="cs-img-btn">📷 選択<input type="file" accept="image/*" style="display:none" onchange="csHandleImage('${st.id}','lineQr',this)"></label>
+      </div>
+    </div>
+  </div>
+</div>`;
+  }).join('');
+}
+
+function csToggleEdit(id) {
+  csEditingId = (csEditingId === id) ? null : id;
+  csRenderList();
+}
+function csUpdate(id, field, value) {
+  const st = csStaff.find(x => x.id === id);
+  if (st) st[field] = value;
+}
+function csDelete(id) {
+  if (!confirm('削除しますか？')) return;
+  csStaff = csStaff.filter(x => x.id !== id);
+  if (csEditingId === id) csEditingId = null;
+  csRenderList();
+}
+function csAdd() {
+  const id = csNewId();
+  csStaff.push({ id, name: '', bio: '', phone: '', photo: '', lineQr: '' });
+  csEditingId = id;
+  csRenderList();
+  document.getElementById('csitem-' + id)?.scrollIntoView({ behavior: 'smooth' });
+}
+function csHandleImage(id, field, input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    // リサイズして保存
+    const img = new Image();
+    img.onload = () => {
+      const MAX = 240;
+      let w = img.width, h = img.height;
+      if (w > MAX || h > MAX) {
+        const r = Math.min(MAX/w, MAX/h);
+        w = Math.round(w*r); h = Math.round(h*r);
+      }
+      const canvas = document.createElement('canvas');
+      canvas.width = w; canvas.height = h;
+      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      const st = csStaff.find(x => x.id === id);
+      if (st) st[field] = dataUrl;
+      csRenderList();
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
 
 function showSection(id, btn) {
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -389,6 +529,7 @@ function saveSettings() {
     photoUrl:      document.getElementById('photo-url').value.trim(),
     storePageUrl:  document.getElementById('store-page-url').value.trim(),
     loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
+    csStaff:       JSON.parse(JSON.stringify(csStaff)),
   };
 
   localStorage.setItem('gaiheki_settings', JSON.stringify(settings));

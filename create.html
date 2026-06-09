@@ -172,6 +172,16 @@ a.lb-url:hover { text-decoration: underline; }
 .btn-save:hover { opacity: .85; }
 .btn-pdf { padding: 10px 14px; background: var(--accent); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; white-space: nowrap; }
 .btn-pdf:hover { opacity: .85; }
+/* ── CS名刺カード ── */
+.cs-card { background: #fff; border-radius: 12px; border: 1px solid #e0ddf5; box-shadow: 0 2px 16px rgba(63,50,119,0.1); padding: 28px 32px; display: flex; gap: 28px; align-items: flex-start; max-width: 540px; margin: 0 auto; }
+.cs-card-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--main); flex-shrink: 0; background: #eeecf8; }
+.cs-card-no-photo { width: 100px; height: 100px; border-radius: 50%; background: #eeecf8; border: 3px solid var(--main); display: flex; align-items: center; justify-content: center; font-size: 36px; flex-shrink: 0; }
+.cs-card-info { flex: 1; min-width: 0; }
+.cs-card-name { font-size: 22px; font-weight: 800; color: var(--main); margin-bottom: 8px; letter-spacing: -0.5px; }
+.cs-card-bio { font-size: 11.5px; color: var(--label); line-height: 1.7; margin-bottom: 10px; white-space: pre-line; }
+.cs-card-phone { font-size: 12.5px; color: var(--text); margin-bottom: 10px; }
+.cs-card-qr { width: 80px; height: 80px; border: 1px solid var(--border); border-radius: 6px; object-fit: cover; }
+
 /* ── 共有・閲覧モード ── */
 
 
@@ -391,6 +401,7 @@ a.lb-url:hover { text-decoration: underline; }
     <button class="nav-item active" onclick="scrollToPage('p1')" id="nav-p1">ご確認事項</button>
     <button class="nav-item" onclick="scrollToPage('p2')" id="nav-p2">写真ご提供のお願い</button>
     <button class="nav-item" onclick="scrollToPage('p3')" id="nav-p3">現調 / 成約に繋げるための施策</button>
+    <button class="nav-item" onclick="scrollToPage('p4')" id="nav-p4">CS担当者</button>
   </div>
 </div>
 
@@ -612,6 +623,20 @@ a.lb-url:hover { text-decoration: underline; }
 
   </div></div>
 </div><!-- /p3 -->
+
+<!-- ━━━ PAGE 4 ━━━ -->
+<div class="a4-page" id="p4">
+  <div class="page-hbar">
+    <div class="phb-l"><span class="phb-brand">gaiheki+</span></div>
+    <div style="text-align:right;line-height:1.6">
+      <div style="font-size:12px;font-weight:700">宛先：<strong id="p-company4">（会社名・担当者名）</strong> 様</div>
+      <div style="font-size:10px;opacity:.85" id="p-date4"></div>
+    </div>
+  </div>
+  <div class="page-content" id="p4-content">
+    <div style="text-align:center;color:var(--muted);padding:60px 0;font-size:13px">CS担当者情報が設定されていません</div>
+  </div>
+</div><!-- /p4 -->
 
 
 </div><!-- /#pages-container -->
@@ -859,6 +884,42 @@ function scalePreview() {
 }
 window.addEventListener('resize', scalePreview);
 
+
+function renderP4() {
+  const content = document.getElementById('p4-content');
+  if (!content) return;
+  const name = v('cs_assignee');
+  if (!name) {
+    content.innerHTML = '<div style="text-align:center;color:var(--muted);padding:60px 0;font-size:13px">CS担当者情報が設定されていません</div>';
+    return;
+  }
+  const s = getSettings();
+  const staff = (s.csStaff || []).find(st => st.name === name);
+  if (!staff) {
+    content.innerHTML = `<div style="text-align:center;color:var(--muted);padding:60px 0;font-size:13px">${esc(name)} の情報が設定されていません</div>`;
+    return;
+  }
+  const photoHtml = staff.photo
+    ? `<img class="cs-card-photo" src="${staff.photo}" alt="${esc(staff.name)}">`
+    : `<div class="cs-card-no-photo">👤</div>`;
+  const qrHtml = staff.lineQr
+    ? `<div style="margin-top:12px"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">LINE</div><img class="cs-card-qr" src="${staff.lineQr}" alt="LINE QR"></div>`
+    : '';
+  content.innerHTML = `
+    <div style="padding:48px 40px">
+      <div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;text-align:center">CS STAFF</div>
+      <div class="cs-card">
+        ${photoHtml}
+        <div class="cs-card-info">
+          <div class="cs-card-name">${esc(staff.name)}</div>
+          ${staff.bio ? `<div class="cs-card-bio">${esc(staff.bio)}</div>` : ''}
+          ${staff.phone ? `<div class="cs-card-phone">📞 ${esc(staff.phone)}</div>` : ''}
+          ${qrHtml}
+        </div>
+      </div>
+    </div>`;
+}
+
 function scrollToPage(id) {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
@@ -936,7 +997,7 @@ function render() {
   const co = v('company'), cn = v('contact_name');
   const isDefault = !co && !cn;
   const recipient = co && cn ? co + '　' + cn : (co || cn || '（会社名・担当者名）');
-  ['p-company','p-company2','p-company3'].forEach(id => {
+  ['p-company','p-company2','p-company3','p-company4'].forEach(id => {
     const el = document.getElementById(id);
     if (el) { el.textContent = recipient; el.style.color = isDefault ? 'var(--muted)' : ''; }
   });
@@ -953,6 +1014,8 @@ function render() {
   set('p-date', '発行日：' + dateLabel);
   set('p-date2', '発行日：' + dateLabel);
   set('p-date3', '発行日：' + dateLabel);
+  set('p-date4', '発行日：' + dateLabel);
+  renderP4();
   setVal('p-plan',       planLabel[v('plan')]);
   setVal('p-fee',        v('monthly_fee'));
   setVal('p-commission', v('commission'));
@@ -1052,6 +1115,7 @@ function saveCase() {
     updatePlanDefaults();
     updatePaymentNoteOptions();
     render();
+    renderP4();
     scalePreview();
     return;
   }
@@ -1071,6 +1135,7 @@ function saveCase() {
   if (Array.isArray(d.areas)) { areas.push(...d.areas); renderAreaTags(); }
   updatePaymentNoteOptions();
   render();
+  renderP4();
   scalePreview();
 })();
 </script>
