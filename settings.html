@@ -142,7 +142,8 @@ a.header-logo:hover { opacity: 0.8; }
 .cs-img-btn:hover { background: var(--bg); }
 /* CS担当者編集/削除ボタン */
 .cs-staff-view .btn-bact-s:first-of-type { padding: 4px 12px; background: #eeecf8; color: var(--main); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
-.cs-staff-view .btn-bact-s:last-of-type  { padding: 4px 12px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; margin-left: 0; }
+.cs-staff-view .btn-bact-s:last-of-type  { padding: 4px 12px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 0; font-weight: 600; cursor: pointer; transition: opacity .12s; margin-left: 0; }
+.cs-staff-view .btn-bact-s:last-of-type::before { content: "削除"; font-size: 12px; }
 .cs-staff-view .btn-bact-s:hover { opacity: .8; }
 .btn-cs-add { margin-top: 8px; width: 100%; padding: 10px; border: 1px dashed var(--border); border-radius: 6px; background: none; cursor: pointer; font-size: 13px; color: var(--label); }
 .btn-cs-add:hover { border-color: var(--main); color: var(--main); background: #f7f6fb; }
