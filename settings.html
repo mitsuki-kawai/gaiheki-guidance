@@ -285,7 +285,7 @@ a.header-logo:hover { opacity: 0.8; }
         </div>
 
       </div>
-      <button class="btn-save" style="margin-top:16px" onclick="savePlanSection()">保存</button>
+      <button id="btn-save-plan" class="btn-save" style="margin-top:16px" onclick="savePlanSection()">保存</button>
     </div>
 
     <!-- ── 担当者設定 ── -->
@@ -294,7 +294,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">資料作成時の「担当者」ドロップダウンとトップページのフィルターに反映されます。</div>
       <div class="staff-list" id="staff-list"></div>
       <button class="btn-add-staff" onclick="addStaff()">＋ 担当者を追加</button>
-      <button class="btn-save" style="margin-top:16px" onclick="saveStaffSection()">保存</button>
+      <button id="btn-save-staff" class="btn-save" style="margin-top:16px" onclick="saveStaffSection()">保存</button>
     </div>
 
     <!-- ── テキスト設定 ── -->
@@ -309,7 +309,7 @@ a.header-logo:hover { opacity: 0.8; }
         <label>⑤ 除外情報の文言</label>
         <textarea id="exclude-text" rows="7"></textarea>
       </div>
-      <button class="btn-save" style="margin-top:16px" onclick="saveTextSection()">保存</button>
+      <button id="btn-save-text" class="btn-save" style="margin-top:16px" onclick="saveTextSection()">保存</button>
     </div>
 
 
@@ -319,7 +319,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">名刺カードに表示するCS担当者の情報を設定します。</div>
       <div class="cs-staff-list" id="cs-staff-list"></div>
       <button class="btn-cs-add" onclick="csAdd()">＋ CS担当者を追加</button>
-      <button class="btn-save" style="margin-top:16px" onclick="saveCsSection()">保存</button>
+      <button id="btn-save-cs" class="btn-save" style="margin-top:16px" onclick="saveCsSection()">保存</button>
     </div>
 
     <!-- ── 決済手段設定 ── -->
@@ -328,7 +328,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">create.htmlフォームの決済手段と備考の選択肢を管理します。</div>
       <div id="pm-list"></div>
       <button class="btn-cs-add" onclick="pmAddMethod()" style="margin-top:8px">＋ 決済手段を追加</button>
-      <button class="btn-save" style="margin-top:16px" onclick="savePaymentSection()">保存</button>
+      <button id="btn-save-payment" class="btn-save" style="margin-top:16px" onclick="savePaymentSection()">保存</button>
     </div>
     <!-- ── URL設定 ── -->
     <div class="section" id="sec-url">
@@ -343,7 +343,7 @@ a.header-logo:hover { opacity: 0.8; }
         <div class="field"><label>写真アップロードフォームURL</label><input type="text" id="photo-url" placeholder="GoogleフォームのURL等"></div>
         <div class="field"><label>加盟店紹介ページURL</label><input type="text" id="store-page-url" placeholder="https://gaihekiplus.com/store/..."></div>
       </div>
-      <button class="btn-save" style="margin-top:16px" onclick="saveUrlSection()">保存</button>
+      <button id="btn-save-url" class="btn-save" style="margin-top:16px" onclick="saveUrlSection()">保存</button>
     </div>
 
   </div><!-- /main -->
@@ -634,64 +634,102 @@ function removeStaff(i) {
 
 
 function saveSectionData(key, data) {
+  console.log('[saveSectionData] 開始 key=' + key);
+  console.log('[saveSectionData] 保存するデータ:', JSON.stringify(data, null, 2));
   try {
     const existing = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+    console.log('[saveSectionData] 既存のlocalStorage:', JSON.stringify(existing, null, 2));
     const merged = { ...existing, ...data };
     localStorage.setItem('gaiheki_settings', JSON.stringify(merged));
-    console.log('[settings] saved:', key, data);
+    const verify = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+    console.log('[saveSectionData] 保存後のlocalStorage[' + key + ']:', verify[key] || merged);
+    console.log('[saveSectionData] 完了 key=' + key);
   } catch(e) {
-    console.error('[settings] save error:', key, e);
+    console.error('[saveSectionData] エラー key=' + key, e);
+    alert('保存中にエラーが発生しました: ' + e.message);
     return;
   }
   const t = document.getElementById('toast');
-  if (!t) return;
+  if (!t) { console.warn('[saveSectionData] toast要素が見つかりません'); return; }
   t.textContent = '保存しました';
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2200);
 }
+
 function savePlanSection() {
-  const plans = {};
-  ['light','basic','pro'].forEach(p => {
-    const g = id => document.getElementById(`${p}-${id}`)?.value?.trim() || DEFAULT_SETTINGS.plans[p][id];
-    plans[p] = { fee:g('fee'), commission:g('commission'), guarantee:g('guarantee'), monthly:g('monthly'), half:g('half'), contractPeriod:g('contract-period') };
-  });
-  console.log('[settings] savePlanSection plans=', plans);
-  saveSectionData('plans', { plans });
+  console.log('保存ボタンクリック：プラン設定');
+  try {
+    const plans = {};
+    ['light','basic','pro'].forEach(p => {
+      const g = id => {
+        const el = document.getElementById(p + '-' + id);
+        console.log('  [plan] #' + p + '-' + id + ' =', el ? el.value : 'NOT FOUND');
+        return (el && el.value.trim()) ? el.value.trim() : DEFAULT_SETTINGS.plans[p][id];
+      };
+      plans[p] = { fee:g('fee'), commission:g('commission'), guarantee:g('guarantee'), monthly:g('monthly'), half:g('half'), contractPeriod:g('contract-period') };
+    });
+    saveSectionData('plans', { plans });
+  } catch(e) { console.error('savePlanSection エラー:', e); }
 }
+
 function saveStaffSection() {
-  console.log('[settings] saveStaffSection staffList=', staffList);
-  saveSectionData('staffList', { staffList: [...staffList] });
+  console.log('保存ボタンクリック：担当者設定');
+  console.log('  staffList =', staffList);
+  try {
+    saveSectionData('staffList', { staffList: [...staffList] });
+  } catch(e) { console.error('saveStaffSection エラー:', e); }
 }
+
 function saveTextSection() {
-  const data = {
-    holidayText: document.getElementById('holiday-text').value || DEFAULT_SETTINGS.holidayText,
-    excludeText: document.getElementById('exclude-text').value || DEFAULT_SETTINGS.excludeText,
-  };
-  console.log('[settings] saveTextSection=', data);
-  saveSectionData('text', data);
+  console.log('保存ボタンクリック：テキスト設定');
+  try {
+    const holidayEl = document.getElementById('holiday-text');
+    const excludeEl = document.getElementById('exclude-text');
+    console.log('  #holiday-text =', holidayEl ? holidayEl.value : 'NOT FOUND');
+    console.log('  #exclude-text =', excludeEl ? excludeEl.value : 'NOT FOUND');
+    const data = {
+      holidayText: (holidayEl && holidayEl.value) ? holidayEl.value : DEFAULT_SETTINGS.holidayText,
+      excludeText: (excludeEl && excludeEl.value) ? excludeEl.value : DEFAULT_SETTINGS.excludeText,
+    };
+    saveSectionData('text', data);
+  } catch(e) { console.error('saveTextSection エラー:', e); }
 }
+
 function saveCsSection() {
-  const data = { csStaff: JSON.parse(JSON.stringify(csStaff)) };
-  console.log('[settings] saveCsSection csStaff=', data.csStaff);
-  saveSectionData('csStaff', data);
+  console.log('保存ボタンクリック：CS担当者情報');
+  console.log('  csStaff =', csStaff);
+  try {
+    saveSectionData('csStaff', { csStaff: JSON.parse(JSON.stringify(csStaff)) });
+  } catch(e) { console.error('saveCsSection エラー:', e); }
 }
+
 function savePaymentSection() {
-  const data = { paymentConfig: JSON.parse(JSON.stringify(pmConfig)) };
-  console.log('[settings] savePaymentSection pmConfig=', data.paymentConfig);
-  saveSectionData('paymentConfig', data);
+  console.log('保存ボタンクリック：決済手段');
+  console.log('  pmConfig =', pmConfig);
+  try {
+    saveSectionData('paymentConfig', { paymentConfig: JSON.parse(JSON.stringify(pmConfig)) });
+  } catch(e) { console.error('savePaymentSection エラー:', e); }
 }
+
 function saveUrlSection() {
-  const data = {
-    loanDocUrl:    document.getElementById('loan-doc-url').value.trim(),
-    loanApplyUrl:  document.getElementById('loan-apply-url').value.trim(),
-    giftSurveyUrl: document.getElementById('gift-survey-url').value.trim(),
-    giftWorkUrl:   document.getElementById('gift-work-url').value.trim(),
-    photoUrl:      document.getElementById('photo-url').value.trim(),
-    storePageUrl:  document.getElementById('store-page-url').value.trim(),
-    loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
-  };
-  console.log('[settings] saveUrlSection=', data);
-  saveSectionData('urls', data);
+  console.log('保存ボタンクリック：URL設定');
+  try {
+    const ids = ['loan-doc-url','loan-apply-url','gift-survey-url','gift-work-url','photo-url','store-page-url','login-url'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      console.log('  #' + id + ' =', el ? el.value : 'NOT FOUND');
+    });
+    const data = {
+      loanDocUrl:    document.getElementById('loan-doc-url').value.trim(),
+      loanApplyUrl:  document.getElementById('loan-apply-url').value.trim(),
+      giftSurveyUrl: document.getElementById('gift-survey-url').value.trim(),
+      giftWorkUrl:   document.getElementById('gift-work-url').value.trim(),
+      photoUrl:      document.getElementById('photo-url').value.trim(),
+      storePageUrl:  document.getElementById('store-page-url').value.trim(),
+      loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
+    };
+    saveSectionData('urls', data);
+  } catch(e) { console.error('saveUrlSection エラー:', e); }
 }
 
 function saveSettings() {
