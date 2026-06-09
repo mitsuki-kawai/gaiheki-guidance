@@ -703,6 +703,28 @@ function escHtml(s) {
   document.getElementById('photo-url').value      = s.photoUrl;
   document.getElementById('store-page-url').value = s.storePageUrl;
   document.getElementById('login-url').value      = s.loginUrl;
+
+  // CS担当者: localStorageにデータがなければデフォルトを強制書き込み
+  const raw = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+  if (!raw.csStaff || !raw.csStaff.length) {
+    raw.csStaff = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.csStaff));
+    localStorage.setItem('gaiheki_settings', JSON.stringify(raw));
+    csStaff = raw.csStaff;
+  } else {
+    csStaff = raw.csStaff;
+  }
+  csRenderList();
+
+  // 決済手段: localStorageにデータがなければデフォルトを強制書き込み
+  const raw2 = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+  if (!raw2.paymentConfig || !raw2.paymentConfig.length) {
+    raw2.paymentConfig = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.paymentConfig));
+    localStorage.setItem('gaiheki_settings', JSON.stringify(raw2));
+    pmConfig = raw2.paymentConfig;
+  } else {
+    pmConfig = raw2.paymentConfig;
+  }
+  pmRender();
 })();
 </script>
 </body>
