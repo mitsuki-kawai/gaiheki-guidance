@@ -791,9 +791,9 @@ const DEFAULT_SETTINGS = {
     { id:'pm3', name:'振り込み', useGroups:false, groups:[{ id:'pg4', label:null, notes:['末締め翌月20日引き落とし'] }] },
   ],
   csStaff: [
-    { id:'cs1', name:'飯塚来己',  photo:'', bio:'お客様に寄り添ったサポートを心がけています。', phone:'090-0000-0001', lineQr:'' },
-    { id:'cs2', name:'留木涼花',  photo:'', bio:'迅速・丁寧な対応をモットーにしています。',     phone:'090-0000-0002', lineQr:'' },
-    { id:'cs3', name:'手光菜津美',photo:'', bio:'何でもお気軽にご相談ください。',               phone:'090-0000-0003', lineQr:'' },
+    { id:'cs1', name:'飯塚来己',  bio:'お客様に寄り添ったサポートを心がけています。', phone:'' },
+    { id:'cs2', name:'留木涼花',  bio:'迅速・丁寧な対応をモットーにしています。', phone:'' },
+    { id:'cs3', name:'手光菜津美', bio:'何でもお気軽にご相談ください。', phone:'' },
   ],
 };
 
@@ -905,11 +905,23 @@ function renderP4() {
     content.innerHTML = `<div style="text-align:center;color:var(--muted);padding:60px 0;font-size:13px">${esc(name)} の情報が設定されていません</div>`;
     return;
   }
-  const photoHtml = staff.photo
-    ? `<img class="cs-card-photo" src="${staff.photo}" alt="${esc(staff.name)}">`
+  const photoMap = {
+    '飯塚来己':  'images/iizuka.jpg',
+    '留木涼花':  'images/tomeki.jpg',
+    '手光菜津美': 'images/temitsu.jpg',
+  };
+  const lineQrMap = {
+    '飯塚来己':  'images/line_iizuka.jpg',
+    '留木涼花':  'images/line_tomeki.jpg',
+    '手光菜津美': 'images/line_temitsu.jpg',
+  };
+  const photoSrc = photoMap[staff.name] || '';
+  const lineQrSrc = lineQrMap[staff.name] || '';
+  const photoHtml = photoSrc
+    ? `<img class="cs-card-photo" src="${photoSrc}" alt="${esc(staff.name)}">`
     : `<div class="cs-card-no-photo">👤</div>`;
-  const qrHtml = staff.lineQr
-    ? `<img class="cs-card-qr" src="${staff.lineQr}" alt="LINE QR">`
+  const qrHtml = lineQrSrc
+    ? `<img class="cs-card-qr" src="${lineQrSrc}" alt="LINE QR">`
     : `<div style="font-size:10px;color:var(--muted)">未設定</div>`;
   content.innerHTML = `
     <div style="padding:32px 40px">

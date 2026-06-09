@@ -132,14 +132,7 @@ a.header-logo:hover { opacity: 0.8; }
 .cs-staff-view-sub { font-size: 11px; color: var(--muted); }
 .cs-staff-edit { background: var(--bg); padding: 14px 16px; border-top: 1px solid var(--border); display: none; }
 .cs-staff-edit.open { display: block; }
-.cs-img-row { display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap; }
-.cs-img-block { display: flex; flex-direction: column; gap: 6px; align-items: center; }
-.cs-img-preview { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; background: #eeecf8; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 28px; overflow: hidden; }
-.cs-img-preview.qr { border-radius: 6px; }
-.cs-img-preview img { width: 100%; height: 100%; object-fit: cover; }
-.cs-img-label { font-size: 10px; color: var(--muted); }
-.cs-img-btn { font-size: 11px; padding: 3px 10px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: var(--white); }
-.cs-img-btn:hover { background: var(--bg); }
+
 /* CS担当者編集/削除ボタン */
 .cs-staff-view .btn-bact-s:first-of-type { padding: 4px 12px; background: #eeecf8; color: var(--main); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
 .cs-staff-view .btn-bact-s:last-of-type  { padding: 4px 12px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 0; font-weight: 600; cursor: pointer; transition: opacity .12s; margin-left: 0; }
@@ -375,9 +368,9 @@ const DEFAULT_SETTINGS = {
     ]},
   ],
   csStaff: [
-    { id:'cs1', name:'飯塚来己',  photo:'', bio:'お客様に寄り添ったサポートを心がけています。', phone:'', lineQr:'' },
-    { id:'cs2', name:'留木涼花',  photo:'', bio:'迅速・丁寧な対応をモットーにしています。',     phone:'', lineQr:'' },
-    { id:'cs3', name:'手光菜津美',photo:'', bio:'何でもお気軽にご相談ください。',               phone:'', lineQr:'' },
+    { id:'cs1', name:'飯塚来己',  bio:'お客様に寄り添ったサポートを心がけています。', phone:'' },
+    { id:'cs2', name:'留木涼花',  bio:'迅速・丁寧な対応をモットーにしています。', phone:'' },
+    { id:'cs3', name:'手光菜津美', bio:'何でもお気軽にご相談ください。', phone:'' },
   ],
 };
 
@@ -412,15 +405,9 @@ function csRenderList() {
   const list = document.getElementById('cs-staff-list');
   if (!list) return;
   list.innerHTML = csStaff.map(st => {
-    const photoHtml = st.photo
-      ? `<div class="cs-staff-thumb"><img src="${st.photo}" alt=""></div>`
-      : `<div class="cs-staff-thumb">👤</div>`;
     const isOpen = csEditingId === st.id;
-    const qrPreview = st.lineQr ? `<img src="${st.lineQr}" alt="QR">` : '📷';
-    const phPreview = st.photo ? `<img src="${st.photo}" alt="">` : '👤';
     return `<div class="cs-staff-item" id="csitem-${st.id}">
   <div class="cs-staff-view">
-    ${photoHtml}
     <div style="flex:1">
       <div class="cs-staff-view-name">${csEsc(st.name || '（名前未設定）')}</div>
       <div class="cs-staff-view-sub">${csEsc(st.phone || '')}${st.bio ? ' · ' + st.bio.slice(0,20) + '…' : ''}</div>
@@ -437,18 +424,6 @@ function csRenderList() {
     </div>
     <div class="field"><label>電話番号</label>
       <input type="text" value="${csEsc(st.phone)}" oninput="this.value=fmtPhone(this.value);csUpdate('${st.id}','phone',this.value)" placeholder="ハイフンなしで入力してください">
-    </div>
-    <div class="cs-img-row" style="margin-top:8px">
-      <div class="cs-img-block">
-        <div class="cs-img-preview">${phPreview}</div>
-        <div class="cs-img-label">顔写真</div>
-        <label class="cs-img-btn">📷 選択<input type="file" accept="image/*" style="display:none" onchange="csHandleImage('${st.id}','photo',this)"></label>
-      </div>
-      <div class="cs-img-block">
-        <div class="cs-img-preview qr">${qrPreview}</div>
-        <div class="cs-img-label">LINE QR</div>
-        <label class="cs-img-btn">📷 選択<input type="file" accept="image/*" style="display:none" onchange="csHandleImage('${st.id}','lineQr',this)"></label>
-      </div>
     </div>
   </div>
 </div>`;
@@ -471,22 +446,12 @@ function csDelete(id) {
 }
 function csAdd() {
   const id = csNewId();
-  csStaff.push({ id, name: '', bio: '', phone: '', photo: '', lineQr: '' });
+  csStaff.push({ id, name: '', bio: '', phone: '' });
   csEditingId = id;
   csRenderList();
   document.getElementById('csitem-' + id)?.scrollIntoView({ behavior: 'smooth' });
 }
-function csHandleImage(id, field, input) {
-  const file = input.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    const st = csStaff.find(x => x.id === id);
-    if (st) st[field] = e.target.result;
-    csRenderList();
-  };
-  reader.readAsDataURL(file);
-}
+
 
 
 /* ── 決済手段管理 ── */
