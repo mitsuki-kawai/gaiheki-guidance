@@ -180,7 +180,6 @@ a.lb-url:hover { text-decoration: underline; }
 .cs-card-photo { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 4px; display: block; image-rendering: auto; image-rendering: high-quality; }
 .cs-card-no-photo { width: 100%; aspect-ratio: 4/3; background: #eeecf8; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--main); }
 .cs-card-phone-row { font-size: 12px; color: var(--label); margin-top: 12px; }
-.cs-card-phone-row::before { content: "📞電話番号："; }
 .cs-line-block { background: #06C755; color: #fff; border-radius: 6px; padding: 10px 12px; margin-top: 8px; display: flex; align-items: center; gap: 12px; }
 .cs-line-block-text { flex: 1; font-size: 11px; line-height: 1.6; }
 .cs-line-block-msg { font-size: 11px; font-weight: bold; text-align: center; }
@@ -929,7 +928,7 @@ function renderP4() {
         <div class="cs-card-body">
           <div class="cs-card-left">
             ${photoHtml}
-            ${staff.phone ? `<div class="cs-card-phone-row" onclick="(function(){if(confirm('${esc(staff.phone)}に電話しますか？')){window.location.href='tel:${esc(staff.phone)}'}})()" style="cursor:pointer">📞 ${esc(staff.phone)}</div>` : ''}
+            ${staff.phone ? `<div class="cs-card-phone-row">📞電話番号：<span onclick="(function(){if(confirm('${esc(staff.phone)}に電話しますか？')){window.location.href='tel:${esc(staff.phone)}'}})()" style="cursor:pointer;text-decoration:underline">${esc(staff.phone)}</span></div>` : ''}
             <div class="cs-line-block">
               <div class="cs-line-block-text">
                 <div class="cs-line-block-msg">何かありましたら<br>お気軽にご連絡ください。</div>
