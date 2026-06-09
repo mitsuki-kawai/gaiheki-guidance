@@ -633,9 +633,16 @@ function removeStaff(i) {
 }
 
 
-function saveSectionData(data) {
-  const existing = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
-  localStorage.setItem('gaiheki_settings', JSON.stringify({ ...existing, ...data }));
+function saveSectionData(key, data) {
+  try {
+    const existing = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+    const merged = { ...existing, ...data };
+    localStorage.setItem('gaiheki_settings', JSON.stringify(merged));
+    console.log('[settings] saved:', key, data);
+  } catch(e) {
+    console.error('[settings] save error:', key, e);
+    return;
+  }
   const t = document.getElementById('toast');
   if (!t) return;
   t.textContent = '保存しました';
@@ -648,19 +655,33 @@ function savePlanSection() {
     const g = id => document.getElementById(`${p}-${id}`)?.value?.trim() || DEFAULT_SETTINGS.plans[p][id];
     plans[p] = { fee:g('fee'), commission:g('commission'), guarantee:g('guarantee'), monthly:g('monthly'), half:g('half'), contractPeriod:g('contract-period') };
   });
-  saveSectionData({ plans });
+  console.log('[settings] savePlanSection plans=', plans);
+  saveSectionData('plans', { plans });
 }
-function saveStaffSection() { saveSectionData({ staffList: [...staffList] }); }
+function saveStaffSection() {
+  console.log('[settings] saveStaffSection staffList=', staffList);
+  saveSectionData('staffList', { staffList: [...staffList] });
+}
 function saveTextSection() {
-  saveSectionData({
+  const data = {
     holidayText: document.getElementById('holiday-text').value || DEFAULT_SETTINGS.holidayText,
     excludeText: document.getElementById('exclude-text').value || DEFAULT_SETTINGS.excludeText,
-  });
+  };
+  console.log('[settings] saveTextSection=', data);
+  saveSectionData('text', data);
 }
-function saveCsSection() { saveSectionData({ csStaff: JSON.parse(JSON.stringify(csStaff)) }); }
-function savePaymentSection() { saveSectionData({ paymentConfig: JSON.parse(JSON.stringify(pmConfig)) }); }
+function saveCsSection() {
+  const data = { csStaff: JSON.parse(JSON.stringify(csStaff)) };
+  console.log('[settings] saveCsSection csStaff=', data.csStaff);
+  saveSectionData('csStaff', data);
+}
+function savePaymentSection() {
+  const data = { paymentConfig: JSON.parse(JSON.stringify(pmConfig)) };
+  console.log('[settings] savePaymentSection pmConfig=', data.paymentConfig);
+  saveSectionData('paymentConfig', data);
+}
 function saveUrlSection() {
-  saveSectionData({
+  const data = {
     loanDocUrl:    document.getElementById('loan-doc-url').value.trim(),
     loanApplyUrl:  document.getElementById('loan-apply-url').value.trim(),
     giftSurveyUrl: document.getElementById('gift-survey-url').value.trim(),
@@ -668,9 +689,9 @@ function saveUrlSection() {
     photoUrl:      document.getElementById('photo-url').value.trim(),
     storePageUrl:  document.getElementById('store-page-url').value.trim(),
     loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
-    p2Blocks:      JSON.parse(JSON.stringify(sBlocksP2)),
-    p3Blocks:      JSON.parse(JSON.stringify(sBlocksP3)),
-  });
+  };
+  console.log('[settings] saveUrlSection=', data);
+  saveSectionData('urls', data);
 }
 
 function saveSettings() {
