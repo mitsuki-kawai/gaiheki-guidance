@@ -918,10 +918,10 @@ function renderP4() {
   const photoSrc = photoMap[staff.name] || '';
   const lineQrSrc = lineQrMap[staff.name] || '';
   const photoHtml = photoSrc
-    ? `<img class="cs-card-photo" src="${photoSrc}" alt="${esc(staff.name)}">`
+    ? `<img class="cs-card-photo" src="${photoSrc}" alt="${esc(staff.name)}" onerror="this.outerHTML='<div class=\\"cs-card-no-photo\\">👤</div>'">`
     : `<div class="cs-card-no-photo">👤</div>`;
   const qrHtml = lineQrSrc
-    ? `<img class="cs-card-qr" src="${lineQrSrc}" alt="LINE QR">`
+    ? `<img class="cs-card-qr" src="${lineQrSrc}" alt="LINE QR" onerror="this.style.display='none'">`
     : `<div style="font-size:10px;color:var(--muted)">未設定</div>`;
   content.innerHTML = `
     <div style="padding:32px 40px">
