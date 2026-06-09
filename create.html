@@ -422,12 +422,6 @@ a.lb-url:hover { text-decoration: underline; }
     <table class="doc-table">
       <colgroup><col style="width:220px"><col><col style="width:220px"><col></colgroup>
 
-      <tr>
-        <td class="k">営業担当者</td><td class="v" id="p-sales-assignee" colspan="3">—</td>
-      </tr>
-      <tr>
-        <td class="k">CS担当者</td><td class="v" id="p-cs-assignee" colspan="3">—</td>
-      </tr>
       <tr class="sh"><td colspan="4">① 料金について</td></tr>
       <tr><td class="k">契約プラン</td><td class="v" colspan="3" id="p-plan">—</td></tr>
       <tr>
@@ -458,7 +452,7 @@ a.lb-url:hover { text-decoration: underline; }
 
       <tr class="sh"><td colspan="4">③ お支払いについて</td></tr>
       <tr><td class="k">決済手段</td><td class="v" colspan="3" id="p-pay-status">—</td></tr>
-      <tr><td class="k">備考（支払いサイクル）</td><td class="v" colspan="3" id="p-pay-note">—</td></tr>
+      <tr><td class="k">備考</td><td class="v" colspan="3" id="p-pay-note">—</td></tr>
 
 
       <tr class="sh"><td colspan="4">④ 休業日について</td></tr>
@@ -740,13 +734,14 @@ a.lb-url:hover { text-decoration: underline; }
       <div class="field">
         <label>決済手段</label>
         <select id="payment_status" onchange="updatePaymentNoteOptions();render()">
+          <option value="">選択してください</option>
           <option value="クレジットカード">クレジットカード</option>
           <option value="口座振替">口座振替</option>
           <option value="振り込み">振り込み</option>
         </select>
       </div>
       <div class="field">
-        <label>備考（支払いサイクル）</label>
+        <label>備考</label>
         <select id="payment_note" onchange="render()"></select>
       </div>
       <div class="f-sec">配信先情報</div>
@@ -761,6 +756,7 @@ a.lb-url:hover { text-decoration: underline; }
       <div class="field">
         <label>LINE通知</label>
         <select id="line_status" onchange="render()">
+          <option value="">選択してください</option>
           <option value="設定済み ✓">設定済み ✓</option>
           <option value="設定待ち（案内済み）">設定待ち（案内済み）</option>
           <option value="未設定">未設定</option>
@@ -929,28 +925,66 @@ function scrollToPage(id) {
 
 
 const PAYMENT_NOTE_OPTIONS = {
-  'クレジットカード': [
-    '先払い：1日決済（前日が振込期限）',
-    '先払い：11日決済（前日が振込期限）',
-    '先払い：16日決済（前日が振込期限）',
-    '先払い：21日決済（前日が振込期限）',
-    '後払い：末締め翌月20日決済（振込期限確認中）',
-  ],
-  '口座振替': [
-    '末締め翌月26日引き落とし（土日の場合は前倒し前営業日）',
-  ],
-  '振り込み': [
-    '末締め翌月20日引き落とし',
-  ],
+  'クレジットカード': {
+    groups: [
+      { label: '先払い', opts: [
+        '1日決済（前日が振込期限）',
+        '11日決済（前日が振込期限）',
+        '16日決済（前日が振込期限）',
+        '21日決済（前日が振込期限）',
+      ]},
+      { label: '後払い', opts: [
+        '末締め翌月20日決済（振込期限確認中）',
+      ]},
+    ]
+  },
+  '口座振替': {
+    groups: [{ label: null, opts: ['末締め翌月26日引き落とし（土日の場合は前倒し前営業日）'] }]
+  },
+  '振り込み': {
+    groups: [{ label: null, opts: ['末締め翌月20日引き落とし'] }]
+  },
 };
 
 function updatePaymentNoteOptions() {
-  const status = v('payment_status') || 'クレジットカード';
-  const opts = PAYMENT_NOTE_OPTIONS[status] || [];
+  const status = v('payment_status');
   const sel = document.getElementById('payment_note');
   if (!sel) return;
+  if (!status) {
+    // 【4】未選択時はグレーアウト・disabled
+    sel.innerHTML = '<option value="">決済手段を選択してください</option>';
+    sel.disabled = true;
+    sel.style.opacity = '0.45';
+    sel.style.cursor = 'not-allowed';
+    render();
+    return;
+  }
+  sel.disabled = false;
+  sel.style.opacity = '';
+  sel.style.cursor = '';
+  const config = PAYMENT_NOTE_OPTIONS[status];
+  if (!config) { sel.innerHTML = ''; render(); return; }
   const cur = sel.value;
-  sel.innerHTML = opts.map(o => `<option value="${o}"${o===cur?' selected':''}>${o}</option>`).join('');
+  // 【5】optgroup形式で生成
+  let html = '';
+  let allOpts = [];
+  config.groups.forEach(g => {
+    const optsHtml = g.opts.map(o => `<option value="${o}"${o===cur?' selected':''}>${o}</option>`).join('');
+    html += g.label ? `<optgroup label="${g.label}">${optsHtml}</optgroup>` : optsHtml;
+    allOpts = allOpts.concat(g.opts);
+  });
+  sel.innerHTML = html;
+  // 【6】選択肢が1つの場合: 自動選択・disabled・▼非表示
+  if (allOpts.length === 1) {
+    sel.value = allOpts[0];
+    sel.disabled = true;
+    sel.style.opacity = '0.6';
+    sel.style.backgroundImage = 'none';
+  } else {
+    sel.disabled = false;
+    sel.style.opacity = '';
+    sel.style.backgroundImage = '';
+  }
   render();
 }
 
