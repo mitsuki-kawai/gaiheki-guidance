@@ -466,7 +466,6 @@ function csUpdate(id, field, value) {
 function csDelete(id) {
   if (!confirm('削除しますか？')) return;
   csStaff = csStaff.filter(x => x.id !== id);
-  localStorage.removeItem('gaiheki_cs_img_' + id);
   if (csEditingId === id) csEditingId = null;
   csRenderList();
 }
@@ -483,44 +482,10 @@ function csHandleImage(id, field, input) {
   const reader = new FileReader();
   reader.onload = e => {
     const st = csStaff.find(x => x.id === id);
-    if (st) {
-      st[field] = e.target.result;
-      csSaveImages(id);
-    }
+    if (st) st[field] = e.target.result;
     csRenderList();
   };
   reader.readAsDataURL(file);
-}
-
-/* 画像を gaiheki_cs_img_{id} キーに保存 */
-function csSaveImages(staffId) {
-  const st = csStaff.find(x => x.id === staffId);
-  if (!st) return;
-  try {
-    localStorage.setItem('gaiheki_cs_img_' + staffId,
-      JSON.stringify({ photo: st.photo || '', lineQr: st.lineQr || '' }));
-    console.log('[csImage] saved gaiheki_cs_img_' + staffId);
-  } catch(e) {
-    console.error('[csImage] 画像保存エラー（容量超過の可能性）:', e);
-    alert('画像の保存に失敗しました（ストレージ容量超過）。');
-  }
-}
-
-/* 各担当者のキーから画像を読み込んで csStaff に注入 */
-function csLoadImages(staffArray) {
-  return staffArray.map(st => {
-    const raw = localStorage.getItem('gaiheki_cs_img_' + st.id);
-    if (!raw) return st;
-    try {
-      const imgs = JSON.parse(raw);
-      return { ...st, photo: imgs.photo || '', lineQr: imgs.lineQr || '' };
-    } catch(e) { return st; }
-  });
-}
-
-/* 画像なしの csStaff コピー（gaiheki_settings 保存用）*/
-function csLeanCopy() {
-  return csStaff.map(st => ({ id: st.id, name: st.name, bio: st.bio, phone: st.phone, photo: '', lineQr: '' }));
 }
 
 
@@ -669,106 +634,101 @@ function removeStaff(i) {
 
 
 function saveSectionData(key, data) {
-  console.log('保存ボタンクリック：' + key);
-  console.log('  保存データ:', data);
+  console.log('[saveSectionData] 開始 key=' + key);
+  console.log('[saveSectionData] 保存するデータ:', JSON.stringify(data, null, 2));
   try {
     const existing = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
-    console.log('  保存前 gaiheki_settings サイズ:', JSON.stringify(existing).length, 'bytes');
+    console.log('[saveSectionData] 既存のlocalStorage:', JSON.stringify(existing, null, 2));
     const merged = { ...existing, ...data };
-    const json = JSON.stringify(merged);
-    console.log('  保存後 gaiheki_settings サイズ:', json.length, 'bytes');
-    localStorage.setItem('gaiheki_settings', json);
-    console.log('  localStorage.setItem 完了');
+    localStorage.setItem('gaiheki_settings', JSON.stringify(merged));
     const verify = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
-    console.log('  読み返し確認 key=' + key + ':', verify[Object.keys(data)[0]]);
+    console.log('[saveSectionData] 保存後のlocalStorage[' + key + ']:', verify[key] || merged);
+    console.log('[saveSectionData] 完了 key=' + key);
   } catch(e) {
-    console.error('localStorage保存エラー key=' + key, e);
-    if (e.name === 'QuotaExceededError') {
-      alert('ストレージ容量が不足しています。
-画像データが大きすぎる可能性があります。
-ページを再読み込みして再度お試しください。');
-    } else {
-      alert('保存中にエラーが発生しました: ' + e.message);
-    }
+    console.error('[saveSectionData] エラー key=' + key, e);
+    alert('保存中にエラーが発生しました: ' + e.message);
     return;
   }
   const t = document.getElementById('toast');
-  if (!t) { console.error('toast要素が見つかりません'); return; }
+  if (!t) { console.warn('[saveSectionData] toast要素が見つかりません'); return; }
   t.textContent = '保存しました';
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 2200);
 }
 
 function savePlanSection() {
+  console.log('保存ボタンクリック：プラン設定');
   try {
     const plans = {};
     ['light','basic','pro'].forEach(p => {
       const g = id => {
         const el = document.getElementById(p + '-' + id);
-        if (!el) { console.warn('要素なし: #' + p + '-' + id); }
+        console.log('  [plan] #' + p + '-' + id + ' =', el ? el.value : 'NOT FOUND');
         return (el && el.value.trim()) ? el.value.trim() : DEFAULT_SETTINGS.plans[p][id];
       };
       plans[p] = { fee:g('fee'), commission:g('commission'), guarantee:g('guarantee'), monthly:g('monthly'), half:g('half'), contractPeriod:g('contract-period') };
     });
-    saveSectionData('プラン設定', { plans });
+    saveSectionData('plans', { plans });
   } catch(e) { console.error('savePlanSection エラー:', e); }
 }
 
 function saveStaffSection() {
+  console.log('保存ボタンクリック：担当者設定');
+  console.log('  staffList =', staffList);
   try {
-    // 編集中の入力欄をフラッシュ
-    document.querySelectorAll('[id^="staff-inp-"]').forEach(el => {
-      const m = el.id.match(/staff-inp-(\d+)/);
-      if (m) {
-        const i = parseInt(m[1], 10);
-        const val = el.value.trim();
-        if (i < staffList.length) staffList[i] = val || staffList[i];
-      }
-    });
-    console.log('  staffList =', staffList);
-    saveSectionData('担当者設定', { staffList: [...staffList] });
+    saveSectionData('staffList', { staffList: [...staffList] });
   } catch(e) { console.error('saveStaffSection エラー:', e); }
 }
 
 function saveTextSection() {
+  console.log('保存ボタンクリック：テキスト設定');
   try {
     const holidayEl = document.getElementById('holiday-text');
     const excludeEl = document.getElementById('exclude-text');
+    console.log('  #holiday-text =', holidayEl ? holidayEl.value : 'NOT FOUND');
+    console.log('  #exclude-text =', excludeEl ? excludeEl.value : 'NOT FOUND');
     const data = {
-      holidayText: holidayEl ? holidayEl.value : DEFAULT_SETTINGS.holidayText,
-      excludeText: excludeEl ? excludeEl.value : DEFAULT_SETTINGS.excludeText,
+      holidayText: (holidayEl && holidayEl.value) ? holidayEl.value : DEFAULT_SETTINGS.holidayText,
+      excludeText: (excludeEl && excludeEl.value) ? excludeEl.value : DEFAULT_SETTINGS.excludeText,
     };
-    saveSectionData('テキスト設定', data);
+    saveSectionData('text', data);
   } catch(e) { console.error('saveTextSection エラー:', e); }
 }
 
 function saveCsSection() {
+  console.log('保存ボタンクリック：CS担当者情報');
+  console.log('  csStaff =', csStaff);
   try {
-    // 画像は gaiheki_cs_img_{id} キーに保存済み
-    // gaiheki_settings には画像なし（軽量）コピーを保存
-    saveSectionData('CS担当者情報', { csStaff: csLeanCopy() });
+    saveSectionData('csStaff', { csStaff: JSON.parse(JSON.stringify(csStaff)) });
   } catch(e) { console.error('saveCsSection エラー:', e); }
 }
 
 function savePaymentSection() {
+  console.log('保存ボタンクリック：決済手段');
+  console.log('  pmConfig =', pmConfig);
   try {
-    saveSectionData('決済手段', { paymentConfig: JSON.parse(JSON.stringify(pmConfig)) });
+    saveSectionData('paymentConfig', { paymentConfig: JSON.parse(JSON.stringify(pmConfig)) });
   } catch(e) { console.error('savePaymentSection エラー:', e); }
 }
 
 function saveUrlSection() {
+  console.log('保存ボタンクリック：URL設定');
   try {
-    const g = id => (document.getElementById(id)?.value || '').trim();
+    const ids = ['loan-doc-url','loan-apply-url','gift-survey-url','gift-work-url','photo-url','store-page-url','login-url'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      console.log('  #' + id + ' =', el ? el.value : 'NOT FOUND');
+    });
     const data = {
-      loanDocUrl:    g('loan-doc-url'),
-      loanApplyUrl:  g('loan-apply-url'),
-      giftSurveyUrl: g('gift-survey-url'),
-      giftWorkUrl:   g('gift-work-url'),
-      photoUrl:      g('photo-url'),
-      storePageUrl:  g('store-page-url'),
-      loginUrl:      g('login-url') || DEFAULT_SETTINGS.loginUrl,
+      loanDocUrl:    document.getElementById('loan-doc-url').value.trim(),
+      loanApplyUrl:  document.getElementById('loan-apply-url').value.trim(),
+      giftSurveyUrl: document.getElementById('gift-survey-url').value.trim(),
+      giftWorkUrl:   document.getElementById('gift-work-url').value.trim(),
+      photoUrl:      document.getElementById('photo-url').value.trim(),
+      storePageUrl:  document.getElementById('store-page-url').value.trim(),
+      loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
     };
-    saveSectionData('URL設定', data);
+    saveSectionData('urls', data);
   } catch(e) { console.error('saveUrlSection エラー:', e); }
 }
 
@@ -798,7 +758,7 @@ function saveSettings() {
     photoUrl:      document.getElementById('photo-url').value.trim(),
     storePageUrl:  document.getElementById('store-page-url').value.trim(),
     loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
-    csStaff:       csLeanCopy(),
+    csStaff:       JSON.parse(JSON.stringify(csStaff)),
     paymentConfig: JSON.parse(JSON.stringify(pmConfig)),
   };
 
@@ -839,30 +799,15 @@ function escHtml(s) {
   document.getElementById('store-page-url').value = s.storePageUrl;
   document.getElementById('login-url').value      = s.loginUrl;
 
-  // CS担当者: 読み込み＋画像の別キー移行
+  // CS担当者: localStorageにデータがなければデフォルトを強制書き込み
   const raw = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
-  let rawCsStaff = (raw.csStaff && raw.csStaff.length) ? raw.csStaff : JSON.parse(JSON.stringify(DEFAULT_SETTINGS.csStaff));
-
-  // 既存データに画像が埋まっていれば別キーに移行して gaiheki_settings を軽量化
-  let needsMigration = false;
-  rawCsStaff.forEach(st => {
-    if (st.photo || st.lineQr) {
-      try {
-        localStorage.setItem('gaiheki_cs_img_' + st.id, JSON.stringify({ photo: st.photo || '', lineQr: st.lineQr || '' }));
-        st.photo = '';
-        st.lineQr = '';
-        needsMigration = true;
-        console.log('[init] 画像を別キーに移行: gaiheki_cs_img_' + st.id);
-      } catch(e) { console.error('[init] 移行エラー:', e); }
-    }
-  });
-  if (needsMigration || !raw.csStaff || !raw.csStaff.length) {
-    raw.csStaff = rawCsStaff;
-    try { localStorage.setItem('gaiheki_settings', JSON.stringify(raw)); } catch(e) {}
+  if (!raw.csStaff || !raw.csStaff.length) {
+    raw.csStaff = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.csStaff));
+    localStorage.setItem('gaiheki_settings', JSON.stringify(raw));
+    csStaff = raw.csStaff;
+  } else {
+    csStaff = raw.csStaff;
   }
-
-  // 別キーから画像を注入してメモリに展開
-  csStaff = csLoadImages(rawCsStaff);
   csRenderList();
 
   // 決済手段: localStorageにデータがなければデフォルトを強制書き込み
