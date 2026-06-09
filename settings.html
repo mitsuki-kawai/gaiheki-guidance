@@ -285,7 +285,7 @@ a.header-logo:hover { opacity: 0.8; }
         </div>
 
       </div>
-      <button class="btn-save" style="margin-top:16px;width:100%" onclick="savePlanSection()">保存</button>
+      <button class="btn-save" style="margin-top:16px" onclick="savePlanSection()">保存</button>
     </div>
 
     <!-- ── 担当者設定 ── -->
@@ -294,7 +294,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">資料作成時の「担当者」ドロップダウンとトップページのフィルターに反映されます。</div>
       <div class="staff-list" id="staff-list"></div>
       <button class="btn-add-staff" onclick="addStaff()">＋ 担当者を追加</button>
-      <button class="btn-save" style="margin-top:16px;width:100%" onclick="saveStaffSection()">保存</button>
+      <button class="btn-save" style="margin-top:16px" onclick="saveStaffSection()">保存</button>
     </div>
 
     <!-- ── テキスト設定 ── -->
@@ -309,7 +309,7 @@ a.header-logo:hover { opacity: 0.8; }
         <label>⑤ 除外情報の文言</label>
         <textarea id="exclude-text" rows="7"></textarea>
       </div>
-      <button class="btn-save" style="margin-top:16px;width:100%" onclick="saveTextSection()">保存</button>
+      <button class="btn-save" style="margin-top:16px" onclick="saveTextSection()">保存</button>
     </div>
 
 
@@ -319,7 +319,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">名刺カードに表示するCS担当者の情報を設定します。</div>
       <div class="cs-staff-list" id="cs-staff-list"></div>
       <button class="btn-cs-add" onclick="csAdd()">＋ CS担当者を追加</button>
-      <button class="btn-save" style="margin-top:16px;width:100%" onclick="saveCsSection()">保存</button>
+      <button class="btn-save" style="margin-top:16px" onclick="saveCsSection()">保存</button>
     </div>
 
     <!-- ── 決済手段設定 ── -->
@@ -328,7 +328,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">create.htmlフォームの決済手段と備考の選択肢を管理します。</div>
       <div id="pm-list"></div>
       <button class="btn-cs-add" onclick="pmAddMethod()" style="margin-top:8px">＋ 決済手段を追加</button>
-      <button class="btn-save" style="margin-top:16px;width:100%" onclick="savePaymentSection()">保存</button>
+      <button class="btn-save" style="margin-top:16px" onclick="savePaymentSection()">保存</button>
     </div>
     <!-- ── URL設定 ── -->
     <div class="section" id="sec-url">
@@ -343,6 +343,7 @@ a.header-logo:hover { opacity: 0.8; }
         <div class="field"><label>写真アップロードフォームURL</label><input type="text" id="photo-url" placeholder="GoogleフォームのURL等"></div>
         <div class="field"><label>加盟店紹介ページURL</label><input type="text" id="store-page-url" placeholder="https://gaihekiplus.com/store/..."></div>
       </div>
+      <button class="btn-save" style="margin-top:16px" onclick="saveUrlSection()">保存</button>
     </div>
 
   </div><!-- /main -->
@@ -374,9 +375,9 @@ const DEFAULT_SETTINGS = {
     ]},
   ],
   csStaff: [
-    { id:'cs1', name:'飯塚来己',  photo:'', bio:'お客様に寄り添ったサポートを心がけています。', phone:'090-0000-0001', lineQr:'' },
-    { id:'cs2', name:'留木涼花',  photo:'', bio:'迅速・丁寧な対応をモットーにしています。',     phone:'090-0000-0002', lineQr:'' },
-    { id:'cs3', name:'手光菜津美',photo:'', bio:'何でもお気軽にご相談ください。',               phone:'090-0000-0003', lineQr:'' },
+    { id:'cs1', name:'飯塚来己',  photo:'', bio:'お客様に寄り添ったサポートを心がけています。', phone:'', lineQr:'' },
+    { id:'cs2', name:'留木涼花',  photo:'', bio:'迅速・丁寧な対応をモットーにしています。',     phone:'', lineQr:'' },
+    { id:'cs3', name:'手光菜津美',photo:'', bio:'何でもお気軽にご相談ください。',               phone:'', lineQr:'' },
   ],
 };
 
