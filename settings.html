@@ -471,24 +471,9 @@ function csHandleImage(id, field, input) {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = e => {
-    // リサイズして保存
-    const img = new Image();
-    img.onload = () => {
-      const MAX = 240;
-      let w = img.width, h = img.height;
-      if (w > MAX || h > MAX) {
-        const r = Math.min(MAX/w, MAX/h);
-        w = Math.round(w*r); h = Math.round(h*r);
-      }
-      const canvas = document.createElement('canvas');
-      canvas.width = w; canvas.height = h;
-      canvas.getContext('2d').drawImage(img, 0, 0, w, h);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
-      const st = csStaff.find(x => x.id === id);
-      if (st) st[field] = dataUrl;
-      csRenderList();
-    };
-    img.src = e.target.result;
+    const st = csStaff.find(x => x.id === id);
+    if (st) st[field] = e.target.result;
+    csRenderList();
   };
   reader.readAsDataURL(file);
 }
