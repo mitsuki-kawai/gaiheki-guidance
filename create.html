@@ -749,24 +749,6 @@ a.lb-url:hover { text-decoration: underline; }
         <label>備考</label>
         <select id="payment_note" onchange="render()"></select>
       </div>
-      <div class="f-sec">配信先情報</div>
-      <div class="field">
-        <label>配信メールアドレス</label>
-        <input type="text" id="email" placeholder="info@example.com" oninput="render()">
-      </div>
-      <div class="field">
-        <label>配信電話番号</label>
-        <input type="text" id="phone" placeholder="090-0000-0000" oninput="render()">
-      </div>
-      <div class="field">
-        <label>LINE通知</label>
-        <select id="line_status" onchange="render()">
-          <option value="">選択してください</option>
-          <option value="設定済み ✓">設定済み ✓</option>
-          <option value="設定待ち（案内済み）">設定待ち（案内済み）</option>
-          <option value="未設定">未設定</option>
-        </select>
-      </div>
       <div class="f-sec">顧客管理システム</div>
       <div class="field">
         <label>ID</label>
@@ -978,21 +960,22 @@ function updatePaymentNoteOptions() {
   const s = getSettings();
   const method = (s.paymentConfig || []).find(m => m.name === status);
   if (!method) { sel.innerHTML = ''; render(); return; }
-  const cur = sel.value;
   let html = '';
   let allOpts = [];
   method.groups.forEach(g => {
-    const optsHtml = g.notes.map(o => `<option value="${o}"${o===cur?' selected':''}>${o}</option>`).join('');
+    const optsHtml = g.notes.map(o => `<option value="${o}">${o}</option>`).join('');
     html += (g.label && method.useGroups) ? `<optgroup label="${g.label}">${optsHtml}</optgroup>` : optsHtml;
     allOpts = allOpts.concat(g.notes);
   });
-  sel.innerHTML = html;
   if (allOpts.length === 1) {
+    sel.innerHTML = html;
     sel.value = allOpts[0];
     sel.disabled = true;
     sel.style.opacity = '0.6';
     sel.style.backgroundImage = 'none';
   } else {
+    sel.innerHTML = '<option value="">選択してください</option>' + html;
+    sel.value = '';
     sel.disabled = false;
     sel.style.opacity = '';
     sel.style.backgroundImage = '';
@@ -1089,9 +1072,6 @@ function render() {
 
   setVal('p-pay-status', v('payment_status'));
   setVal('p-pay-note',   v('payment_note'));
-  setVal('p-email',      v('email'));
-  setVal('p-phone',      v('phone'));
-  setVal('p-line',       v('line_status'));
   setVal('p-login-id',   v('login_id'));
   setLink('p-photo-url',   s.photoUrl);
   setLink('p-store-url',   s.storePageUrl);
@@ -1134,8 +1114,7 @@ function getCases() {
 function collectFormData() {
   const statusEl = document.querySelector('input[name="guidance_status"]:checked');
   const fields = ['assignee','cs_assignee','company','contact_name','issue_date','plan','monthly_fee','commission','guarantee',
-    'monthly_est','half_est','payment_status','payment_note','email','phone',
-    'line_status','login_id'];
+    'monthly_est','half_est','payment_status','payment_note','login_id'];
   const data = {};
   data.guidance_status = statusEl ? statusEl.value : '未実施';
   fields.forEach(f => { const el = document.getElementById(f); if(el) data[f] = el.value; });
@@ -1182,8 +1161,7 @@ function saveCase() {
   if (!c) { updatePlanDefaults(); render(); return; }
   const d = c.formData;
   ['assignee','cs_assignee','company','contact_name','issue_date','plan','monthly_fee','commission','guarantee',
-   'monthly_est','half_est','payment_status','payment_note','email','phone',
-   'line_status','login_id'].forEach(f => {
+   'monthly_est','half_est','payment_status','payment_note','login_id'].forEach(f => {
     const el = document.getElementById(f);
     if (el && d[f] !== undefined) el.value = d[f];
   });
@@ -1194,6 +1172,8 @@ function saveCase() {
   if (Array.isArray(d.areas)) { areas.push(...d.areas); renderAreaTags(); }
   populatePaymentMethodSelect();
   updatePaymentNoteOptions();
+  const pnEl = document.getElementById('payment_note');
+  if (pnEl && d.payment_note) pnEl.value = d.payment_note;
   render();
   renderP4();
   scalePreview();

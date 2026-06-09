@@ -184,25 +184,6 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
         <option value="実施済み">実施済み</option>
       </select>
     </div>
-    <div class="filter-group">
-      <span class="filter-label">契約プラン</span>
-      <select id="f-plan" onchange="renderCards()">
-        <option value="all">すべて</option>
-        <option value="light">ライト</option>
-        <option value="basic">ベーシック</option>
-        <option value="pro">プロ</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <span class="filter-label">お支払い状況</span>
-      <select id="f-payment" onchange="renderCards()">
-        <option value="all">すべて</option>
-        <option value="確認済み ✓">確認済み</option>
-        <option value="クレジットカード登録待ち">クレジットカード登録待ち</option>
-        <option value="請求書払い対応">請求書払い対応</option>
-        <option value="未確認">未確認</option>
-      </select>
-    </div>
   </div>
   <div class="card-grid" id="card-grid"></div>
 </div>
@@ -293,12 +274,8 @@ function renderCards() {
   const cases = getCases();
   let filtered = currentFilter === 'all' ? cases : cases.filter(c => c.assignee === currentFilter);
 
-  const fStatus  = document.getElementById('f-status')?.value  || 'all';
-  const fPlan    = document.getElementById('f-plan')?.value    || 'all';
-  const fPayment = document.getElementById('f-payment')?.value || 'all';
-  if (fStatus  !== 'all') filtered = filtered.filter(c => (c.guidance_status || '未実施') === fStatus);
-  if (fPlan    !== 'all') filtered = filtered.filter(c => (c.plan || 'basic') === fPlan);
-  if (fPayment !== 'all') filtered = filtered.filter(c => (c.formData?.payment_status || '') === fPayment);
+  const fStatus = document.getElementById('f-status')?.value || 'all';
+  if (fStatus !== 'all') filtered = filtered.filter(c => (c.guidance_status || '未実施') === fStatus);
 
   const titleEl = document.getElementById('main-title');
   const subEl = document.getElementById('main-sub');
