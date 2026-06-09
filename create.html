@@ -180,10 +180,8 @@ a.lb-url:hover { text-decoration: underline; }
 .cs-card-photo { width: 100%; aspect-ratio: 4/5; object-fit: cover; border-radius: 4px; display: block; image-rendering: auto; image-rendering: high-quality; }
 .cs-card-no-photo { width: 100%; aspect-ratio: 4/5; background: #eeecf8; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--main); }
 .cs-card-phone-row { font-size: 12px; color: var(--label); margin-top: 12px; }
-.cs-line-block { background: #1a1a1a; color: #fff; border-radius: 6px; padding: 10px 12px; margin-top: 8px; display: flex; align-items: center; gap: 12px; }
+.cs-line-block { background: #06C755; color: #fff; border-radius: 6px; padding: 10px 12px; margin-top: 8px; display: flex; align-items: center; gap: 12px; }
 .cs-line-block-text { flex: 1; font-size: 11px; line-height: 1.6; }
-.cs-line-block-name { font-weight: 700; font-size: 12px; margin-bottom: 2px; }
-.cs-line-block-sub { opacity: .75; font-size: 10px; }
 .cs-line-block-msg { opacity: .75; font-size: 10px; margin-top: 4px; }
 .cs-card-qr { width: 64px; height: 64px; object-fit: contain; border-radius: 4px; flex-shrink: 0; }
 .cs-card-right { flex: 1; padding-left: 32px; }
@@ -930,12 +928,10 @@ function renderP4() {
         <div class="cs-card-body">
           <div class="cs-card-left">
             ${photoHtml}
-            <div class="cs-card-phone-row">電話番号：${staff.phone ? esc(staff.phone) : '—'}</div>
+            ${staff.phone ? `<div class="cs-card-phone-row" onclick="(function(){if(confirm('${esc(staff.phone)}に電話しますか？')){window.location.href='tel:${esc(staff.phone)}'}})()" style="cursor:pointer">📞 ${esc(staff.phone)}</div>` : ''}
             <div class="cs-line-block">
               <div class="cs-line-block-text">
-                <div class="cs-line-block-name">CS担当 ${esc(staff.name)}</div>
-                <div class="cs-line-block-sub">LINEアカウント</div>
-                <div class="cs-line-block-msg">何かありましたらお気軽にご連絡ください。</div>
+                <div class="cs-line-block-msg">何かありましたら<br>お気軽にご連絡ください。</div>
               </div>
               ${qrHtml}
             </div>
