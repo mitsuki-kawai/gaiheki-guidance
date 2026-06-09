@@ -396,6 +396,12 @@ let csEditingId = null;
 let csIdCnt = 0;
 const csNewId = () => 'cs_' + (++csIdCnt) + '_' + Date.now();
 
+function fmtPhone(v) {
+  const d = v.replace(/\D/g, '');
+  if (d.length === 11) return d.slice(0,3) + '-' + d.slice(3,7) + '-' + d.slice(7);
+  if (d.length === 10) return d.slice(0,2) + '-' + d.slice(2,6) + '-' + d.slice(6);
+  return v;
+}
 function csEsc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 function csRenderList() {
@@ -426,7 +432,7 @@ function csRenderList() {
       <textarea rows="3" oninput="csUpdate('${st.id}','bio',this.value)">${csEsc(st.bio)}</textarea>
     </div>
     <div class="field"><label>電話番号</label>
-      <input type="text" value="${csEsc(st.phone)}" oninput="csUpdate('${st.id}','phone',this.value)" placeholder="090-0000-0000">
+      <input type="text" value="${csEsc(st.phone)}" oninput="this.value=fmtPhone(this.value);csUpdate('${st.id}','phone',this.value)" placeholder="ハイフンなしで入力してください">
     </div>
     <div class="cs-img-row" style="margin-top:8px">
       <div class="cs-img-block">
