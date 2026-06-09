@@ -105,7 +105,7 @@ a.header-logo:hover { opacity: 0.8; }
   pointer-events: none;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-/* ── 決済手段・備考設定 ── */
+/* ── 決済手段設定 ── */
 .pm-method { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 12px; overflow: hidden; }
 .pm-method-head { background: var(--bg); padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
 .pm-method-name { flex: 1; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; font-family: inherit; }
@@ -222,7 +222,6 @@ a.header-logo:hover { opacity: 0.8; }
 <div class="header">
   <a href="index.html" class="header-logo"><img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block"></a>
   <a href="index.html" class="btn-back" style="margin-left:auto">戻る</a>
-  <button class="btn-save" onclick="saveSettings()">保存</button>
 </div>
 
 <div class="body">
@@ -235,14 +234,14 @@ a.header-logo:hover { opacity: 0.8; }
     <button class="sidenav-item" onclick="showSection('text', this)">📝 テキスト設定</button>
     <button class="sidenav-item" onclick="showSection('url', this)">🔗 URL設定</button>
     <button class="sidenav-item" onclick="showSection('cs', this)">👤 CS担当者情報</button>
-    <button class="sidenav-item" onclick="showSection('payment', this)">💳 決済手段・備考</button>
+    <button class="sidenav-item" onclick="showSection('payment', this)">💳 決済手段</button>
     <select id="section-select" class="section-select" onchange="showSectionById(this.value)">
       <option value="plan">📋 プラン設定</option>
       <option value="staff">👤 担当者設定</option>
       <option value="text">📝 テキスト設定</option>
       <option value="url">🔗 URL設定</option>
       <option value="cs">👤 CS担当者情報</option>
-      <option value="payment">💳 決済手段・備考</option>
+      <option value="payment">💳 決済手段</option>
     </select>
   </div>
 
@@ -286,6 +285,7 @@ a.header-logo:hover { opacity: 0.8; }
         </div>
 
       </div>
+      <button class="btn-save" style="margin-top:16px;width:100%" onclick="savePlanSection()">保存</button>
     </div>
 
     <!-- ── 担当者設定 ── -->
@@ -294,6 +294,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">資料作成時の「担当者」ドロップダウンとトップページのフィルターに反映されます。</div>
       <div class="staff-list" id="staff-list"></div>
       <button class="btn-add-staff" onclick="addStaff()">＋ 担当者を追加</button>
+      <button class="btn-save" style="margin-top:16px;width:100%" onclick="saveStaffSection()">保存</button>
     </div>
 
     <!-- ── テキスト設定 ── -->
@@ -308,6 +309,7 @@ a.header-logo:hover { opacity: 0.8; }
         <label>⑤ 除外情報の文言</label>
         <textarea id="exclude-text" rows="7"></textarea>
       </div>
+      <button class="btn-save" style="margin-top:16px;width:100%" onclick="saveTextSection()">保存</button>
     </div>
 
 
@@ -317,14 +319,16 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">名刺カードに表示するCS担当者の情報を設定します。</div>
       <div class="cs-staff-list" id="cs-staff-list"></div>
       <button class="btn-cs-add" onclick="csAdd()">＋ CS担当者を追加</button>
+      <button class="btn-save" style="margin-top:16px;width:100%" onclick="saveCsSection()">保存</button>
     </div>
 
-    <!-- ── 決済手段・備考設定 ── -->
+    <!-- ── 決済手段設定 ── -->
     <div class="section" id="sec-payment">
-      <div class="section-title">決済手段・備考設定</div>
+      <div class="section-title">決済手段</div>
       <div class="section-desc">create.htmlフォームの決済手段と備考の選択肢を管理します。</div>
       <div id="pm-list"></div>
       <button class="btn-cs-add" onclick="pmAddMethod()" style="margin-top:8px">＋ 決済手段を追加</button>
+      <button class="btn-save" style="margin-top:16px;width:100%" onclick="savePaymentSection()">保存</button>
     </div>
     <!-- ── URL設定 ── -->
     <div class="section" id="sec-url">
@@ -431,7 +435,7 @@ function csRenderList() {
       <textarea rows="3" oninput="csUpdate('${st.id}','bio',this.value)">${csEsc(st.bio)}</textarea>
     </div>
     <div class="field"><label>電話番号</label>
-      <input type="text" value="${csEsc(st.phone)}" oninput="csUpdate('${st.id}','phone',this.value)" placeholder="090-0000-0000">
+      <input type="text" value="${csEsc(st.phone)}" oninput="this.value=fmtPhone(this.value);csUpdate('${st.id}','phone',this.value)" placeholder="ハイフンなしで入力してください">
     </div>
     <div class="cs-img-row" style="margin-top:8px">
       <div class="cs-img-block">
@@ -484,7 +488,7 @@ function csHandleImage(id, field, input) {
 }
 
 
-/* ── 決済手段・備考管理 ── */
+/* ── 決済手段管理 ── */
 let pmConfig = [];
 let pmIdCnt = 0;
 const pmNewId = () => 'pm_' + (++pmIdCnt) + '_' + Date.now();
@@ -625,6 +629,47 @@ function addStaff() {
 function removeStaff(i) {
   staffList.splice(i, 1);
   renderStaffList();
+}
+
+
+function saveSectionData(data) {
+  const existing = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+  localStorage.setItem('gaiheki_settings', JSON.stringify({ ...existing, ...data }));
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = '保存しました';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+function savePlanSection() {
+  const plans = {};
+  ['light','basic','pro'].forEach(p => {
+    const g = id => document.getElementById(`${p}-${id}`)?.value?.trim() || DEFAULT_SETTINGS.plans[p][id];
+    plans[p] = { fee:g('fee'), commission:g('commission'), guarantee:g('guarantee'), monthly:g('monthly'), half:g('half'), contractPeriod:g('contract-period') };
+  });
+  saveSectionData({ plans });
+}
+function saveStaffSection() { saveSectionData({ staffList: [...staffList] }); }
+function saveTextSection() {
+  saveSectionData({
+    holidayText: document.getElementById('holiday-text').value || DEFAULT_SETTINGS.holidayText,
+    excludeText: document.getElementById('exclude-text').value || DEFAULT_SETTINGS.excludeText,
+  });
+}
+function saveCsSection() { saveSectionData({ csStaff: JSON.parse(JSON.stringify(csStaff)) }); }
+function savePaymentSection() { saveSectionData({ paymentConfig: JSON.parse(JSON.stringify(pmConfig)) }); }
+function saveUrlSection() {
+  saveSectionData({
+    loanDocUrl:    document.getElementById('loan-doc-url').value.trim(),
+    loanApplyUrl:  document.getElementById('loan-apply-url').value.trim(),
+    giftSurveyUrl: document.getElementById('gift-survey-url').value.trim(),
+    giftWorkUrl:   document.getElementById('gift-work-url').value.trim(),
+    photoUrl:      document.getElementById('photo-url').value.trim(),
+    storePageUrl:  document.getElementById('store-page-url').value.trim(),
+    loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
+    p2Blocks:      JSON.parse(JSON.stringify(sBlocksP2)),
+    p3Blocks:      JSON.parse(JSON.stringify(sBlocksP3)),
+  });
 }
 
 function saveSettings() {
