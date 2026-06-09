@@ -891,6 +891,10 @@ function fmtPhoneDisplay(v) {
   return v; // すでにハイフンがあるかその他
 }
 
+function csPhotoFallback(el) {
+  el.outerHTML = '<div class="cs-card-no-photo">👤</div>';
+}
+
 function renderP4() {
   const content = document.getElementById('p4-content');
   if (!content) return;
@@ -918,7 +922,7 @@ function renderP4() {
   const photoSrc = photoMap[staff.name] || '';
   const lineQrSrc = lineQrMap[staff.name] || '';
   const photoHtml = photoSrc
-    ? `<img class="cs-card-photo" src="${photoSrc}" alt="${esc(staff.name)}" onerror="this.outerHTML='<div class=\\"cs-card-no-photo\\">👤</div>'">`
+    ? `<img class="cs-card-photo" src="${photoSrc}" alt="${esc(staff.name)}" onerror="csPhotoFallback(this)">`
     : `<div class="cs-card-no-photo">👤</div>`;
   const qrHtml = lineQrSrc
     ? `<img class="cs-card-qr" src="${lineQrSrc}" alt="LINE QR" onerror="this.style.display='none'">`
