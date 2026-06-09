@@ -901,6 +901,14 @@ function scalePreview() {
 window.addEventListener('resize', scalePreview);
 
 
+function fmtPhoneDisplay(v) {
+  if (!v) return v;
+  const d = v.replace(/\D/g, '');
+  if (d.length === 11) return d.slice(0,3) + '-' + d.slice(3,7) + '-' + d.slice(7);
+  if (d.length === 10) return d.slice(0,2) + '-' + d.slice(2,6) + '-' + d.slice(6);
+  return v; // すでにハイフンがあるかその他
+}
+
 function renderP4() {
   const content = document.getElementById('p4-content');
   if (!content) return;
@@ -928,10 +936,10 @@ function renderP4() {
         <div class="cs-card-body">
           <div class="cs-card-left">
             ${photoHtml}
-            ${staff.phone ? `<div class="cs-card-phone-row">📞電話番号：<span onclick="(function(){if(confirm('${esc(staff.phone)}に電話しますか？')){window.location.href='tel:${esc(staff.phone)}'}})()" style="cursor:pointer;text-decoration:underline">${esc(staff.phone)}</span></div>` : ''}
+            ${staff.phone ? `<div class="cs-card-phone-row">📞電話番号：<span onclick="(function(){if(confirm('${esc(staff.phone)}に電話しますか？')){window.location.href='tel:${esc(staff.phone)}'}})()" style="cursor:pointer;text-decoration:underline">${esc(fmtPhoneDisplay(staff.phone))}</span></div>` : ''}
             <div class="cs-line-block">
               <div class="cs-line-block-text">
-                <div class="cs-line-block-msg">何かありましたら<br>お気軽にご連絡ください。</div>
+                <div class="cs-line-block-msg">何かあったらお気軽に<br>ご連絡ください。</div>
               </div>
               ${qrHtml}
             </div>
