@@ -924,34 +924,11 @@ function scrollToPage(id) {
 }
 
 
-const PAYMENT_NOTE_OPTIONS = {
-  'クレジットカード': {
-    groups: [
-      { label: '先払い', opts: [
-        '1日決済（前日が振込期限）',
-        '11日決済（前日が振込期限）',
-        '16日決済（前日が振込期限）',
-        '21日決済（前日が振込期限）',
-      ]},
-      { label: '後払い', opts: [
-        '末締め翌月20日決済（振込期限確認中）',
-      ]},
-    ]
-  },
-  '口座振替': {
-    groups: [{ label: null, opts: ['末締め翌月26日引き落とし（土日の場合は前倒し前営業日）'] }]
-  },
-  '振り込み': {
-    groups: [{ label: null, opts: ['末締め翌月20日引き落とし'] }]
-  },
-};
-
 function updatePaymentNoteOptions() {
   const status = v('payment_status');
   const sel = document.getElementById('payment_note');
   if (!sel) return;
   if (!status) {
-    // 【4】未選択時はグレーアウト・disabled
     sel.innerHTML = '<option value="">決済手段を選択してください</option>';
     sel.disabled = true;
     sel.style.opacity = '0.45';
@@ -962,19 +939,18 @@ function updatePaymentNoteOptions() {
   sel.disabled = false;
   sel.style.opacity = '';
   sel.style.cursor = '';
-  const config = PAYMENT_NOTE_OPTIONS[status];
-  if (!config) { sel.innerHTML = ''; render(); return; }
+  const s = getSettings();
+  const method = (s.paymentConfig || []).find(m => m.name === status);
+  if (!method) { sel.innerHTML = ''; render(); return; }
   const cur = sel.value;
-  // 【5】optgroup形式で生成
   let html = '';
   let allOpts = [];
-  config.groups.forEach(g => {
-    const optsHtml = g.opts.map(o => `<option value="${o}"${o===cur?' selected':''}>${o}</option>`).join('');
-    html += g.label ? `<optgroup label="${g.label}">${optsHtml}</optgroup>` : optsHtml;
-    allOpts = allOpts.concat(g.opts);
+  method.groups.forEach(g => {
+    const optsHtml = g.notes.map(o => `<option value="${o}"${o===cur?' selected':''}>${o}</option>`).join('');
+    html += (g.label && method.useGroups) ? `<optgroup label="${g.label}">${optsHtml}</optgroup>` : optsHtml;
+    allOpts = allOpts.concat(g.notes);
   });
   sel.innerHTML = html;
-  // 【6】選択肢が1つの場合: 自動選択・disabled・▼非表示
   if (allOpts.length === 1) {
     sel.value = allOpts[0];
     sel.disabled = true;
@@ -986,6 +962,18 @@ function updatePaymentNoteOptions() {
     sel.style.backgroundImage = '';
   }
   render();
+}
+
+function populatePaymentMethodSelect() {
+  const sel = document.getElementById('payment_status');
+  if (!sel) return;
+  const s = getSettings();
+  const methods = (s.paymentConfig || []).map(m => m.name);
+  const cur = sel.value;
+  const opts = methods.length
+    ? methods.map(m => `<option value="${m}"${m===cur?' selected':''}>${m}</option>`).join('')
+    : '<option value="クレジットカード">クレジットカード</option><option value="口座振替">口座振替</option><option value="振り込み">振り込み</option>';
+  sel.innerHTML = '<option value="">選択してください</option>' + opts;
 }
 
 function updatePlanDefaults() {
@@ -1147,6 +1135,7 @@ function saveCase() {
     if (staffParam) { const el = document.getElementById('assignee'); if(el) el.value = staffParam; }
     document.getElementById('issue_date').value = new Date().toISOString().split('T')[0];
     updatePlanDefaults();
+    populatePaymentMethodSelect();
     updatePaymentNoteOptions();
     render();
     renderP4();
@@ -1167,6 +1156,7 @@ function saveCase() {
     if (r) r.checked = true;
   }
   if (Array.isArray(d.areas)) { areas.push(...d.areas); renderAreaTags(); }
+  populatePaymentMethodSelect();
   updatePaymentNoteOptions();
   render();
   renderP4();
