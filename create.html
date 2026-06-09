@@ -173,14 +173,20 @@ a.lb-url:hover { text-decoration: underline; }
 .btn-pdf { padding: 10px 14px; background: var(--accent); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; white-space: nowrap; }
 .btn-pdf:hover { opacity: .85; }
 /* ── CS名刺カード ── */
-.cs-card { background: #fff; border-radius: 12px; border: 1px solid #e0ddf5; box-shadow: 0 2px 16px rgba(63,50,119,0.1); padding: 28px 32px; display: flex; gap: 28px; align-items: flex-start; max-width: 540px; margin: 0 auto; }
-.cs-card-photo { width: 100px; height: 100px; border-radius: 50%; object-fit: cover; border: 3px solid var(--main); flex-shrink: 0; background: #eeecf8; }
-.cs-card-no-photo { width: 100px; height: 100px; border-radius: 50%; background: #eeecf8; border: 3px solid var(--main); display: flex; align-items: center; justify-content: center; font-size: 36px; flex-shrink: 0; }
-.cs-card-info { flex: 1; min-width: 0; }
-.cs-card-name { font-size: 22px; font-weight: 800; color: var(--main); margin-bottom: 8px; letter-spacing: -0.5px; }
-.cs-card-bio { font-size: 11.5px; color: var(--label); line-height: 1.7; margin-bottom: 10px; white-space: pre-line; }
-.cs-card-phone { font-size: 12.5px; color: var(--text); margin-bottom: 10px; }
-.cs-card-qr { width: 80px; height: 80px; border: 1px solid var(--border); border-radius: 6px; object-fit: cover; }
+.cs-card { background: #fff; border-radius: 8px; border: 1px solid #e0e0e0; overflow: hidden; max-width: 560px; margin: 0 auto; }
+.cs-card-upper { display: flex; align-items: stretch; }
+.cs-card-left { width: 168px; flex-shrink: 0; padding: 18px 16px 18px 20px; }
+.cs-card-name { font-size: 18px; font-weight: 700; color: var(--main); margin-bottom: 10px; line-height: 1.3; }
+.cs-card-photo { width: 132px; height: 165px; object-fit: cover; border-radius: 4px; display: block; }
+.cs-card-no-photo { width: 132px; height: 165px; background: #eeecf8; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--main); }
+.cs-card-right { flex: 1; padding: 18px 20px 18px 16px; border-left: 1px solid #e8e8e8; overflow: hidden; }
+.cs-card-bio { font-size: 11.5px; color: var(--label); line-height: 1.75; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 10; -webkit-box-orient: vertical; }
+.cs-card-lower { border-top: 1px solid #e0e0e0; display: flex; }
+.cs-tel-card { flex: 1; padding: 14px 16px; display: flex; align-items: center; gap: 10px; border-right: 1px solid #e0e0e0; }
+.cs-line-card { flex: 1; padding: 14px 16px; display: flex; align-items: center; gap: 10px; }
+.cs-card-lbl { font-size: 11px; font-weight: 700; color: var(--main); letter-spacing: .05em; flex-shrink: 0; }
+.cs-card-phone { font-size: 13px; color: var(--text); font-weight: 600; }
+.cs-card-qr { width: 64px; height: 64px; object-fit: contain; border: 1px solid #e0e0e0; border-radius: 4px; }
 
 /* ── 共有・閲覧モード ── */
 
@@ -913,19 +919,33 @@ function renderP4() {
   const photoHtml = staff.photo
     ? `<img class="cs-card-photo" src="${staff.photo}" alt="${esc(staff.name)}">`
     : `<div class="cs-card-no-photo">👤</div>`;
+  const bioHtml = staff.bio
+    ? `<div class="cs-card-bio">${esc(staff.bio).replace(/
+/g,'<br>')}</div>`
+    : `<div class="cs-card-bio" style="color:var(--muted)">紹介文が未設定です</div>`;
+  const telHtml = staff.phone
+    ? `<div class="cs-card-phone">${esc(staff.phone)}</div>`
+    : `<div class="cs-card-phone" style="color:var(--muted)">—</div>`;
   const qrHtml = staff.lineQr
-    ? `<div style="margin-top:12px"><div style="font-size:10px;color:var(--muted);margin-bottom:4px">LINE</div><img class="cs-card-qr" src="${staff.lineQr}" alt="LINE QR"></div>`
-    : '';
+    ? `<img class="cs-card-qr" src="${staff.lineQr}" alt="LINE QR">`
+    : `<div class="cs-card-qr" style="display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:10px;background:#f9f9f9">未設定</div>`;
   content.innerHTML = `
-    <div style="padding:48px 40px">
-      <div style="font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;margin-bottom:24px;text-align:center">CS STAFF</div>
+    <div style="padding:32px 40px">
       <div class="cs-card">
-        ${photoHtml}
-        <div class="cs-card-info">
-          <div class="cs-card-name">${esc(staff.name)}</div>
-          ${staff.bio ? `<div class="cs-card-bio">${esc(staff.bio)}</div>` : ''}
-          ${staff.phone ? `<div class="cs-card-phone">📞 ${esc(staff.phone)}</div>` : ''}
-          ${qrHtml}
+        <div class="cs-card-upper">
+          <div class="cs-card-left">
+            <div class="cs-card-name">${esc(staff.name)}</div>
+            ${photoHtml}
+          </div>
+          <div class="cs-card-right">${bioHtml}</div>
+        </div>
+        <div class="cs-card-lower">
+          <div class="cs-tel-card">
+            <div class="cs-card-lbl">TEL</div>${telHtml}
+          </div>
+          <div class="cs-line-card">
+            <div class="cs-card-lbl">LINE</div>${qrHtml}
+          </div>
         </div>
       </div>
     </div>`;
@@ -933,7 +953,13 @@ function renderP4() {
 
 function scrollToPage(id) {
   const el = document.getElementById(id);
-  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  const preview = document.querySelector('.preview');
+  if (!el || !preview) return;
+  const container = document.getElementById('pages-container');
+  const scaleMatch = (container?.style.transform || '').match(/scale\(([\d.]+)\)/);
+  const scale = scaleMatch ? parseFloat(scaleMatch[1]) : 1;
+  const scrollTop = (container?.offsetTop || 0) + el.offsetTop * scale - 20;
+  preview.scrollTo({top: scrollTop, behavior: 'smooth'});
   document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
   document.getElementById('nav-' + id)?.classList.add('active');
 }
@@ -1004,6 +1030,16 @@ function updatePlanDefaults() {
 function populateAssigneeSelect() {
   const list = getSettings().staffList;
   const sel = document.getElementById('assignee');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">選択してください</option>' +
+    list.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+  if (cur) sel.value = cur;
+}
+
+function populateCsAssigneeSelect() {
+  const list = (getSettings().csStaff || []).map(st => st.name);
+  const sel = document.getElementById('cs_assignee');
+  if (!sel) return;
   const cur = sel.value;
   sel.innerHTML = '<option value="">選択してください</option>' +
     list.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
