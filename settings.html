@@ -123,12 +123,12 @@ a.header-logo:hover { opacity: 0.8; }
 .btn-pm-add:hover { border-color: var(--main); color: var(--main); }
 
 /* ── CS担当者設定 ── */
-.cs-staff-list { display: flex; flex-direction: column; gap: 12px; }
-.cs-staff-item { border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
-.cs-staff-view { display: flex; align-items: center; gap: 12px; padding: 12px 14px; }
+.cs-staff-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.cs-staff-item { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.cs-staff-view { display: flex; align-items: center; gap: 8px; padding: 9px 14px; background: var(--white); }
 .cs-staff-thumb { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--main); flex-shrink: 0; background: #eeecf8; display: flex; align-items: center; justify-content: center; color: var(--main); font-size: 20px; }
 .cs-staff-thumb img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
-.cs-staff-view-name { font-weight: 600; flex: 1; font-size: 14px; }
+.cs-staff-view-name { font-weight: 500; flex: 1; font-size: 13px; color: var(--text); }
 .cs-staff-view-sub { font-size: 11px; color: var(--muted); }
 .cs-staff-edit { background: var(--bg); padding: 14px 16px; border-top: 1px solid var(--border); display: none; }
 .cs-staff-edit.open { display: block; }
@@ -140,6 +140,10 @@ a.header-logo:hover { opacity: 0.8; }
 .cs-img-label { font-size: 10px; color: var(--muted); }
 .cs-img-btn { font-size: 11px; padding: 3px 10px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: var(--white); }
 .cs-img-btn:hover { background: var(--bg); }
+/* CS担当者編集/削除ボタン */
+.cs-staff-view .btn-bact-s:first-of-type { padding: 4px 12px; background: #eeecf8; color: var(--main); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
+.cs-staff-view .btn-bact-s:last-of-type  { padding: 4px 12px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; margin-left: 0; }
+.cs-staff-view .btn-bact-s:hover { opacity: .8; }
 .btn-cs-add { margin-top: 8px; width: 100%; padding: 10px; border: 1px dashed var(--border); border-radius: 6px; background: none; cursor: pointer; font-size: 13px; color: var(--label); }
 .btn-cs-add:hover { border-color: var(--main); color: var(--main); background: #f7f6fb; }
 
