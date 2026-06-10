@@ -271,6 +271,26 @@ a.header-logo:hover { opacity: 0.8; }
   border-top-color: #F07200;
 }
 </style>
+<!-- Firebase Auth (認証チェックのみ) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script>
+(function() {
+  firebase.initializeApp({
+    apiKey: "AIzaSyCtKA71KjRHQvMPtYcURVjuSKaOanoEh7Y",
+    authDomain: "madoguchi-guidance.firebaseapp.com",
+    projectId: "madoguchi-guidance",
+    storageBucket: "madoguchi-guidance.firebasestorage.app",
+    messagingSenderId: "1080989158935",
+    appId: "1:1080989158935:web:4b75da9e3252e8086a5652"
+  });
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user || !(user.email || '').endsWith('@madoguchi.inc')) {
+      location.replace('login.html');
+    }
+  });
+})();
+</script>
 </head>
 <body>
 
