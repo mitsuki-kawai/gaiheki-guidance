@@ -243,8 +243,33 @@ a.header-logo:hover { opacity: 0.8; }
 .area-edit-grid .field input, .area-edit-grid .field select { width:100%; padding:4px 7px; border:1px solid var(--border); border-radius:4px; font-size:12px; font-family:inherit; }
 
 /* ── 未保存インジケーター ── */
-.dirty-badge { display:none; font-size:11px; color:#e65100; font-weight:600; margin-left:10px; vertical-align:middle; }
-.dirty-badge::before { content:"⚠ "; }
+.save-btn-wrap { display:inline-block; position:relative; margin-top:16px; }
+.dirty-badge {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #F07200;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 2px 6px rgba(0,0,0,.18);
+}
+.dirty-badge::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #F07200;
+}
 </style>
 </head>
 <body>
@@ -318,8 +343,10 @@ a.header-logo:hover { opacity: 0.8; }
         </div>
 
       </div>
-      <span class="dirty-badge" id="dirty-plan">未保存の変更があります</span>
-      <button id="btn-save-plan" class="btn-save" style="margin-top:16px" onclick="savePlanSection()">保存</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-plan">未保存の変更があります</span>
+        <button id="btn-save-plan" class="btn-save" onclick="savePlanSection()">保存</button>
+      </div>
     </div>
 
     <!-- ── 担当者設定 ── -->
@@ -328,8 +355,10 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">資料作成時の「担当者」ドロップダウンとトップページのフィルターに反映されます。</div>
       <div class="staff-list" id="staff-list"></div>
       <button class="btn-add-staff" onclick="addStaff()">＋ 担当者を追加</button>
-      <span class="dirty-badge" id="dirty-staff">未保存の変更があります</span>
-      <button id="btn-save-staff" class="btn-save" style="margin-top:16px" onclick="saveStaffSection()">保存</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-staff">未保存の変更があります</span>
+        <button id="btn-save-staff" class="btn-save" onclick="saveStaffSection()">保存</button>
+      </div>
     </div>
 
     <!-- ── テキスト設定 ── -->
@@ -344,8 +373,10 @@ a.header-logo:hover { opacity: 0.8; }
         <label>⑤ 除外情報の文言</label>
         <textarea id="exclude-text" rows="7"></textarea>
       </div>
-      <span class="dirty-badge" id="dirty-text">未保存の変更があります</span>
-      <button id="btn-save-text" class="btn-save" style="margin-top:16px" onclick="saveTextSection()">保存</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-text">未保存の変更があります</span>
+        <button id="btn-save-text" class="btn-save" onclick="saveTextSection()">保存</button>
+      </div>
     </div>
 
 
@@ -355,8 +386,10 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">名刺カードに表示するCS担当者の情報を設定します。</div>
       <div class="cs-staff-list" id="cs-staff-list"></div>
       <button class="btn-cs-add" onclick="csAdd()">＋ CS担当者を追加</button>
-      <span class="dirty-badge" id="dirty-cs">未保存の変更があります</span>
-      <button id="btn-save-cs" class="btn-save" style="margin-top:16px" onclick="saveCsSection()">保存</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-cs">未保存の変更があります</span>
+        <button id="btn-save-cs" class="btn-save" onclick="saveCsSection()">保存</button>
+      </div>
     </div>
 
     <!-- ── 決済手段設定 ── -->
@@ -365,8 +398,10 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">create.htmlフォームの決済手段と備考の選択肢を管理します。</div>
       <div id="pm-list"></div>
       <button class="btn-cs-add" onclick="pmAddMethod()" style="margin-top:8px">＋ 決済手段を追加</button>
-      <span class="dirty-badge" id="dirty-payment">未保存の変更があります</span>
-      <button id="btn-save-payment" class="btn-save" style="margin-top:16px" onclick="savePaymentSection()">保存</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-payment">未保存の変更があります</span>
+        <button id="btn-save-payment" class="btn-save" onclick="savePaymentSection()">保存</button>
+      </div>
     </div>
 
     <!-- ── 対応エリア設定 ── -->
@@ -427,8 +462,10 @@ a.header-logo:hover { opacity: 0.8; }
         </div>
       </div>
       <button class="btn-cs-add" onclick="amgrShowAdd()">＋ エリアを追加</button>
-      <span class="dirty-badge" id="dirty-area">未保存の変更があります</span>
-      <button id="btn-save-area" class="btn-save" style="margin-top:16px" onclick="saveAreaSection()">保存</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-area">未保存の変更があります</span>
+        <button id="btn-save-area" class="btn-save" onclick="saveAreaSection()">保存</button>
+      </div>
     </div>
     <!-- ── URL設定 ── -->
     <div class="section" id="sec-url">
@@ -443,8 +480,10 @@ a.header-logo:hover { opacity: 0.8; }
         <div class="field"><label>写真アップロードフォームURL</label><input type="text" id="photo-url" placeholder="GoogleフォームのURL等"></div>
         <div class="field"><label>加盟店紹介ページURL</label><input type="text" id="store-page-url" placeholder="https://gaihekiplus.com/store/..."></div>
       </div>
-      <span class="dirty-badge" id="dirty-url">未保存の変更があります</span>
-      <button id="btn-save-url" class="btn-save" style="margin-top:16px" onclick="saveUrlSection()">保存</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-url">未保存の変更があります</span>
+        <button id="btn-save-url" class="btn-save" onclick="saveUrlSection()">保存</button>
+      </div>
     </div>
 
   </div><!-- /main -->
