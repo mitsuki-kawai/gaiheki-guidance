@@ -741,6 +741,7 @@ a.lb-url:hover { text-decoration: underline; }
         </select>
         <select id="area-pref" onchange="areaOnPref()" disabled><option value="">都道府県</option></select>
       </div>
+      <input type="text" id="area-search" placeholder="市区町村を検索…" oninput="areaFilterCities()" style="display:none;width:100%;padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:11px;font-family:inherit;margin-bottom:4px;box-sizing:border-box">
       <div class="area-city-list" id="area-city-list" style="display:none"></div>
       <div class="area-tags" id="area-tags"></div>
       <div class="area-summary" id="area-summary" style="display:none"></div>
@@ -1998,31 +1999,60 @@ function areaOnRegion() {
   const region = document.getElementById('area-region').value;
   const prefSel = document.getElementById('area-pref');
   const cityList = document.getElementById('area-city-list');
+  const searchEl = document.getElementById('area-search');
   prefSel.innerHTML = '<option value="">都道府県</option>';
-  prefSel.disabled = !region;
+  prefSel.disabled = true;
   cityList.style.display = 'none';
   cityList.innerHTML = '';
+  searchEl.style.display = 'none';
+  searchEl.value = '';
   if (!region) return;
   const prefs = [...new Set(AREA_DATA.filter(d => d.region === region).map(d => d.pref))];
   prefSel.innerHTML = '<option value="">都道府県</option>' + prefs.map(p => `<option>${p}</option>`).join('');
+  // 北海道は都道府県が1つなので自動選択してdisabled
+  if (prefs.length === 1) {
+    prefSel.value = prefs[0];
+    prefSel.disabled = true;
+    areaOnPref();
+  } else {
+    prefSel.disabled = false;
+  }
 }
 function areaOnPref() {
   const pref = document.getElementById('area-pref').value;
   const cityList = document.getElementById('area-city-list');
+  const searchEl = document.getElementById('area-search');
   cityList.innerHTML = '';
-  if (!pref) { cityList.style.display = 'none'; return; }
-  const cities = AREA_DATA.filter(d => d.pref === pref);
-  cityList.innerHTML = cities.map(c => {
-    const checked = areas.some(a => a.pref === pref && a.city === c.city) ? 'checked' : '';
-    const pts = c.points % 1 === 0 ? c.points : c.points;
-    return `<label class="area-city-item">
-      <input type="checkbox" ${checked} onchange="onCityCheck('${esc(pref)}','${esc(c.city)}',this)">
-      <span class="area-city-name">${esc(c.city)}</span>
-      <span class="area-city-stats">${c.min}〜${c.max}件</span>
-      <span class="area-city-pts">${pts}pt</span>
-    </label>`;
-  }).join('');
+  searchEl.value = '';
+  if (!pref) {
+    cityList.style.display = 'none';
+    searchEl.style.display = 'none';
+    return;
+  }
+  searchEl.style.display = '';
+  areaRenderCities(pref, '');
   cityList.style.display = '';
+}
+function areaRenderCities(pref, query) {
+  const cityList = document.getElementById('area-city-list');
+  const q = query.trim();
+  const cities = AREA_DATA.filter(d => d.pref === pref);
+  cityList.innerHTML = cities
+    .filter(c => !q || c.city.includes(q) || areas.some(a => a.pref === pref && a.city === c.city))
+    .map(c => {
+      const checked = areas.some(a => a.pref === pref && a.city === c.city) ? 'checked' : '';
+      return `<label class="area-city-item">
+        <input type="checkbox" ${checked} onchange="onCityCheck('${esc(pref)}','${esc(c.city)}',this)">
+        <span class="area-city-name">${esc(c.city)}</span>
+        <span class="area-city-stats">${c.min}〜${c.max}件</span>
+        <span class="area-city-pts">${c.points}pt</span>
+      </label>`;
+    }).join('');
+}
+function areaFilterCities() {
+  const pref = document.getElementById('area-pref').value;
+  const q = document.getElementById('area-search').value;
+  if (pref) areaRenderCities(pref, q);
 }
 function onCityCheck(pref, city, cb) {
   if (cb.checked) {
@@ -2040,9 +2070,9 @@ function onCityCheck(pref, city, cb) {
 function removeArea(i) {
   areas.splice(i, 1);
   renderAreaTags();
-  // タグ削除後にチェックボックスの状態を同期
   const pref = document.getElementById('area-pref').value;
-  if (pref) areaOnPref();
+  const q = document.getElementById('area-search').value;
+  if (pref) areaRenderCities(pref, q);
   render();
 }
 function renderAreaTags() {
