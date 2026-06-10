@@ -1762,7 +1762,6 @@ auth.onAuthStateChanged(user => {
   if (!user || !(user.email || '').endsWith('@' + ALLOWED_DOMAIN)) {
     location.replace('login.html'); return;
   }
-  console.log('[create] 認証OK:', user.email);
   const editId = new URLSearchParams(location.search).get('id');
   const promises = [
     db.collection('settings').doc('main').get().then(doc => {
@@ -2285,20 +2284,9 @@ function saveCase() {
     formData: collectFormData(),
     settingsSnapshot: collectSettingsSnapshot()
   };
-  console.log('[create] 案件保存開始:', id, caseData.company);
   db.collection('cases').doc(id).set(caseData)
-    .then(() => {
-      console.log('[create] 案件保存成功:', id);
-      location.href = 'index.html';
-    })
-    .catch(err => {
-      console.error('[create] 案件保存エラー:', err.code, err.message);
-      if (err.code === 'permission-denied') {
-        alert('Firestoreのセキュリティルールでアクセスが拒否されました。\nFirebase Console でルールを更新してください。');
-      } else {
-        alert('保存に失敗しました: ' + err.message);
-      }
-    });
+    .then(() => { location.href = 'index.html'; })
+    .catch(err => { console.error('案件保存エラー:', err); alert('保存に失敗しました'); });
 }
 
 function initPage() {
