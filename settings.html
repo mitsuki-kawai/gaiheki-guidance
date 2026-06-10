@@ -584,7 +584,7 @@ function csToggleEdit(id) {
 }
 function csUpdate(id, field, value) {
   const st = csStaff.find(x => x.id === id);
-  if (st) { st[field] = value; setDirty('cs'); }
+  if (st) { st[field] = value; checkDirty('cs'); }
 }
 function csDelete(id) {
   if (!confirm('削除しますか？')) return;
@@ -595,7 +595,7 @@ function csDelete(id) {
 function csAdd() {
   const id = csNewId();
   csStaff.push({ id, name: '', bio: '', phone: '' });
-  setDirty('cs');
+  checkDirty('cs');
   csEditingId = id;
   csRenderList();
   document.getElementById('csitem-' + id)?.scrollIntoView({ behavior: 'smooth' });
@@ -646,61 +646,61 @@ function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&
 
 function pmAddMethod() {
   const id = pmNewId();
-  setDirty('payment');
+  checkDirty('payment');
   pmConfig.push({ id, name: '', useGroups: false, groups: [{ id: pmNewId(), label: null, notes: [] }] });
   pmRender();
 }
 function pmDeleteMethod(id) {
   if (!confirm('削除しますか？')) return;
   pmConfig = pmConfig.filter(m => m.id !== id);
-  setDirty('payment');
+  checkDirty('payment');
   pmRender();
 }
 function pmUpdateName(id, name) {
   const m = pmConfig.find(x => x.id === id); if (m) m.name = name;
-  setDirty('payment');
+  checkDirty('payment');
 }
 function pmToggleGroups(id) {
   const m = pmConfig.find(x => x.id === id);
   if (!m) return;
   m.useGroups = !m.useGroups;
   if (m.useGroups && m.groups.length === 1 && !m.groups[0].label) m.groups[0].label = '';
-  setDirty('payment');
+  checkDirty('payment');
   pmRender();
 }
 function pmAddGroup(methodId) {
   const m = pmConfig.find(x => x.id === methodId);
-  if (m) { m.groups.push({ id: pmNewId(), label: '', notes: [] }); setDirty('payment'); }
+  if (m) { m.groups.push({ id: pmNewId(), label: '', notes: [] }); checkDirty('payment'); }
   pmRender();
 }
 function pmDeleteGroup(methodId, groupId) {
   const m = pmConfig.find(x => x.id === methodId);
-  if (m) { m.groups = m.groups.filter(g => g.id !== groupId); setDirty('payment'); }
+  if (m) { m.groups = m.groups.filter(g => g.id !== groupId); checkDirty('payment'); }
   pmRender();
 }
 function pmUpdateGroupLabel(methodId, groupId, label) {
   const m = pmConfig.find(x => x.id === methodId);
   const g = m?.groups.find(g => g.id === groupId);
   if (g) g.label = label;
-  setDirty('payment');
+  checkDirty('payment');
 }
 function pmAddNote(methodId, groupId) {
   const m = pmConfig.find(x => x.id === methodId);
   const g = m?.groups.find(g => g.id === groupId);
-  if (g) { g.notes.push(''); setDirty('payment'); }
+  if (g) { g.notes.push(''); checkDirty('payment'); }
   pmRender();
 }
 function pmDeleteNote(methodId, groupId, idx) {
   const m = pmConfig.find(x => x.id === methodId);
   const g = m?.groups.find(g => g.id === groupId);
-  if (g) { g.notes.splice(idx, 1); setDirty('payment'); }
+  if (g) { g.notes.splice(idx, 1); checkDirty('payment'); }
   pmRender();
 }
 function pmUpdateNote(methodId, groupId, idx, value) {
   const m = pmConfig.find(x => x.id === methodId);
   const g = m?.groups.find(g => g.id === groupId);
   if (g) g.notes[idx] = value;
-  setDirty('payment');
+  checkDirty('payment');
 }
 
 function showSection(id, btn) {
@@ -739,20 +739,20 @@ function saveStaff(i) {
   const val = (document.getElementById('staff-inp-' + i)?.value || '').trim();
   if (!val) { staffList.splice(i, 1); }
   else { staffList[i] = val; }
-  setDirty('staff');
+  checkDirty('staff');
   renderStaffList();
 }
 
 function addStaff() {
   staffList.push('');
-  setDirty('staff');
+  checkDirty('staff');
   renderStaffList();
   editStaff(staffList.length - 1);
 }
 
 function removeStaff(i) {
   staffList.splice(i, 1);
-  setDirty('staff');
+  checkDirty('staff');
   renderStaffList();
 }
 
@@ -878,6 +878,63 @@ function restoreSection(sec) {
         break;
     }
   } catch(e) { console.error('restoreSection error:', sec, e); }
+}
+
+
+/* ── 現在値取得（比較用） ── */
+function gatherCurrent(sec) {
+  try {
+    switch(sec) {
+      case 'plan': {
+        const plans = {};
+        ['light','basic','pro'].forEach(p => {
+          plans[p] = {
+            fee:            document.getElementById(`${p}-fee`)?.value || '',
+            commission:     document.getElementById(`${p}-commission`)?.value || '',
+            guarantee:      document.getElementById(`${p}-guarantee`)?.value || '',
+            monthly:        document.getElementById(`${p}-monthly`)?.value || '',
+            half:           document.getElementById(`${p}-half`)?.value || '',
+            contractPeriod: document.getElementById(`${p}-contract-period`)?.value || '',
+          };
+        });
+        return plans;
+      }
+      case 'staff':
+        return staffList.slice();
+      case 'text':
+        return {
+          holidayText: document.getElementById('holiday-text')?.value || '',
+          excludeText: document.getElementById('exclude-text')?.value || '',
+        };
+      case 'cs':
+        return JSON.parse(JSON.stringify(csStaff));
+      case 'payment':
+        return JSON.parse(JSON.stringify(pmConfig));
+      case 'url':
+        return {
+          loanDocUrl:    document.getElementById('loan-doc-url')?.value || '',
+          loanApplyUrl:  document.getElementById('loan-apply-url')?.value || '',
+          giftSurveyUrl: document.getElementById('gift-survey-url')?.value || '',
+          giftWorkUrl:   document.getElementById('gift-work-url')?.value || '',
+          photoUrl:      document.getElementById('photo-url')?.value || '',
+          storePageUrl:  document.getElementById('store-page-url')?.value || '',
+          loginUrl:      document.getElementById('login-url')?.value || '',
+        };
+      case 'area':
+        return JSON.parse(JSON.stringify(amgrData));
+    }
+  } catch(e) { return null; }
+  return null;
+}
+
+function checkDirty(sec) {
+  const orig = originalData[sec];
+  if (orig === undefined) return false;
+  const curr = gatherCurrent(sec);
+  if (curr === null) return false;
+  const isDirty = JSON.stringify(curr) !== JSON.stringify(orig);
+  if (isDirty) { setDirty(sec); } else { clearDirty(sec); }
+  return isDirty;
 }
 
 function saveSectionData(key, data) {
@@ -1110,7 +1167,7 @@ function amgrSaveEdit(gi) {
     min:    parseInt(document.getElementById('ae-min-'+gi).value) || 0,
     max:    parseInt(document.getElementById('ae-max-'+gi).value) || 0,
   };
-  setDirty('area');
+  checkDirty('area');
   amgrCloseEdit(gi);
   amgrRenderList();
 }
@@ -1118,21 +1175,56 @@ function amgrSaveEdit(gi) {
 function amgrDelete(gi) {
   if (!confirm('「' + amgrData[gi].pref + ' ' + amgrData[gi].city + '」を削除しますか？')) return;
   amgrData.splice(gi, 1);
-  setDirty('area');
+  checkDirty('area');
   amgrRenderList();
 }
 
 function amgrShowAdd() {
-  document.getElementById('amgr-add-form').style.display = '';
-  document.getElementById('amgr-add-region').value = '';
-  document.getElementById('amgr-add-pref').innerHTML = '<option value="">先に地方を選択</option>';
-  document.getElementById('amgr-add-pref').disabled = true;
+  const filterRegion = document.getElementById('amgr-region').value;
+  const filterPref   = document.getElementById('amgr-pref').value;
+  const addRegionSel = document.getElementById('amgr-add-region');
+  const addPrefSel   = document.getElementById('amgr-add-pref');
+
+  // 共通リセット
   document.getElementById('amgr-add-city').value = '';
-  document.getElementById('amgr-add-pts').value = '';
-  document.getElementById('amgr-add-min').value = '';
-  document.getElementById('amgr-add-max').value = '';
+  document.getElementById('amgr-add-pts').value  = '';
+  document.getElementById('amgr-add-min').value  = '';
+  document.getElementById('amgr-add-max').value  = '';
+
+  if (filterRegion) {
+    // 地方をフィルター値に固定
+    addRegionSel.value = filterRegion;
+    addRegionSel.disabled = true;
+    addRegionSel.classList.add('amgr-pref-auto');
+    amgrAddOnRegion(); // pref 選択肢を生成（北海道は自動選択＋disabled）
+
+    if (filterPref && !addPrefSel.disabled) {
+      // 都道府県もフィルター値に固定（北海道以外の多都道府県地方）
+      addPrefSel.value = filterPref;
+      addPrefSel.disabled = true;
+      addPrefSel.classList.add('amgr-pref-auto');
+    }
+  } else {
+    // フィルター未選択: 通常通り
+    addRegionSel.value = '';
+    addRegionSel.disabled = false;
+    addRegionSel.classList.remove('amgr-pref-auto');
+    addPrefSel.innerHTML = '<option value="">先に地方を選択</option>';
+    addPrefSel.disabled = true;
+    addPrefSel.classList.remove('amgr-pref-auto');
+  }
+
+  document.getElementById('amgr-add-form').style.display = '';
 }
-function amgrHideAdd() { document.getElementById('amgr-add-form').style.display = 'none'; }
+function amgrHideAdd() {
+  document.getElementById('amgr-add-form').style.display = 'none';
+  const addRegionSel = document.getElementById('amgr-add-region');
+  const addPrefSel   = document.getElementById('amgr-add-pref');
+  addRegionSel.disabled = false;
+  addRegionSel.classList.remove('amgr-pref-auto');
+  addPrefSel.disabled = false;
+  addPrefSel.classList.remove('amgr-pref-auto');
+}
 
 function amgrAddOnRegion() {
   const region = document.getElementById('amgr-add-region').value;
@@ -1176,7 +1268,7 @@ function amgrAddEntry() {
     return;
   }
   amgrData.push({ region, pref, city, points: pts, min: mn || 0, max: mx || 0 });
-  setDirty('area');
+  checkDirty('area');
   amgrHideAdd();
   amgrRenderList();
 }
@@ -1295,7 +1387,7 @@ function escHtml(s) {
   ['sec-plan','sec-text','sec-url'].forEach(id => {
     document.getElementById(id).addEventListener('input', () => {
       const sec = id.replace('sec-', '');
-      setDirty(sec);
+      checkDirty(sec);
     });
   });
 
