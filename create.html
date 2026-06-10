@@ -2332,49 +2332,98 @@ function saveCase() {
 })();
 </script>
 
-<script>
-/* ── Firestore バックアップ（create.html 追加コード・既存JS変更なし） ── */
-(function() {
-  // firebase.firestore() 初期化確認
-  console.log('[FS] スクリプト読み込み完了');
-  console.log('[FS] firebase利用可能:', typeof firebase !== 'undefined');
-  if (typeof firebase !== 'undefined') {
-    try {
-      var _db = firebase.firestore();
-      console.log('[FS] Firestore初期化OK:', !!_db);
-    } catch(e) {
-      console.error('[FS] Firestore初期化エラー:', e);
-    }
-  }
 
-  var _origSetItem = localStorage.setItem.bind(localStorage);
-  localStorage.setItem = function(key, value) {
-    _origSetItem(key, value); // localStorage には必ず保存
-    if (key !== 'gaiheki_cases') return;
-    console.log('保存開始');
-    try {
-      var cases = JSON.parse(value);
-      if (!Array.isArray(cases) || cases.length === 0) {
-        console.warn('[FS] casesが空です');
-        return;
-      }
-      var caseData = cases[0]; // saveCase は unshift で先頭に追加
-      if (!caseData || !caseData.id) {
-        console.warn('[FS] caseDataまたはidが不正:', caseData);
-        return;
-      }
-      if (typeof firebase === 'undefined') {
-        console.error('[FS] firebaseが未定義です');
-        return;
-      }
-      console.log('Firestore保存試行', caseData);
-      firebase.firestore().collection('cases').doc(caseData.id).set(caseData)
-        .then(function() { console.log('Firestore保存成功', caseData.id); })
-        .catch(function(e) { console.error('Firestore保存失敗', e); });
-    } catch(e) {
-      console.error('[FS] 予期しないエラー:', e);
-    }
+<script>
+/* ── Firestore 連携（create.html） ── */
+(function () {
+  'use strict';
+  var _cache = []; // Firestore キャッシュ
+
+  /* getCases をオーバーライド: Firestoreキャッシュを返す */
+  window.getCases = function () { return _cache; };
+
+  /* saveCase をオーバーライド: Firestoreに保存 */
+  window.saveCase = function () {
+    if (!v('company') && !v('contact_name')) { alert('会社名または担当者名を入力してください'); return; }
+    if (!v('assignee')) { alert('担当者を選択してください'); return; }
+
+    var editId = new URLSearchParams(location.search).get('id');
+    var id = editId || Date.now().toString();
+    var existingCase = _cache.find(function (c) { return c.id === id; });
+
+    var caseData = {
+      id: id,
+      assignee: v('assignee'),
+      company: v('company') || v('contact_name'),
+      plan: v('plan'),
+      guidance_status: (document.querySelector('input[name="guidance_status"]:checked') || {}).value || '未実施',
+      createdAt: existingCase ? existingCase.createdAt : new Date().toISOString().split('T')[0],
+      formData: collectFormData(),
+      settingsSnapshot: collectSettingsSnapshot()
+    };
+
+    console.log('[FS] 案件保存開始:', id);
+    firebase.firestore().collection('cases').doc(id).set(caseData)
+      .then(function () {
+        console.log('[FS] 案件保存成功:', id);
+        location.href = 'index.html';
+      })
+      .catch(function (e) {
+        console.error('[FS] 案件保存失敗:', e.code, e.message);
+        alert('保存に失敗しました: ' + e.message);
+      });
   };
+
+  /* 編集モード: onAuthStateChanged 内でFirestoreから案件を読み込みフォームを再描画 */
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (!user) return;
+    var editId = new URLSearchParams(location.search).get('id');
+    if (!editId) return;
+
+    firebase.firestore().collection('cases').doc(editId).get()
+      .then(function (doc) {
+        if (!doc.exists) { console.warn('[FS] 案件なし:', editId); return; }
+        var c = doc.data();
+        _cache = [c];
+
+        // 設定スナップショットを適用
+        if (c.settingsSnapshot && typeof getSettings === 'function') {
+          var base = JSON.parse(JSON.stringify(getSettings()));
+          window._settingsOverride = Object.assign(base, c.settingsSnapshot);
+        }
+
+        // フォームを再描画
+        var d = c.formData;
+        if (!d) return;
+        ['assignee','cs_assignee','company','contact_name','issue_date','plan',
+         'monthly_fee','commission','guarantee','monthly_est','half_est',
+         'payment_status','payment_note','login_id'].forEach(function (f) {
+          var el = document.getElementById(f);
+          if (el && d[f] !== undefined) el.value = d[f];
+        });
+        if (d.guidance_status) {
+          var r = document.querySelector('input[name="guidance_status"][value="' + d.guidance_status + '"]');
+          if (r) r.checked = true;
+        }
+        if (typeof areas !== 'undefined') {
+          areas.length = 0;
+          if (Array.isArray(d.areas)) {
+            d.areas.forEach(function (a) {
+              areas.push(typeof a === 'string' ? { pref: a, city: '', points: 0, min: 0, max: 0 } : a);
+            });
+          }
+          if (typeof renderAreaTags === 'function') renderAreaTags();
+        }
+        if (typeof populatePaymentMethodSelect === 'function') populatePaymentMethodSelect();
+        if (typeof updatePaymentNoteOptions === 'function') updatePaymentNoteOptions();
+        var pnEl = document.getElementById('payment_note');
+        if (pnEl && d.payment_note) pnEl.value = d.payment_note;
+        if (typeof render === 'function') render();
+        if (typeof renderP4 === 'function') renderP4();
+        console.log('[FS] 編集データ読み込み完了:', editId);
+      })
+      .catch(function (e) { console.error('[FS] 案件読み込みエラー:', e.code, e.message); });
+  });
 })();
 </script>
 </body>

@@ -341,40 +341,43 @@ function escHtml(s) {
 renderPage();
 </script>
 
-<script>
-/* ── Firestore リアルタイム同期（index.html 追加コード・既存JS変更なし） ── */
-(function() {
-  function mergeAndRender(fsDocs) {
-    try {
-      var lsCases = JSON.parse(localStorage.getItem('gaiheki_cases') || '[]');
-      var map = {};
-      lsCases.forEach(function(c) { if (c.id) map[c.id] = c; });
-      fsDocs.forEach(function(c) { if (c.id) map[c.id] = c; }); // Firestore で上書き
-      var merged = Object.values(map);
-      merged.sort(function(a, b) {
-        return (b.createdAt || '').localeCompare(a.createdAt || '');
-      });
-      localStorage.setItem('gaiheki_cases', JSON.stringify(merged));
-      if (typeof renderPage === 'function') renderPage();
-    } catch(e) {
-      console.warn('[FS] merge warn:', e.message);
-      if (typeof renderPage === 'function') renderPage();
-    }
-  }
 
-  firebase.auth().onAuthStateChanged(function(user) {
+<script>
+/* ── Firestore 連携（index.html） ── */
+(function () {
+  'use strict';
+  var _cache = [];
+
+  /* getCases をオーバーライド */
+  window.getCases = function () { return _cache; };
+
+  /* deleteCase をオーバーライド: Firestoreから削除 */
+  window.deleteCase = function (id, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!confirm('この案件を削除しますか？')) return;
+    firebase.firestore().collection('cases').doc(id).delete()
+      .then(function () { console.log('[FS] 案件削除:', id); })
+      .catch(function (e) { console.error('[FS] 削除エラー:', e.code, e.message); });
+  };
+
+  /* onAuthStateChanged 内でonSnapshotを設定 */
+  firebase.auth().onAuthStateChanged(function (user) {
     if (!user) return;
+    console.log('[FS] Firestore監視開始');
     firebase.firestore().collection('cases').onSnapshot(
-      function(snap) {
-        console.log('[FS] cases snapshot:', snap.size, '件');
-        var docs = snap.docs.map(function(d) {
+      function (snap) {
+        _cache = snap.docs.map(function (d) {
           return Object.assign({ id: d.id }, d.data());
         });
-        mergeAndRender(docs);
+        _cache.sort(function (a, b) {
+          return (b.createdAt || '').localeCompare(a.createdAt || '');
+        });
+        console.log('[FS] cases更新:', _cache.length, '件');
+        if (typeof renderPage === 'function') renderPage();
       },
-      function(err) {
-        console.warn('[FS] snapshot warn:', err.message);
-        if (typeof renderPage === 'function') renderPage(); // FS失敗でもlocalStorageで表示
+      function (err) {
+        console.error('[FS] snapshotエラー:', err.code, err.message);
       }
     );
   });
