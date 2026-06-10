@@ -2430,5 +2430,49 @@ function saveCase() {
   });
 })();
 </script>
+
+<script>
+/* ── サイドバー ナビ ハイライト（IntersectionObserver） ── */
+(function () {
+  var preview = document.getElementById('preview-scroll');
+  if (!preview || !window.IntersectionObserver) return;
+
+  var PAGE_IDS = ['p1', 'p2', 'p3', 'p4'];
+  var visibleSet = new Set();
+
+  function syncNav() {
+    // p1→p4 の順で最初に visible なページをアクティブに
+    var activeId = null;
+    for (var i = 0; i < PAGE_IDS.length; i++) {
+      if (visibleSet.has(PAGE_IDS[i])) { activeId = PAGE_IDS[i]; break; }
+    }
+    if (!activeId) return;
+    document.querySelectorAll('.nav-item').forEach(function (btn) {
+      btn.classList.remove('active');
+    });
+    var navEl = document.getElementById('nav-' + activeId);
+    if (navEl) navEl.classList.add('active');
+  }
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        visibleSet.add(entry.target.id);
+      } else {
+        visibleSet.delete(entry.target.id);
+      }
+    });
+    syncNav();
+  }, {
+    root: preview,       // プレビューペインを基準
+    threshold: 0.15      // 15%以上見えたらアクティブ
+  });
+
+  PAGE_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+})();
+</script>
 </body>
 </html>
