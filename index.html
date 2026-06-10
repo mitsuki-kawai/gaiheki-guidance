@@ -430,6 +430,21 @@ document.addEventListener('click', function(e) {
   /* onAuthStateChanged 内でonSnapshotを設定 */
   firebase.auth().onAuthStateChanged(function (user) {
     if (!user) return;
+
+    // ── ユーザー情報をサイドバーに表示 ──
+    var name    = user.displayName || (user.email || '').split('@')[0];
+    var initial = (name.charAt(0) || '?').toUpperCase();
+    var el = {
+      avatar: document.getElementById('user-avatar'),
+      name:   document.getElementById('user-name'),
+      email:  document.getElementById('user-email'),
+      widget: document.getElementById('sidebar-user')
+    };
+    if (el.avatar) el.avatar.textContent = initial;
+    if (el.name)   el.name.textContent   = name;
+    if (el.email)  el.email.textContent  = user.email || '';
+    if (el.widget) el.widget.style.display = '';
+
     console.log('[FS] Firestore監視開始');
     firebase.firestore().collection('cases').onSnapshot(
       function (snap) {
