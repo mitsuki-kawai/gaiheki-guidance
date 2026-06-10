@@ -202,13 +202,12 @@ const DEFAULT_SETTINGS = {
   staffList: ['恩田雅史', '鈴木宏午', '皆川進太', '中村元彌', '松本そよ', '穴澤萌花', '亀井翼', '染葉健介', '杉本山東'],
 };
 
-let _indexSettings = null;
 function getSettings() {
-  const s = _indexSettings || (() => {
-    try { return JSON.parse(localStorage.getItem('gaiheki_settings') || 'null'); } catch(e) { return null; }
-  })();
-  if (!s) return { ...DEFAULT_SETTINGS };
-  return { ...DEFAULT_SETTINGS, ...s, staffList: s.staffList?.length ? s.staffList : DEFAULT_SETTINGS.staffList };
+  try {
+    const s = JSON.parse(localStorage.getItem('gaiheki_settings') || 'null');
+    if (!s) return { ...DEFAULT_SETTINGS };
+    return { ...DEFAULT_SETTINGS, ...s, staffList: s.staffList?.length ? s.staffList : DEFAULT_SETTINGS.staffList };
+  } catch(e) { return { ...DEFAULT_SETTINGS }; }
 }
 
 function goToCreate() {
@@ -293,9 +292,7 @@ function renderCards() {
   grid.innerHTML = newCard + filtered.map(c => {
     const plan = c.plan || 'basic';
     const areas = c.formData?.areas || [];
-    const areaText = areas.length
-      ? areas.map(a => typeof a === 'string' ? a : (a.pref || '') + (a.city ? ' ' + a.city : '')).filter(Boolean).join('・')
-      : 'エリア未設定';
+    const areaText = areas.length ? areas.join('・') : 'エリア未設定';
     const dateStr = c.createdAt ? c.createdAt.replace(/-/g, '/') : '—';
     const status = c.guidance_status || '未実施';
     const statusClass = status === '実施済み' ? 'done' : 'pending';
@@ -322,32 +319,17 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── Firebase Auth + Firestore リアルタイム ──
-let _unsubCases = null;
+// ── Firebase Auth + Firestore cases リアルタイム ──
 auth.onAuthStateChanged(user => {
   if (!user || !(user.email || '').endsWith('@' + ALLOWED_DOMAIN)) {
-    if (_unsubCases) { _unsubCases(); _unsubCases = null; }
     location.replace('login.html'); return;
   }
-  console.log('[index] 認証OK:', user.email);
-
-  // 設定を読み込む（staffList 用）
-  db.collection('settings').doc('main').get()
-    .then(doc => { if (doc.exists) _indexSettings = doc.data(); })
-    .catch(err => console.warn('[index] settings 読み込みエラー:', err));
-
-  // 案件をリアルタイム監視
-  _unsubCases = db.collection('cases').onSnapshot(snap => {
-    console.log('[index] cases snapshot:', snap.size, '件');
+  db.collection('cases').onSnapshot(snap => {
     _casesCache = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+    // 作成日降順
     _casesCache.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
     renderPage();
-  }, err => {
-    console.error('[index] cases snapshot エラー:', err.code, err.message);
-    if (err.code === 'permission-denied') {
-      alert('Firestoreのセキュリティルールでアクセスが拒否されました。\nFirebase Console でルールを更新してください。');
-    }
-  });
+  }, err => console.error('cases snapshot error:', err));
 });
 </script>
 </body>
