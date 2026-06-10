@@ -241,6 +241,10 @@ a.header-logo:hover { opacity: 0.8; }
 .area-edit-grid .field { margin:0; }
 .area-edit-grid .field label { display:block; font-size:10px; font-weight:600; color:var(--label); margin-bottom:3px; }
 .area-edit-grid .field input, .area-edit-grid .field select { width:100%; padding:4px 7px; border:1px solid var(--border); border-radius:4px; font-size:12px; font-family:inherit; }
+
+/* ── 未保存インジケーター ── */
+.dirty-badge { display:none; font-size:11px; color:#e65100; font-weight:600; margin-left:10px; vertical-align:middle; }
+.dirty-badge::before { content:"⚠ "; }
 </style>
 </head>
 <body>
@@ -314,6 +318,7 @@ a.header-logo:hover { opacity: 0.8; }
         </div>
 
       </div>
+      <span class="dirty-badge" id="dirty-plan">未保存の変更があります</span>
       <button id="btn-save-plan" class="btn-save" style="margin-top:16px" onclick="savePlanSection()">保存</button>
     </div>
 
@@ -323,6 +328,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">資料作成時の「担当者」ドロップダウンとトップページのフィルターに反映されます。</div>
       <div class="staff-list" id="staff-list"></div>
       <button class="btn-add-staff" onclick="addStaff()">＋ 担当者を追加</button>
+      <span class="dirty-badge" id="dirty-staff">未保存の変更があります</span>
       <button id="btn-save-staff" class="btn-save" style="margin-top:16px" onclick="saveStaffSection()">保存</button>
     </div>
 
@@ -338,6 +344,7 @@ a.header-logo:hover { opacity: 0.8; }
         <label>⑤ 除外情報の文言</label>
         <textarea id="exclude-text" rows="7"></textarea>
       </div>
+      <span class="dirty-badge" id="dirty-text">未保存の変更があります</span>
       <button id="btn-save-text" class="btn-save" style="margin-top:16px" onclick="saveTextSection()">保存</button>
     </div>
 
@@ -348,6 +355,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">名刺カードに表示するCS担当者の情報を設定します。</div>
       <div class="cs-staff-list" id="cs-staff-list"></div>
       <button class="btn-cs-add" onclick="csAdd()">＋ CS担当者を追加</button>
+      <span class="dirty-badge" id="dirty-cs">未保存の変更があります</span>
       <button id="btn-save-cs" class="btn-save" style="margin-top:16px" onclick="saveCsSection()">保存</button>
     </div>
 
@@ -357,6 +365,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-desc">create.htmlフォームの決済手段と備考の選択肢を管理します。</div>
       <div id="pm-list"></div>
       <button class="btn-cs-add" onclick="pmAddMethod()" style="margin-top:8px">＋ 決済手段を追加</button>
+      <span class="dirty-badge" id="dirty-payment">未保存の変更があります</span>
       <button id="btn-save-payment" class="btn-save" style="margin-top:16px" onclick="savePaymentSection()">保存</button>
     </div>
 
@@ -418,6 +427,7 @@ a.header-logo:hover { opacity: 0.8; }
         </div>
       </div>
       <button class="btn-cs-add" onclick="amgrShowAdd()">＋ エリアを追加</button>
+      <span class="dirty-badge" id="dirty-area">未保存の変更があります</span>
       <button id="btn-save-area" class="btn-save" style="margin-top:16px" onclick="saveAreaSection()">保存</button>
     </div>
     <!-- ── URL設定 ── -->
@@ -433,6 +443,7 @@ a.header-logo:hover { opacity: 0.8; }
         <div class="field"><label>写真アップロードフォームURL</label><input type="text" id="photo-url" placeholder="GoogleフォームのURL等"></div>
         <div class="field"><label>加盟店紹介ページURL</label><input type="text" id="store-page-url" placeholder="https://gaihekiplus.com/store/..."></div>
       </div>
+      <span class="dirty-badge" id="dirty-url">未保存の変更があります</span>
       <button id="btn-save-url" class="btn-save" style="margin-top:16px" onclick="saveUrlSection()">保存</button>
     </div>
 
@@ -534,7 +545,7 @@ function csToggleEdit(id) {
 }
 function csUpdate(id, field, value) {
   const st = csStaff.find(x => x.id === id);
-  if (st) st[field] = value;
+  if (st) { st[field] = value; setDirty('cs'); }
 }
 function csDelete(id) {
   if (!confirm('削除しますか？')) return;
@@ -545,6 +556,7 @@ function csDelete(id) {
 function csAdd() {
   const id = csNewId();
   csStaff.push({ id, name: '', bio: '', phone: '' });
+  setDirty('cs');
   csEditingId = id;
   csRenderList();
   document.getElementById('csitem-' + id)?.scrollIntoView({ behavior: 'smooth' });
@@ -595,62 +607,65 @@ function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&
 
 function pmAddMethod() {
   const id = pmNewId();
+  setDirty('payment');
   pmConfig.push({ id, name: '', useGroups: false, groups: [{ id: pmNewId(), label: null, notes: [] }] });
   pmRender();
 }
 function pmDeleteMethod(id) {
   if (!confirm('削除しますか？')) return;
   pmConfig = pmConfig.filter(m => m.id !== id);
+  setDirty('payment');
   pmRender();
 }
 function pmUpdateName(id, name) {
   const m = pmConfig.find(x => x.id === id); if (m) m.name = name;
+  setDirty('payment');
 }
 function pmToggleGroups(id) {
   const m = pmConfig.find(x => x.id === id);
   if (!m) return;
   m.useGroups = !m.useGroups;
   if (m.useGroups && m.groups.length === 1 && !m.groups[0].label) m.groups[0].label = '';
+  setDirty('payment');
   pmRender();
 }
 function pmAddGroup(methodId) {
   const m = pmConfig.find(x => x.id === methodId);
-  if (m) m.groups.push({ id: pmNewId(), label: '', notes: [] });
+  if (m) { m.groups.push({ id: pmNewId(), label: '', notes: [] }); setDirty('payment'); }
   pmRender();
 }
 function pmDeleteGroup(methodId, groupId) {
   const m = pmConfig.find(x => x.id === methodId);
-  if (m) m.groups = m.groups.filter(g => g.id !== groupId);
+  if (m) { m.groups = m.groups.filter(g => g.id !== groupId); setDirty('payment'); }
   pmRender();
 }
 function pmUpdateGroupLabel(methodId, groupId, label) {
   const m = pmConfig.find(x => x.id === methodId);
   const g = m?.groups.find(g => g.id === groupId);
   if (g) g.label = label;
+  setDirty('payment');
 }
 function pmAddNote(methodId, groupId) {
   const m = pmConfig.find(x => x.id === methodId);
   const g = m?.groups.find(g => g.id === groupId);
-  if (g) g.notes.push('');
+  if (g) { g.notes.push(''); setDirty('payment'); }
   pmRender();
 }
 function pmDeleteNote(methodId, groupId, idx) {
   const m = pmConfig.find(x => x.id === methodId);
   const g = m?.groups.find(g => g.id === groupId);
-  if (g) g.notes.splice(idx, 1);
+  if (g) { g.notes.splice(idx, 1); setDirty('payment'); }
   pmRender();
 }
 function pmUpdateNote(methodId, groupId, idx, value) {
   const m = pmConfig.find(x => x.id === methodId);
   const g = m?.groups.find(g => g.id === groupId);
   if (g) g.notes[idx] = value;
+  setDirty('payment');
 }
 
 function showSection(id, btn) {
-  if (id !== 'area' && amgrDirty) {
-    if (!confirm('対応エリア設定に保存されていない変更があります。移動しますか？')) return;
-    amgrDirty = false;
-  }
+  if (!guardLeave(id)) return;
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.sidenav-item').forEach(b => b.classList.remove('active'));
   document.getElementById('sec-' + id).classList.add('active');
@@ -685,20 +700,52 @@ function saveStaff(i) {
   const val = (document.getElementById('staff-inp-' + i)?.value || '').trim();
   if (!val) { staffList.splice(i, 1); }
   else { staffList[i] = val; }
+  setDirty('staff');
   renderStaffList();
 }
 
 function addStaff() {
   staffList.push('');
+  setDirty('staff');
   renderStaffList();
   editStaff(staffList.length - 1);
 }
 
 function removeStaff(i) {
   staffList.splice(i, 1);
+  setDirty('staff');
   renderStaffList();
 }
 
+
+
+/* ── 未保存変更管理 ── */
+const dirty = { plan:false, staff:false, text:false, cs:false, payment:false, url:false, area:false };
+
+function setDirty(sec) {
+  dirty[sec] = true;
+  const el = document.getElementById('dirty-' + sec);
+  if (el) el.style.display = 'inline';
+}
+function clearDirty(sec) {
+  dirty[sec] = false;
+  const el = document.getElementById('dirty-' + sec);
+  if (el) el.style.display = 'none';
+}
+function hasAnyDirty() {
+  return Object.values(dirty).some(Boolean);
+}
+function currentSecId() {
+  const el = document.querySelector('.section.active');
+  return el ? el.id.replace('sec-', '') : '';
+}
+function guardLeave(targetSec) {
+  const cur = currentSecId();
+  if (cur && dirty[cur] && cur !== targetSec) {
+    return confirm('保存されていない変更があります。ページを移動しますか？');
+  }
+  return true;
+}
 
 function saveSectionData(key, data) {
   console.log('[saveSectionData] 開始 key=' + key);
@@ -735,6 +782,7 @@ function savePlanSection() {
       };
       plans[p] = { fee:g('fee'), commission:g('commission'), guarantee:g('guarantee'), monthly:g('monthly'), half:g('half'), contractPeriod:g('contract-period') };
     });
+    clearDirty('plan');
     saveSectionData('plans', { plans });
   } catch(e) { console.error('savePlanSection エラー:', e); }
 }
@@ -743,6 +791,7 @@ function saveStaffSection() {
   console.log('保存ボタンクリック：担当者設定');
   console.log('  staffList =', staffList);
   try {
+    clearDirty('staff');
     saveSectionData('staffList', { staffList: [...staffList] });
   } catch(e) { console.error('saveStaffSection エラー:', e); }
 }
@@ -758,6 +807,7 @@ function saveTextSection() {
       holidayText: (holidayEl && holidayEl.value) ? holidayEl.value : DEFAULT_SETTINGS.holidayText,
       excludeText: (excludeEl && excludeEl.value) ? excludeEl.value : DEFAULT_SETTINGS.excludeText,
     };
+    clearDirty('text');
     saveSectionData('text', data);
   } catch(e) { console.error('saveTextSection エラー:', e); }
 }
@@ -766,6 +816,7 @@ function saveCsSection() {
   console.log('保存ボタンクリック：CS担当者情報');
   console.log('  csStaff =', csStaff);
   try {
+    clearDirty('cs');
     saveSectionData('csStaff', { csStaff: JSON.parse(JSON.stringify(csStaff)) });
   } catch(e) { console.error('saveCsSection エラー:', e); }
 }
@@ -774,6 +825,7 @@ function savePaymentSection() {
   console.log('保存ボタンクリック：決済手段');
   console.log('  pmConfig =', pmConfig);
   try {
+    clearDirty('payment');
     saveSectionData('paymentConfig', { paymentConfig: JSON.parse(JSON.stringify(pmConfig)) });
   } catch(e) { console.error('savePaymentSection エラー:', e); }
 }
@@ -795,6 +847,7 @@ function saveUrlSection() {
       storePageUrl:  document.getElementById('store-page-url').value.trim(),
       loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
     };
+    clearDirty('url');
     saveSectionData('urls', data);
   } catch(e) { console.error('saveUrlSection エラー:', e); }
 }
@@ -802,7 +855,6 @@ function saveUrlSection() {
 
 /* ── 対応エリア管理 ── */
 let amgrData = [];
-let amgrDirty = false;
 
 const PT_RANGE = {
   '6': [48, 60], '5': [40, 50], '4': [32, 40],
@@ -919,7 +971,7 @@ function amgrSaveEdit(gi) {
     min:    parseInt(document.getElementById('ae-min-'+gi).value) || 0,
     max:    parseInt(document.getElementById('ae-max-'+gi).value) || 0,
   };
-  amgrDirty = true;
+  setDirty('area');
   amgrCloseEdit(gi);
   amgrRenderList();
 }
@@ -927,7 +979,7 @@ function amgrSaveEdit(gi) {
 function amgrDelete(gi) {
   if (!confirm('「' + amgrData[gi].pref + ' ' + amgrData[gi].city + '」を削除しますか？')) return;
   amgrData.splice(gi, 1);
-  amgrDirty = true;
+  setDirty('area');
   amgrRenderList();
 }
 
@@ -985,7 +1037,7 @@ function amgrAddEntry() {
     return;
   }
   amgrData.push({ region, pref, city, points: pts, min: mn || 0, max: mx || 0 });
-  amgrDirty = true;
+  setDirty('area');
   amgrHideAdd();
   amgrRenderList();
 }
@@ -993,7 +1045,7 @@ function amgrAddEntry() {
 function saveAreaSection() {
   try {
     localStorage.setItem('gaiheki_area_data', JSON.stringify(amgrData));
-    amgrDirty = false;
+    clearDirty('area');
     console.log('[settings] saveAreaSection: saved', amgrData.length, 'entries');
   } catch(e) {
     console.error('[settings] saveAreaSection error:', e);
@@ -1096,6 +1148,33 @@ function escHtml(s) {
   }
   pmRender();
   amgrLoad();
+  // ── 未保存変更: セクション別 input イベント委任 ──
+  ['sec-plan','sec-text','sec-url'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      const sec = id.replace('sec-', '');
+      setDirty(sec);
+    });
+  });
+
+  // ── 未保存変更: ナビゲーション保護 ──
+  // ロゴ・戻るボタン
+  document.querySelectorAll('a[href="index.html"]').forEach(a => {
+    a.addEventListener('click', e => {
+      if (hasAnyDirty()) {
+        if (!confirm('保存されていない変更があります。ページを移動しますか？')) {
+          e.preventDefault();
+        }
+      }
+    });
+  });
+  // ブラウザ戻るボタン
+  window.addEventListener('beforeunload', e => {
+    if (hasAnyDirty()) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+
 })();
 </script>
 </body>
