@@ -742,9 +742,103 @@ function currentSecId() {
 function guardLeave(targetSec) {
   const cur = currentSecId();
   if (cur && dirty[cur] && cur !== targetSec) {
-    return confirm('保存されていない変更があります。ページを移動しますか？');
+    if (!confirm('保存されていない変更があります。ページを移動しますか？')) return false;
+    restoreSection(cur);
+    clearDirty(cur);
   }
   return true;
+}
+
+
+/* ── originalData: 最後に保存された状態のスナップショット ── */
+const originalData = {};
+
+function snapshotSection(sec) {
+  try {
+    switch(sec) {
+      case 'plan': {
+        const st = getSettings();
+        originalData.plan = JSON.parse(JSON.stringify(st.plans));
+        break;
+      }
+      case 'staff':
+        originalData.staff = staffList.slice();
+        break;
+      case 'text': {
+        const st = getSettings();
+        originalData.text = { holidayText: st.holidayText, excludeText: st.excludeText };
+        break;
+      }
+      case 'cs':
+        originalData.cs = JSON.parse(JSON.stringify(csStaff));
+        break;
+      case 'payment':
+        originalData.payment = JSON.parse(JSON.stringify(pmConfig));
+        break;
+      case 'url': {
+        const st = getSettings();
+        originalData.url = {
+          loanDocUrl: st.loanDocUrl || '', loanApplyUrl: st.loanApplyUrl || '',
+          giftSurveyUrl: st.giftSurveyUrl || '', giftWorkUrl: st.giftWorkUrl || '',
+          photoUrl: st.photoUrl || '', storePageUrl: st.storePageUrl || '',
+          loginUrl: st.loginUrl || '',
+        };
+        break;
+      }
+      case 'area':
+        originalData.area = JSON.parse(JSON.stringify(amgrData));
+        break;
+    }
+  } catch(e) { console.error('snapshotSection error:', sec, e); }
+}
+
+function restoreSection(sec) {
+  const d = originalData[sec];
+  if (!d) return;
+  try {
+    switch(sec) {
+      case 'plan':
+        ['light','basic','pro'].forEach(p => {
+          document.getElementById(`${p}-fee`).value            = d[p].fee || '';
+          document.getElementById(`${p}-commission`).value     = d[p].commission || '';
+          document.getElementById(`${p}-guarantee`).value      = d[p].guarantee || '';
+          document.getElementById(`${p}-monthly`).value        = d[p].monthly || '';
+          document.getElementById(`${p}-half`).value           = d[p].half || '';
+          document.getElementById(`${p}-contract-period`).value= d[p].contractPeriod || '';
+        });
+        break;
+      case 'staff':
+        staffList = d.slice();
+        renderStaffList();
+        break;
+      case 'text':
+        document.getElementById('holiday-text').value = d.holidayText || '';
+        document.getElementById('exclude-text').value = d.excludeText || '';
+        break;
+      case 'cs':
+        csStaff = JSON.parse(JSON.stringify(d));
+        csEditingId = null;
+        csRenderList();
+        break;
+      case 'payment':
+        pmConfig = JSON.parse(JSON.stringify(d));
+        pmRender();
+        break;
+      case 'url':
+        document.getElementById('loan-doc-url').value    = d.loanDocUrl || '';
+        document.getElementById('loan-apply-url').value  = d.loanApplyUrl || '';
+        document.getElementById('gift-survey-url').value = d.giftSurveyUrl || '';
+        document.getElementById('gift-work-url').value   = d.giftWorkUrl || '';
+        document.getElementById('photo-url').value       = d.photoUrl || '';
+        document.getElementById('store-page-url').value  = d.storePageUrl || '';
+        document.getElementById('login-url').value       = d.loginUrl || '';
+        break;
+      case 'area':
+        amgrData = JSON.parse(JSON.stringify(d));
+        amgrRenderList();
+        break;
+    }
+  } catch(e) { console.error('restoreSection error:', sec, e); }
 }
 
 function saveSectionData(key, data) {
@@ -784,6 +878,7 @@ function savePlanSection() {
     });
     clearDirty('plan');
     saveSectionData('plans', { plans });
+    snapshotSection('plan');
   } catch(e) { console.error('savePlanSection エラー:', e); }
 }
 
@@ -793,6 +888,7 @@ function saveStaffSection() {
   try {
     clearDirty('staff');
     saveSectionData('staffList', { staffList: [...staffList] });
+    snapshotSection('staff');
   } catch(e) { console.error('saveStaffSection エラー:', e); }
 }
 
@@ -809,6 +905,7 @@ function saveTextSection() {
     };
     clearDirty('text');
     saveSectionData('text', data);
+    snapshotSection('text');
   } catch(e) { console.error('saveTextSection エラー:', e); }
 }
 
@@ -818,6 +915,7 @@ function saveCsSection() {
   try {
     clearDirty('cs');
     saveSectionData('csStaff', { csStaff: JSON.parse(JSON.stringify(csStaff)) });
+    snapshotSection('cs');
   } catch(e) { console.error('saveCsSection エラー:', e); }
 }
 
@@ -827,6 +925,7 @@ function savePaymentSection() {
   try {
     clearDirty('payment');
     saveSectionData('paymentConfig', { paymentConfig: JSON.parse(JSON.stringify(pmConfig)) });
+    snapshotSection('payment');
   } catch(e) { console.error('savePaymentSection エラー:', e); }
 }
 
@@ -849,6 +948,7 @@ function saveUrlSection() {
     };
     clearDirty('url');
     saveSectionData('urls', data);
+    snapshotSection('url');
   } catch(e) { console.error('saveUrlSection エラー:', e); }
 }
 
@@ -1046,6 +1146,7 @@ function saveAreaSection() {
   try {
     localStorage.setItem('gaiheki_area_data', JSON.stringify(amgrData));
     clearDirty('area');
+    snapshotSection('area');
     console.log('[settings] saveAreaSection: saved', amgrData.length, 'entries');
   } catch(e) {
     console.error('[settings] saveAreaSection error:', e);
@@ -1148,6 +1249,9 @@ function escHtml(s) {
   }
   pmRender();
   amgrLoad();
+
+  // ── 各セクションの初期状態をスナップショット ──
+  ['plan','staff','text','cs','payment','url','area'].forEach(snapshotSection);
   // ── 未保存変更: セクション別 input イベント委任 ──
   ['sec-plan','sec-text','sec-url'].forEach(id => {
     document.getElementById(id).addEventListener('input', () => {
