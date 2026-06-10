@@ -72,6 +72,8 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 .card-areas{font-size:11px;color:var(--mid);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:1;margin-right:8px}
 .card-delete{background:none;border:none;font-size:11px;color:var(--gray-text);cursor:pointer;padding:2px 6px;border-radius:4px;transition:all 0.12s;flex-shrink:0}
 .card-delete:hover{background:#fff0f0;color:#e53935}
+.card-editor{background:none;border:1px solid var(--purple-mid);color:var(--purple);font-size:11px;cursor:pointer;padding:2px 8px;border-radius:4px;transition:all 0.12s;flex-shrink:0;text-decoration:none}
+.card-editor:hover{background:var(--purple-light)}
 .filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:flex-end}
 .filter-group{display:flex;flex-direction:column;gap:3px}
 .filter-label{font-size:11px;color:var(--gray-text);font-weight:500;padding-left:2px}
@@ -345,6 +347,7 @@ function renderCards() {
         </div>
         <div class="card-footer">
           <div class="card-areas">📍 ${escHtml(areaText)}</div>
+          <a class="card-editor" href="editor.html?caseId=${c.id}" onclick="event.stopPropagation()">編集</a>
           <button class="card-delete" onclick="deleteCase('${c.id}', event)">削除</button>
         </div>
       </a>`;
