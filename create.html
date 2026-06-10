@@ -401,11 +401,6 @@ a.lb-url:hover { text-decoration: underline; }
   @page { size: A4; margin: 10mm; }
 }
 </style>
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="firebase-app.js"></script>
 </head>
 <body>
 <div class="app">
@@ -1755,34 +1750,7 @@ function getAreaData() {
   if (!localStorage.getItem('gaiheki_area_data')) {
     try { localStorage.setItem('gaiheki_area_data', JSON.stringify(AREA_DATA)); } catch(e) {}
   }
-}
-
-// ── Firebase Auth + Firestore データ読み込み ──
-auth.onAuthStateChanged(user => {
-  if (!user || !(user.email || '').endsWith('@' + ALLOWED_DOMAIN)) {
-    location.replace('login.html'); return;
-  }
-  const editId = new URLSearchParams(location.search).get('id');
-  const promises = [
-    db.collection('settings').doc('main').get().then(doc => {
-      if (doc.exists) _firestoreSettings = doc.data();
-    }),
-    db.collection('settings').doc('area_data').get().then(doc => {
-      if (doc.exists) _cachedAreaData = doc.data().data || null;
-    }),
-  ];
-  if (editId) {
-    promises.push(
-      db.collection('cases').get().then(snap => {
-        _casesPageCache = snap.docs.map(d => ({ ...d.data(), id: d.id }));
-      })
-    );
-  }
-  Promise.all(promises)
-    .then(() => initPage())
-    .catch(err => { console.error('Firestore 読み込みエラー:', err); initPage(); });
-});
-
+})();
 
 
 
@@ -1814,25 +1782,24 @@ const DEFAULT_SETTINGS = {
 };
 
 let _settingsOverride = null; // 既存案件編集時に snapshot で上書き
-let _firestoreSettings = null; // Firestore から読み込んだ設定
 
 function getSettings() {
   if (_settingsOverride) return _settingsOverride;
-  const s = _firestoreSettings || (() => {
-    try { return JSON.parse(localStorage.getItem('gaiheki_settings') || 'null'); } catch(e) { return null; }
-  })();
-  if (!s) return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
-  return {
-    ...DEFAULT_SETTINGS, ...s,
-    plans: {
-      light: { ...DEFAULT_SETTINGS.plans.light, ...(s.plans?.light || {}) },
-      basic: { ...DEFAULT_SETTINGS.plans.basic, ...(s.plans?.basic || {}) },
-      pro:   { ...DEFAULT_SETTINGS.plans.pro,   ...(s.plans?.pro   || {}) },
-    },
-    staffList:     s.staffList?.length ? s.staffList : DEFAULT_SETTINGS.staffList,
-    csStaff:       s.csStaff?.length   ? s.csStaff   : DEFAULT_SETTINGS.csStaff,
-    paymentConfig: s.paymentConfig?.length ? s.paymentConfig : DEFAULT_SETTINGS.paymentConfig,
-  };
+  try {
+    const s = JSON.parse(localStorage.getItem('gaiheki_settings') || 'null');
+    if (!s) return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+    return {
+      ...DEFAULT_SETTINGS, ...s,
+      plans: {
+        light: { ...DEFAULT_SETTINGS.plans.light, ...(s.plans?.light || {}) },
+        basic: { ...DEFAULT_SETTINGS.plans.basic, ...(s.plans?.basic || {}) },
+        pro:   { ...DEFAULT_SETTINGS.plans.pro,   ...(s.plans?.pro   || {}) },
+      },
+      staffList:     s.staffList?.length ? s.staffList : DEFAULT_SETTINGS.staffList,
+      csStaff:       s.csStaff?.length   ? s.csStaff   : DEFAULT_SETTINGS.csStaff,
+      paymentConfig: s.paymentConfig?.length ? s.paymentConfig : DEFAULT_SETTINGS.paymentConfig,
+    };
+  } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); }
 }
 
 
@@ -2239,8 +2206,9 @@ function setLink(id, url) {
   }
 }
 
-function getCases() { return _casesPageCache || []; }
-let _casesPageCache = [];
+function getCases() {
+  try { return JSON.parse(localStorage.getItem('gaiheki_cases') || '[]'); } catch(e) { return []; }
+}
 function collectFormData() {
   const statusEl = document.querySelector('input[name="guidance_status"]:checked');
   const fields = ['assignee','cs_assignee','company','contact_name','issue_date','plan','monthly_fee','commission','guarantee',
@@ -2284,12 +2252,13 @@ function saveCase() {
     formData: collectFormData(),
     settingsSnapshot: collectSettingsSnapshot()
   };
-  db.collection('cases').doc(id).set(caseData)
-    .then(() => { location.href = 'index.html'; })
-    .catch(err => { console.error('案件保存エラー:', err); alert('保存に失敗しました'); });
+  const cases = existing.filter(c => c.id !== id);
+  cases.unshift(caseData);
+  localStorage.setItem('gaiheki_cases', JSON.stringify(cases));
+  location.href = 'index.html';
 }
 
-function initPage() {
+(function init() {
   populateAssigneeSelect();
 
   const editId = new URLSearchParams(location.search).get('id');

@@ -271,11 +271,6 @@ a.header-logo:hover { opacity: 0.8; }
   border-top-color: #F07200;
 }
 </style>
-<!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
-<script src="firebase-app.js"></script>
 </head>
 <body>
 
@@ -527,22 +522,20 @@ const DEFAULT_SETTINGS = {
   ],
 };
 
-let _firestoreSettings = null;
-
 function getSettings() {
-  const s = _firestoreSettings || (() => {
-    try { return JSON.parse(localStorage.getItem('gaiheki_settings') || 'null'); } catch(e) { return null; }
-  })();
-  if (!s) return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
-  return {
-    ...DEFAULT_SETTINGS, ...s,
-    plans: {
-      light: { ...DEFAULT_SETTINGS.plans.light, ...(s.plans?.light || {}) },
-      basic: { ...DEFAULT_SETTINGS.plans.basic, ...(s.plans?.basic || {}) },
-      pro:   { ...DEFAULT_SETTINGS.plans.pro,   ...(s.plans?.pro   || {}) },
-    },
-    staffList: s.staffList?.length ? s.staffList : DEFAULT_SETTINGS.staffList,
-  };
+  try {
+    const s = JSON.parse(localStorage.getItem('gaiheki_settings') || 'null');
+    if (!s) return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+    return {
+      ...DEFAULT_SETTINGS, ...s,
+      plans: {
+        light: { ...DEFAULT_SETTINGS.plans.light, ...(s.plans?.light || {}) },
+        basic: { ...DEFAULT_SETTINGS.plans.basic, ...(s.plans?.basic || {}) },
+        pro:   { ...DEFAULT_SETTINGS.plans.pro,   ...(s.plans?.pro   || {}) },
+      },
+      staffList: s.staffList?.length ? s.staffList : DEFAULT_SETTINGS.staffList,
+    };
+  } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); }
 }
 
 let staffList = [];
@@ -804,7 +797,7 @@ function snapshotSection(sec) {
     switch(sec) {
       case 'plan': {
         const st = getSettings();
-        originalData.plan = JSON.parse(JSON.stringify(st.plans || DEFAULT_SETTINGS.plans));
+        originalData.plan = JSON.parse(JSON.stringify(st.plans));
         break;
       }
       case 'staff':
@@ -944,15 +937,17 @@ function checkDirty(sec) {
   return isDirty;
 }
 
-async function saveSectionData(key, data) {
+function saveSectionData(key, data) {
   console.log('[saveSectionData] 開始 key=' + key);
   console.log('[saveSectionData] 保存するデータ:', JSON.stringify(data, null, 2));
   try {
-    await db.collection('settings').doc('main').set(data, { merge: true });
-    // Firestore に保存後、キャッシュ更新
-    const doc = await db.collection('settings').doc('main').get();
-    if (doc.exists) _firestoreSettings = doc.data();
-    console.log('[saveSectionData] Firestore 保存完了 key=' + key);
+    const existing = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+    console.log('[saveSectionData] 既存のlocalStorage:', JSON.stringify(existing, null, 2));
+    const merged = { ...existing, ...data };
+    localStorage.setItem('gaiheki_settings', JSON.stringify(merged));
+    const verify = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+    console.log('[saveSectionData] 保存後のlocalStorage[' + key + ']:', verify[key] || merged);
+    console.log('[saveSectionData] 完了 key=' + key);
   } catch(e) {
     console.error('[saveSectionData] エラー key=' + key, e);
     alert('保存中にエラーが発生しました: ' + e.message);
@@ -1063,8 +1058,10 @@ const PT_RANGE = {
 };
 
 function amgrLoad() {
-  // amgrData は initPage() で Firestore から読み込み済み
-  // ここでは既に設定されている amgrData をそのまま使う
+  try {
+    const s = localStorage.getItem('gaiheki_area_data');
+    amgrData = s ? JSON.parse(s) : [];
+  } catch(e) { amgrData = []; }
   amgrPopulatePref();
   if (!amgrData.length) {
     document.getElementById('amgr-list').innerHTML =
@@ -1276,9 +1273,9 @@ function amgrAddEntry() {
   amgrRenderList();
 }
 
-async function saveAreaSection() {
+function saveAreaSection() {
   try {
-    await db.collection('settings').doc('area_data').set({ data: amgrData });
+    localStorage.setItem('gaiheki_area_data', JSON.stringify(amgrData));
     clearDirty('area');
     snapshotSection('area');
     console.log('[settings] saveAreaSection: saved', amgrData.length, 'entries');
@@ -1324,9 +1321,7 @@ function saveSettings() {
     paymentConfig: JSON.parse(JSON.stringify(pmConfig)),
   };
 
-  db.collection('settings').doc('main').set(settings)
-    .then(() => { _firestoreSettings = settings; })
-    .catch(err => console.error('saveSettings error:', err));
+  localStorage.setItem('gaiheki_settings', JSON.stringify(settings));
 
   const toast = document.getElementById('toast');
   toast.classList.add('show');
@@ -1338,7 +1333,7 @@ function escHtml(s) {
 }
 
 /* ── 初期化 ── */
-function initPage() {
+(function() {
   const s = getSettings();
 
   ['light', 'basic', 'pro'].forEach(p => {
@@ -1363,24 +1358,23 @@ function initPage() {
   document.getElementById('store-page-url').value = s.storePageUrl;
   document.getElementById('login-url').value      = s.loginUrl;
 
-  // CS担当者: Firestore から読み込み済みの設定を使用
-  const raw = _firestoreSettings || {};
+  // CS担当者: localStorageにデータがなければデフォルトを強制書き込み
+  const raw = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
   if (!raw.csStaff || !raw.csStaff.length) {
-    csStaff = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.csStaff));
-    // Firestore に初期データを保存
-    db.collection('settings').doc('main').set({ csStaff }, { merge: true })
-      .then(() => { if (_firestoreSettings) _firestoreSettings.csStaff = csStaff; });
+    raw.csStaff = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.csStaff));
+    localStorage.setItem('gaiheki_settings', JSON.stringify(raw));
+    csStaff = raw.csStaff;
   } else {
     csStaff = raw.csStaff;
   }
   csRenderList();
 
-  // 決済手段: Firestore から読み込み済みの設定を使用
-  const raw2 = _firestoreSettings || {};
+  // 決済手段: localStorageにデータがなければデフォルトを強制書き込み
+  const raw2 = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
   if (!raw2.paymentConfig || !raw2.paymentConfig.length) {
-    pmConfig = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.paymentConfig));
-    db.collection('settings').doc('main').set({ paymentConfig: pmConfig }, { merge: true })
-      .then(() => { if (_firestoreSettings) _firestoreSettings.paymentConfig = pmConfig; });
+    raw2.paymentConfig = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.paymentConfig));
+    localStorage.setItem('gaiheki_settings', JSON.stringify(raw2));
+    pmConfig = raw2.paymentConfig;
   } else {
     pmConfig = raw2.paymentConfig;
   }
@@ -1417,27 +1411,6 @@ function initPage() {
   });
 
 })();
-</script>
-</body>
-</html>
-
-// ── Firebase Auth + Firestore 設定読み込み ──
-auth.onAuthStateChanged(user => {
-  if (!user || !(user.email || '').endsWith('@' + ALLOWED_DOMAIN)) {
-    location.replace('login.html'); return;
-  }
-  Promise.all([
-    db.collection('settings').doc('main').get().then(doc => {
-      if (doc.exists) _firestoreSettings = doc.data();
-    }),
-    db.collection('settings').doc('area_data').get().then(doc => {
-      if (doc.exists) amgrData = doc.data().data || [];
-    }),
-  ])
-  .then(() => initPage())
-  .catch(err => { console.error('Firestore 読み込みエラー:', err); initPage(); });
-});
-
 </script>
 </body>
 </html>
