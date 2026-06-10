@@ -348,7 +348,10 @@ renderPage();
   'use strict';
   var _cache = [];
 
-  /* getCases をオーバーライド */
+  /* 古い localStorage 案件データを削除 */
+  localStorage.removeItem('gaiheki_cases');
+
+  /* getCases をオーバーライド: Firestoreキャッシュのみ */
   window.getCases = function () { return _cache; };
 
   /* deleteCase をオーバーライド: Firestoreから削除 */
@@ -360,6 +363,12 @@ renderPage();
       .then(function () { console.log('[FS] 案件削除:', id); })
       .catch(function (e) { console.error('[FS] 削除エラー:', e.code, e.message); });
   };
+
+  /* ローディング表示（前のrenderPage()が描いたlocalStorageデータを上書き） */
+  var grid = document.getElementById('card-grid');
+  if (grid) {
+    grid.innerHTML = '<div style="grid-column:1/-1;padding:48px 0;text-align:center;color:#999;font-size:13px">読み込み中...</div>';
+  }
 
   /* onAuthStateChanged 内でonSnapshotを設定 */
   firebase.auth().onAuthStateChanged(function (user) {
@@ -378,6 +387,7 @@ renderPage();
       },
       function (err) {
         console.error('[FS] snapshotエラー:', err.code, err.message);
+        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;padding:48px 0;text-align:center;color:#c00;font-size:13px">データの読み込みに失敗しました</div>';
       }
     );
   });
