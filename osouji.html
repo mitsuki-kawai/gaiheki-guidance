@@ -262,12 +262,12 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 let currentFilter = 'all';
 
 const DEFAULT_SETTINGS = {
-  staffList: ['恩田雅史', '鈴木宏午', '皆川進太', '中村元彌', '松本そよ', '穴澤萌花', '亀井翼', '染葉健介', '杉本山東'],
+  staffList: ['藤平友一', '山田一輝', '大舘慈里', '高松小雪', '上條悠人'],
 };
 
 function getSettings() {
   try {
-    const s = JSON.parse(localStorage.getItem('gaiheki_settings') || 'null');
+    const s = JSON.parse(localStorage.getItem('osouji_settings') || 'null');
     if (!s) return { ...DEFAULT_SETTINGS };
     return { ...DEFAULT_SETTINGS, ...s, staffList: s.staffList?.length ? s.staffList : DEFAULT_SETTINGS.staffList };
   } catch(e) { return { ...DEFAULT_SETTINGS }; }
@@ -456,6 +456,21 @@ document.addEventListener('click', function(e) {
     if (el.email)  el.email.textContent  = user.email || '';
     if (el.widget) el.widget.style.display = '';
 
+
+    // 設定（担当者リスト等）を Firestore から動的に読み込む
+    firebase.firestore().collection('settings').doc('osouji').get()
+      .then(function(doc) {
+        if (doc.exists && doc.data().staffList && doc.data().staffList.length) {
+          // localStorage を更新して getSettings() に反映
+          try {
+            var cur = JSON.parse(localStorage.getItem('osouji_settings') || '{}');
+            cur.staffList = doc.data().staffList;
+            localStorage.setItem('osouji_settings', JSON.stringify(cur));
+          } catch(e) {}
+          if (typeof renderSidebar === 'function') renderSidebar();
+        }
+      })
+      .catch(function(e) { /* settings 読み込み失敗は無視 */ });
     console.log('[FS] Firestore監視開始');
     firebase.firestore().collection('cases_osouji').onSnapshot(
       function (snap) {
