@@ -2367,9 +2367,23 @@ function saveCase() {
     };
 
     console.log('[FS] 案件保存開始:', id);
-    firebase.firestore().collection('cases').doc(id).set(caseData)
+    var db = firebase.firestore();
+    db.collection('cases').doc(id).set(caseData)
       .then(function () {
         console.log('[FS] 案件保存成功:', id);
+        // templates/gaiheki を caseSnapshots/{id} にコピー（スナップショット）
+        return db.collection('templates').doc('gaiheki').get()
+          .then(function(tmplDoc) {
+            if (!tmplDoc.exists) return;
+            return db.collection('caseSnapshots').doc(id).set({
+              caseId: id,
+              blocks: tmplDoc.data().blocks,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          })
+          .catch(function(e){ console.warn('[FS] snapshot warn:', e.message); });
+      })
+      .then(function () {
         location.href = 'index.html';
       })
       .catch(function (e) {
