@@ -433,12 +433,12 @@ a.lb-url:hover { text-decoration: underline; }
 <!-- ══ 左ナビ ══ -->
 <div class="nav">
   <div class="nav-logo">
-    <a href="index.html" class="brand"><img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block"></a>
-    <a href="index.html" class="back-link pc-back-link">戻る</a>
+    <a href="gaiheki.html" class="brand"><img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block"></a>
+    <a href="gaiheki.html" class="back-link pc-back-link">戻る</a>
     <div class="sub">ガイダンス資料作成</div>
     <div class="sp-nav-right">
       <button class="sp-toggle-btn" id="sp-toggle-btn" onclick="toggleSPView()" aria-label="フォーム表示切替">📝</button>
-      <a href="index.html" class="back-link">戻る</a>
+      <a href="gaiheki.html" class="back-link">戻る</a>
     </div>
   </div>
   <div class="nav-list">
@@ -2284,7 +2284,7 @@ function saveCase() {
   const cases = existing.filter(c => c.id !== id);
   cases.unshift(caseData);
   localStorage.setItem('gaiheki_cases', JSON.stringify(cases));
-  location.href = 'index.html';
+  location.href = 'gaiheki.html';
 }
 
 (function init() {
@@ -2387,7 +2387,7 @@ function saveCase() {
           .catch(function(e){ console.warn('[FS] snapshot warn:', e.message); });
       })
       .then(function () {
-        location.href = 'index.html';
+        location.href = 'gaiheki.html';
       })
       .catch(function (e) {
         console.error('[FS] 案件保存失敗:', e.code, e.message);

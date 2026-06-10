@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gaiheki+ ガイダンス一覧</title>
+<style>
+:root {
+  --purple: #7c5cbf;
+  --purple-light: #f0ebff;
+  --purple-mid: #c5aff0;
+  --green: #3db87a;
+  --green-light: #eafaf2;
+  --gray-bg: #f5f4f1;
+  --gray-border: #e2e0db;
+  --gray-text: #999;
+  --dark: #1a1a1a;
+  --mid: #555;
+  --white: #fff;
+  --sidebar-w: 200px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:var(--gray-bg);color:var(--dark);font-size:14px;line-height:1.6}
+
+/* ── レイアウト ── */
+.app{display:grid;grid-template-columns:var(--sidebar-w) 1fr;grid-template-rows:56px 1fr;height:100vh;overflow:hidden}
+
+/* ── ヘッダー ── */
+.header{grid-column:1/-1;background:var(--white);border-bottom:1px solid var(--gray-border);display:flex;align-items:center;height:56px;padding:0 24px;gap:16px;position:sticky;top:0;z-index:10}
+.header-logo{font-size:18px;font-weight:800;letter-spacing:-0.5px;margin-right:auto}
+.header-logo span{color:var(--purple)}
+.header-logo .sub{font-size:10px;color:var(--gray-text);font-weight:400;margin-left:6px;letter-spacing:0}
+.btn-new{display:flex;align-items:center;gap:5px;padding:8px 16px;background:var(--purple);color:var(--white);border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.13s}
+.btn-new:hover{background:#6b4daf}
+.btn-settings{display:flex;align-items:center;gap:4px;padding:8px 14px;background:none;color:var(--mid);border:1px solid var(--gray-border);border-radius:7px;font-size:13px;font-weight:500;cursor:pointer;text-decoration:none;transition:all 0.13s}
+.btn-settings:hover{background:var(--gray-bg);color:var(--purple)}
+
+/* ── 左サイドバー ── */
+.sidebar{background:var(--white);border-right:1px solid var(--gray-border);overflow-y:auto;padding:16px 10px;display:flex;flex-direction:column}
+.sidebar-section{font-size:9px;font-weight:700;letter-spacing:0.08em;color:var(--gray-text);padding:6px 8px 4px;text-transform:uppercase}
+.filter-item{display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 10px;border-radius:6px;border:none;background:none;font-size:13px;font-weight:500;color:var(--mid);cursor:pointer;text-align:left;margin-bottom:2px;transition:all 0.12s}
+.filter-item:hover{background:var(--gray-bg)}
+.filter-item.active{background:var(--purple-light);color:var(--purple);font-weight:700}
+.filter-count{font-size:11px;font-weight:700;padding:1px 7px;border-radius:10px;background:var(--gray-bg);color:var(--gray-text)}
+.filter-item.active .filter-count{background:var(--purple);color:var(--white)}
+.filter-select{display:none;width:100%;padding:8px 10px;border:1px solid var(--gray-border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--white);color:var(--dark);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;margin-top:4px}
+
+/* ── メインエリア ── */
+.main{overflow-y:auto;padding:24px}
+.main-bar{display:flex;align-items:center;margin-bottom:20px;gap:12px}
+.main-title{font-size:15px;font-weight:700}
+.total-badge{font-size:11px;color:var(--gray-text);font-weight:400}
+
+/* ── カードグリッド ── */
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;align-items:stretch}
+
+.card{background:var(--white);border-radius:10px;border:1px solid var(--gray-border);padding:16px 18px;cursor:pointer;transition:all 0.15s;text-decoration:none;color:inherit;display:block}
+.card:hover{border-color:var(--purple-mid);box-shadow:0 4px 14px rgba(124,92,191,0.12);transform:translateY(-1px)}
+
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
+.card-company{font-size:14px;font-weight:700;line-height:1.4;flex:1;margin-right:8px}
+.card-plan{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0}
+.card-plan.light{background:#fff3e0;color:#e65100}
+.card-plan.basic{background:var(--purple-light);color:var(--purple)}
+.card-plan.pro{background:var(--green-light);color:var(--green)}
+
+.card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.card-assignee{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--purple);background:var(--purple-light);padding:2px 8px;border-radius:4px}
+.card-date{font-size:11px;color:var(--gray-text);margin-left:auto}
+
+.card-footer{margin-top:10px;padding-top:10px;border-top:1px solid var(--gray-border);display:flex;align-items:center;justify-content:space-between}
+.card-areas{font-size:11px;color:var(--mid);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;flex:1;margin-right:8px}
+.card-delete{background:none;border:none;font-size:11px;color:var(--gray-text);cursor:pointer;padding:2px 6px;border-radius:4px;transition:all 0.12s;flex-shrink:0}
+.card-delete:hover{background:#fff0f0;color:#e53935}
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:flex-end}
+.filter-group{display:flex;flex-direction:column;gap:3px}
+.filter-label{font-size:11px;color:var(--gray-text);font-weight:500;padding-left:2px}
+.filter-bar input[type="date"]{padding:5px 8px;border:1px solid var(--gray-border);border-radius:6px;font-size:12px;font-family:inherit;background:var(--white);color:var(--dark);min-height:32px;cursor:pointer}
+.filter-bar input[type="date"]:focus{outline:none;border-color:var(--purple)}
+.filter-bar select{padding:5px 28px 5px 10px;border:1px solid var(--gray-border);border-radius:6px;font-size:12px;font-family:inherit;background:var(--white);color:var(--dark);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;min-height:32px}
+.card-status{font-size:10px;font-weight:600;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.card-status.pending{background:#f3f3f3;color:#999}
+.card-status.done{background:#e6f7ef;color:#2a7a50}
+
+/* ── 新規作成カード ── */
+.card-new{border:2px dashed var(--purple-mid);background:transparent;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all 0.15s;color:inherit;min-height:130px}
+.card-new:hover{border-color:var(--purple);background:var(--purple-light);transform:translateY(-1px)}
+.card-new-inner{display:flex;flex-direction:column;align-items:center;gap:6px}
+.card-new-icon{font-size:28px;font-weight:300;color:var(--purple);line-height:1}
+.card-new-label{font-size:13px;font-weight:600;color:var(--purple)}
+
+/* ── Responsive ── */
+@media (max-width: 1023px) {
+  :root { --sidebar-w: 160px; }
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+  .filter-item { padding: 6px 8px; font-size: 12px; }
+}
+@media (max-width: 767px) {
+  body { overflow-x: hidden; }
+  .app {
+    grid-template-columns: 1fr;
+    grid-template-rows: 56px auto 1fr;
+    height: 100vh;
+  }
+  .header { grid-column: 1 / -1; height: 56px; padding: 0 16px; gap: 12px; }
+  .header-logo img { height: 28px; }
+  .sidebar {
+    grid-column: 1;
+    grid-row: 2;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 6px 12px;
+    border-right: none;
+    border-bottom: 1px solid var(--gray-border);
+    gap: 4px;
+    flex-wrap: nowrap;
+    min-height: 0;
+  }
+  .sidebar-section { display: none; }
+  #filter-list {
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    flex-wrap: nowrap;
+  }
+  .filter-item {
+    white-space: nowrap;
+    border-radius: 20px;
+    padding: 8px 14px;
+    flex-shrink: 0;
+    min-height: 36px;
+    margin-bottom: 0;
+  }
+  .main { grid-column: 1; grid-row: 3; padding: 16px; }
+  .card-grid { grid-template-columns: 1fr; }
+  .btn-new, .btn-settings { min-height: 44px; }
+  .header-logo .sub { display: none; }
+  .main-bar { margin-bottom: 8px; }
+  .filter-bar { gap: 6px; flex-wrap: nowrap; }
+  .filter-group { flex: 1; min-width: 0; }
+  .filter-bar select { width: 100%; font-size: 11px; padding: 4px 22px 4px 6px; min-height: 28px; background-position: right 6px center; }
+  .filter-label { font-size: 10px; }
+  .card-new { display: none !important; }
+  #filter-list { display: none; }
+  .filter-select { display: block; }
+  .sidebar { padding: 8px 12px; }
+}
+
+/* ── ユーザー情報 ── */
+.sidebar-user{margin-top:auto;padding:12px 10px;border-top:1px solid var(--gray-border);position:relative}
+.user-row{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;transition:background .12s}
+.user-row:hover{background:var(--gray-bg)}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:#3F3277;color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.user-info{flex:1;min-width:0}
+.user-name{font-size:12px;font-weight:600;color:var(--dark);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.user-email{font-size:10px;color:var(--gray-text);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.user-popup{display:none;position:absolute;bottom:calc(100% + 4px);left:10px;right:10px;background:var(--white);border:1px solid var(--gray-border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);overflow:hidden;z-index:20}
+.user-popup.open{display:block}
+.btn-logout{display:block;width:100%;padding:11px 14px;font-size:13px;font-weight:600;color:#e53935;background:none;border:none;cursor:pointer;text-align:left;transition:background .12s}
+.btn-logout:hover{background:#ffeaea}
+
+/* ── 事業部切り替え ── */
+.biz-tabs{padding:10px 8px 8px;border-bottom:1px solid var(--gray-border)}
+.biz-tab{display:block;width:100%;padding:7px 10px;border:none;border-radius:6px;font-size:12px;font-weight:500;color:var(--mid);background:none;cursor:pointer;text-align:left;transition:all .12s;text-decoration:none;margin-bottom:2px}
+.biz-tab:hover{background:var(--gray-bg);color:var(--purple)}
+.biz-tab.active{background:var(--purple-light);color:var(--purple);font-weight:700}
+</style>
+<!-- Firebase Auth (認証チェックのみ) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+(function() {
+  firebase.initializeApp({
+    apiKey: "AIzaSyCtKA71KjRHQvMPtYcURVjuSKaOanoEh7Y",
+    authDomain: "madoguchi-guidance.firebaseapp.com",
+    projectId: "madoguchi-guidance",
+    storageBucket: "madoguchi-guidance.firebasestorage.app",
+    messagingSenderId: "1080989158935",
+    appId: "1:1080989158935:web:4b75da9e3252e8086a5652"
+  });
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user || !(user.email || '').endsWith('@madoguchi.inc')) {
+      location.replace('login.html');
+    }
+  });
+})();
+</script>
+</head>
+<body>
+<div class="app">
+
+<!-- ── ヘッダー ── -->
+<div class="header">
+  <div class="header-logo">
+    <img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block;margin-bottom:2px">
+  </div>
+  <a href="gaiheki-setting.html" class="btn-settings">⚙ 設定</a>
+  <button class="btn-new" onclick="goToCreate()">＋ 新規作成</button>
+</div>
+
+<!-- ── 左サイドバー ── -->
+<div class="sidebar">
+  <div class="biz-tabs">
+    <a href="gaiheki.html" class="biz-tab active">🏠 gaiheki+</a>
+    <a href="osouji.html"  class="biz-tab">🧹 おそうじ合衆国</a>
+    <a href="fuyouhin.html" class="biz-tab">📦 不用品回収の窓口</a>
+  </div>
+  <div class="sidebar-section">担当者フィルター</div>
+  <div id="filter-list"></div>
+  <select id="filter-select" class="filter-select" onchange="setFilter(this.value)">
+    <option value="all">すべて</option>
+  </select>
+  <div class="sidebar-user" id="sidebar-user" style="display:none">
+    <div class="user-popup" id="user-popup">
+      <button class="btn-logout" onclick="signOut()">ログアウト</button>
+    </div>
+    <div class="user-row" onclick="togglePopup()">
+      <div class="user-avatar" id="user-avatar">?</div>
+      <div class="user-info">
+        <div class="user-name" id="user-name">—</div>
+        <div class="user-email" id="user-email">—</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── メインエリア ── -->
+<div class="main">
+  <div class="main-bar">
+    <div class="main-title" id="main-title">すべての案件</div>
+    <div class="total-badge" id="main-sub"></div>
+  </div>
+  <div class="filter-bar">
+    <div class="filter-group">
+      <span class="filter-label">実施状況</span>
+      <select id="f-status" onchange="renderCards()">
+        <option value="all">すべて</option>
+        <option value="未実施" selected>未実施</option>
+        <option value="実施済み">実施済み</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">発行日（開始）</span>
+      <input type="date" id="f-date-from" onchange="renderCards()">
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">発行日（終了）</span>
+      <input type="date" id="f-date-to" onchange="renderCards()">
+    </div>
+  </div>
+  <div class="card-grid" id="card-grid"></div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+let currentFilter = 'all';
+
+const DEFAULT_SETTINGS = {
+  staffList: ['恩田雅史', '鈴木宏午', '皆川進太', '中村元彌', '松本そよ', '穴澤萌花', '亀井翼', '染葉健介', '杉本山東'],
+};
+
+function getSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem('gaiheki_settings') || 'null');
+    if (!s) return { ...DEFAULT_SETTINGS };
+    return { ...DEFAULT_SETTINGS, ...s, staffList: s.staffList?.length ? s.staffList : DEFAULT_SETTINGS.staffList };
+  } catch(e) { return { ...DEFAULT_SETTINGS }; }
+}
+
+function goToCreate() {
+  const url = currentFilter === 'all' ? 'gaiheki-create.html' : 'gaiheki-create.html?staff=' + encodeURIComponent(currentFilter);
+  location.href = url;
+}
+
+function getCases() {
+  try { return JSON.parse(localStorage.getItem('gaiheki_cases') || '[]'); } catch(e) { return []; }
+}
+
+function deleteCase(id, e) {
+  e.preventDefault();
+  e.stopPropagation();
+  if (!confirm('この案件を削除しますか？')) return;
+  const cases = getCases().filter(c => c.id !== id);
+  localStorage.setItem('gaiheki_cases', JSON.stringify(cases));
+  renderPage();
+}
+
+const planLabel = {light:'LIGHT', basic:'BASIC', pro:'PRO'};
+
+function setFilter(filter) {
+  currentFilter = filter;
+  renderPage();
+}
+
+function renderSidebar() {
+  const cases = getCases();
+  const members = getSettings().staffList;
+  const sel = document.getElementById('filter-select');
+  if (sel) {
+    sel.innerHTML = `<option value="all">すべて（${cases.length}件）</option>` +
+      members.map(m => {
+        const count = cases.filter(c => c.assignee === m).length;
+        return `<option value="${escHtml(m)}" ${currentFilter===m?'selected':''}>${escHtml(m)}（${count}件）</option>`;
+      }).join('');
+    sel.value = currentFilter;
+  }
+  // legacy filter-list (SP fallback)
+  const list = document.getElementById('filter-list');
+  if (!list) return;
+  list.innerHTML = '';
+
+  const allBtn = document.createElement('button');
+  allBtn.className = 'filter-item' + (currentFilter === 'all' ? ' active' : '');
+  allBtn.dataset.filter = 'all';
+  allBtn.innerHTML = `すべて<span class="filter-count">${cases.length}</span>`;
+  allBtn.onclick = () => setFilter('all');
+  list.appendChild(allBtn);
+
+  members.forEach(m => {
+    const count = cases.filter(c => c.assignee === m).length;
+    const btn = document.createElement('button');
+    btn.className = 'filter-item' + (currentFilter === m ? ' active' : '');
+    btn.dataset.filter = m;
+    btn.innerHTML = `${escHtml(m)}<span class="filter-count">${count}</span>`;
+    btn.onclick = () => setFilter(m);
+    list.appendChild(btn);
+  });
+}
+
+function renderPage() {
+  renderSidebar();
+  renderCards();
+}
+
+function renderCards() {
+  const cases = getCases();
+  let filtered = currentFilter === 'all' ? cases : cases.filter(c => c.assignee === currentFilter);
+
+  const fStatus    = document.getElementById('f-status')?.value    || 'all';
+  const fDateFrom  = document.getElementById('f-date-from')?.value  || '';
+  const fDateTo    = document.getElementById('f-date-to')?.value    || '';
+  if (fStatus   !== 'all') filtered = filtered.filter(c => (c.guidance_status || '未実施') === fStatus);
+  if (fDateFrom) filtered = filtered.filter(c => ((c.formData?.issue_date || c.createdAt || '') >= fDateFrom));
+  if (fDateTo)   filtered = filtered.filter(c => ((c.formData?.issue_date || c.createdAt || '') <= fDateTo));
+
+  const titleEl = document.getElementById('main-title');
+  const subEl = document.getElementById('main-sub');
+  titleEl.textContent = currentFilter === 'all' ? 'すべての案件' : currentFilter + ' の案件';
+  subEl.textContent = filtered.length + '件';
+
+  const grid = document.getElementById('card-grid');
+  const newUrl = currentFilter === 'all' ? 'gaiheki-create.html' : 'gaiheki-create.html?staff=' + encodeURIComponent(currentFilter);
+  const newCard = `<a href="${newUrl}" class="card-new"><div class="card-new-inner"><div class="card-new-icon">＋</div><div class="card-new-label">新規作成</div></div></a>`;
+
+  grid.innerHTML = newCard + filtered.map(c => {
+    const plan = c.plan || 'basic';
+    const areas = c.formData?.areas || [];
+    const areaText = areas.length
+      ? areas.map(a => typeof a === 'string' ? a : (a.city || a.pref || '')).filter(Boolean).join('、')
+      : 'エリア未設定';
+    const issueDate = c.formData?.issue_date || c.createdAt || '';
+    const dateStr = issueDate ? issueDate.replace(/-/g, '/') : '—';
+    const status = c.guidance_status || '未実施';
+    const statusClass = status === '実施済み' ? 'done' : 'pending';
+    return `
+      <a href="create.html?id=${c.id}" class="card">
+        <div class="card-top">
+          <div class="card-company">${escHtml(c.company || '（会社名未入力）')}</div>
+          <div class="card-plan ${plan}">${planLabel[plan] || plan}</div>
+        </div>
+        <div class="card-meta">
+          <div class="card-assignee">👤 ${escHtml(c.assignee || '—')}</div>
+          <span class="card-status ${statusClass}">${escHtml(status)}</span>
+          <div class="card-date">${dateStr}</div>
+        </div>
+        <div class="card-footer">
+          <div class="card-areas">📍 ${escHtml(areaText)}</div>
+          <button class="card-delete" onclick="deleteCase('${c.id}', event)">削除</button>
+        </div>
+      </a>`;
+  }).join('');
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+renderPage();
+
+function togglePopup() {
+  document.getElementById('user-popup').classList.toggle('open');
+}
+function signOut() {
+  firebase.auth().signOut().then(function() { location.replace('login.html'); });
+}
+// ポップアップ外クリックで閉じる
+document.addEventListener('click', function(e) {
+  var su = document.getElementById('sidebar-user');
+  if (su && !su.contains(e.target)) {
+    var p = document.getElementById('user-popup');
+    if (p) p.classList.remove('open');
+  }
+});
+</script>
+
+
+<script>
+/* ── Firestore 連携（index.html） ── */
+(function () {
+  'use strict';
+  var _cache = [];
+
+  /* 古い localStorage 案件データを削除 */
+  localStorage.removeItem('gaiheki_cases');
+
+  /* getCases をオーバーライド: Firestoreキャッシュのみ */
+  window.getCases = function () { return _cache; };
+
+  /* deleteCase をオーバーライド: Firestoreから削除 */
+  window.deleteCase = function (id, e) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!confirm('この案件を削除しますか？')) return;
+    firebase.firestore().collection('cases').doc(id).delete()
+      .then(function () { console.log('[FS] 案件削除:', id); })
+      .catch(function (e) { console.error('[FS] 削除エラー:', e.code, e.message); });
+  };
+
+  /* ローディング表示（前のrenderPage()が描いたlocalStorageデータを上書き） */
+  var grid = document.getElementById('card-grid');
+  if (grid) {
+    grid.innerHTML = '<div style="grid-column:1/-1;padding:48px 0;text-align:center;color:#999;font-size:13px">読み込み中...</div>';
+  }
+
+  /* onAuthStateChanged 内でonSnapshotを設定 */
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (!user) return;
+
+    // ── ユーザー情報をサイドバーに表示 ──
+    var name    = user.displayName || (user.email || '').split('@')[0];
+    var initial = (name.charAt(0) || '?').toUpperCase();
+    var el = {
+      avatar: document.getElementById('user-avatar'),
+      name:   document.getElementById('user-name'),
+      email:  document.getElementById('user-email'),
+      widget: document.getElementById('sidebar-user')
+    };
+    if (el.avatar) el.avatar.textContent = initial;
+    if (el.name)   el.name.textContent   = name;
+    if (el.email)  el.email.textContent  = user.email || '';
+    if (el.widget) el.widget.style.display = '';
+
+    console.log('[FS] Firestore監視開始');
+    firebase.firestore().collection('cases').onSnapshot(
+      function (snap) {
+        _cache = snap.docs.map(function (d) {
+          return Object.assign({ id: d.id }, d.data());
+        });
+        _cache.sort(function (a, b) {
+          var dA = (a.formData && a.formData.issue_date) || a.createdAt || '';
+          var dB = (b.formData && b.formData.issue_date) || b.createdAt || '';
+          return dB.localeCompare(dA);
+        });
+        console.log('[FS] cases更新:', _cache.length, '件');
+        if (typeof renderPage === 'function') renderPage();
+      },
+      function (err) {
+        console.error('[FS] snapshotエラー:', err.code, err.message);
+        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;padding:48px 0;text-align:center;color:#c00;font-size:13px">データの読み込みに失敗しました</div>';
+      }
+    );
+  });
+})();
+</script>
+</body>
+</html>

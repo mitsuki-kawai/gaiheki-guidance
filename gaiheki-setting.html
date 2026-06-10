@@ -296,8 +296,8 @@ a.header-logo:hover { opacity: 0.8; }
 
 <!-- ヘッダー -->
 <div class="header">
-  <a href="index.html" class="header-logo"><img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block"></a>
-  <a href="index.html" class="btn-back" style="margin-left:auto">戻る</a>
+  <a href="gaiheki.html" class="header-logo"><img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block"></a>
+  <a href="gaiheki.html" class="btn-back" style="margin-left:auto">戻る</a>
 </div>
 
 <div class="body">
@@ -1413,7 +1413,7 @@ function escHtml(s) {
 
   // ── 未保存変更: ナビゲーション保護 ──
   // ロゴ・戻るボタン
-  document.querySelectorAll('a[href="index.html"]').forEach(a => {
+  document.querySelectorAll('a[href="gaiheki.html"]').forEach(a => {
     a.addEventListener('click', e => {
       if (hasAnyDirty()) {
         if (!confirm('保存されていない変更があります。ページを移動しますか？')) {

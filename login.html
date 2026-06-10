@@ -66,7 +66,7 @@ function signIn() {
       if (!email.endsWith('@' + ALLOWED)) {
         return auth.signOut().then(() => showErr('@' + ALLOWED + ' のアカウントでログインしてください。\n(' + email + ')'));
       }
-      location.href = 'index.html';
+      location.href = 'gaiheki.html';
     })
     .catch(err => {
       if (err.code === 'auth/popup-closed-by-user') {
@@ -83,7 +83,7 @@ document.getElementById('btn').style.display = 'none';
 document.getElementById('loading').style.display = 'block';
 auth.onAuthStateChanged(user => {
   if (user && (user.email || '').endsWith('@' + ALLOWED)) {
-    location.href = 'index.html';
+    location.href = 'gaiheki.html';
   } else {
     document.getElementById('btn').style.display = '';
     document.getElementById('loading').style.display = 'none';

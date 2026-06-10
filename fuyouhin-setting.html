@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>不用品回収の窓口 設定</title>
+<style>
+:root {
+  --main:   #3F3277;
+  --accent: #F07200;
+  --bg:     #F3F3F3;
+  --text:   #1a1a1a;
+  --white:  #ffffff;
+  --border: #dcdcdc;
+  --label:  #555555;
+  --muted:  #999999;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; }
+
+/* ── ヘッダー ── */
+.header {
+  background: var(--white); border-bottom: 1px solid var(--border);
+  height: 56px; display: flex; align-items: center; padding: 0 24px; gap: 16px;
+  position: sticky; top: 0; z-index: 10;
+}
+.header-logo, a.header-logo { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; text-decoration: none; color: var(--text); }
+a.header-logo:hover { opacity: 0.8; }
+.header-logo span { color: var(--main); }
+.header-divider { width: 1px; height: 18px; background: var(--border); }
+.header-title { font-size: 14px; font-weight: 600; color: var(--label); flex: 1; }
+.btn-back { display: inline-flex; align-items: center; font-size: 12px; font-weight: 600; color: var(--muted); text-decoration: none; padding: 8px 14px; border-radius: 4px; transition: background .12s, color .12s; }
+.btn-back:hover { background: var(--bg); color: var(--main); }
+.btn-save {
+  padding: 8px 20px; background: var(--main); color: var(--white);
+  border: none; border-radius: 4px; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity .12s;
+}
+.btn-save:hover { opacity: .85; }
+
+/* ── レイアウト ── */
+.body { display: flex; height: calc(100vh - 56px); overflow: hidden; }
+
+/* ── サイドナビ ── */
+.sidenav { width: 200px; background: var(--white); border-right: 1px solid var(--border); padding: 16px 0; flex-shrink: 0; overflow-y: auto; }
+.sidenav-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 0 20px 6px; }
+.sidenav-item {
+  display: block; width: 100%; padding: 10px 20px;
+  font-size: 13px; color: var(--label); background: none; border: none;
+  border-left: 3px solid transparent; text-align: left; cursor: pointer;
+  transition: color .12s, border-color .12s; margin-bottom: 1px;
+}
+.sidenav-item:hover { color: var(--main); }
+.sidenav-item.active { color: var(--main); border-left-color: var(--main); font-weight: 600; }
+
+/* ── メインコンテンツ ── */
+.main { flex: 1; overflow-y: auto; padding: 28px 36px 40px; }
+.section { display: none; max-width: 860px; }
+.section.active { display: block; }
+.section-title { font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.section-desc { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+
+/* ── プランカード ── */
+.plan-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.plan-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; padding: 18px; }
+.plan-card-head {
+  font-size: 13px; font-weight: 700; color: var(--main);
+  padding-bottom: 10px; margin-bottom: 14px;
+  border-bottom: 2px solid var(--main);
+}
+
+/* ── フィールド ── */
+.field { margin-bottom: 13px; }
+.field label { display: block; font-size: 11px; font-weight: 600; color: var(--label); margin-bottom: 4px; }
+.field input, .field textarea {
+  width: 100%; padding: 7px 10px; border: 1px solid var(--border);
+  border-radius: 4px; font-size: 12px; background: var(--white);
+  color: var(--text); font-family: inherit; transition: border-color .12s;
+}
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--main); }
+.field textarea { resize: vertical; min-height: 90px; line-height: 1.65; }
+
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* ── 担当者リスト ── */
+.staff-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.staff-row { display: flex; align-items: center; gap: 8px; padding: 9px 14px; background: var(--white); border: 1px solid var(--border); border-radius: 6px; }
+.staff-row-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); }
+.staff-row input { flex: 1; padding: 5px 9px; border: 1px solid var(--main); border-radius: 4px; font-size: 13px; font-family: inherit; }
+.staff-row input:focus { outline: none; }
+.btn-edit { padding: 4px 12px; background: #eeecf8; color: var(--main); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
+.btn-row-save { padding: 4px 12px; background: var(--main); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
+.btn-del  { padding: 4px 12px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
+.btn-edit:hover, .btn-row-save:hover, .btn-del:hover { opacity: .8; }
+.btn-add-staff { width: 100%; padding: 10px; background: none; border: 1px dashed var(--border); border-radius: 6px; color: var(--label); font-size: 13px; cursor: pointer; transition: all .12s; }
+.btn-add-staff:hover { border-color: var(--main); color: var(--main); background: #f7f6fb; }
+
+/* ── URLグリッド ── */
+.url-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ── トースト ── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px);
+  background: #1a1a1a; color: var(--white); padding: 11px 28px; border-radius: 6px;
+  font-size: 13px; font-weight: 500; opacity: 0; transition: opacity .25s, transform .25s;
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+/* ── 決済手段設定 ── */
+.pm-method { border: 1px solid var(--border); border-radius: 6px; margin-bottom: 12px; overflow: hidden; }
+.pm-method-head { background: var(--bg); padding: 10px 14px; display: flex; align-items: center; gap: 8px; }
+.pm-method-name { flex: 1; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; font-family: inherit; }
+.pm-toggle-groups { font-size: 11px; padding: 3px 8px; border: 1px solid var(--border); border-radius: 4px; cursor: pointer; background: var(--white); color: var(--label); }
+.pm-toggle-groups.on { background: var(--main); color: #fff; border-color: var(--main); }
+.pm-body { padding: 10px 14px; }
+.pm-group { background: var(--bg); border-radius: 4px; padding: 8px 10px; margin-bottom: 8px; }
+.pm-group-head { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+.pm-group-label { flex: 1; padding: 3px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; }
+.pm-note-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.pm-note-input { flex: 1; padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; }
+.btn-pm-sm { padding: 2px 6px; font-size: 11px; border: 1px solid var(--border); border-radius: 3px; cursor: pointer; background: none; color: var(--label); flex-shrink: 0; }
+.btn-pm-sm:hover { background: var(--bg); }
+.btn-pm-add { font-size: 11px; padding: 3px 10px; border: 1px dashed var(--border); border-radius: 4px; background: none; cursor: pointer; color: var(--label); margin-top: 4px; }
+.btn-pm-add:hover { border-color: var(--main); color: var(--main); }
+
+/* ── CS担当者設定 ── */
+.cs-staff-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.cs-staff-item { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.cs-staff-view { display: flex; align-items: center; gap: 8px; padding: 9px 14px; background: var(--white); }
+.cs-staff-thumb { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--main); flex-shrink: 0; background: #eeecf8; display: flex; align-items: center; justify-content: center; color: var(--main); font-size: 20px; }
+.cs-staff-thumb img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
+.cs-staff-view-name { font-weight: 500; flex: 1; font-size: 13px; color: var(--text); }
+.cs-staff-view-sub { font-size: 11px; color: var(--muted); }
+.cs-staff-edit { background: var(--bg); padding: 14px 16px; border-top: 1px solid var(--border); display: none; }
+.cs-staff-edit.open { display: block; }
+
+/* CS担当者編集/削除ボタン */
+.cs-staff-view .btn-bact-s:first-of-type { padding: 4px 12px; background: #eeecf8; color: var(--main); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
+.cs-staff-view .btn-bact-s:last-of-type  { padding: 4px 12px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 0; font-weight: 600; cursor: pointer; transition: opacity .12s; margin-left: 0; }
+.cs-staff-view .btn-bact-s:last-of-type::before { content: "削除"; font-size: 12px; }
+.cs-staff-view .btn-bact-s:hover { opacity: .8; }
+.btn-cs-add { margin-top: 8px; width: 100%; padding: 10px; border: 1px dashed var(--border); border-radius: 6px; background: none; cursor: pointer; font-size: 13px; color: var(--label); }
+.btn-cs-add:hover { border-color: var(--main); color: var(--main); background: #f7f6fb; }
+
+.section-select { display: none; }
+
+/* ── Responsive ── */
+@media (max-width: 1023px) {
+  .plan-grid { grid-template-columns: repeat(2, 1fr); }
+  .url-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 767px) {
+  body { overflow-x: hidden; }
+  .header { height: 56px; padding: 0 16px; gap: 12px; }
+  .header-divider { display: none; }
+  .body { flex-direction: column; height: auto; overflow: visible; }
+  .sidenav {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 8px 12px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    gap: 4px;
+    flex-shrink: 0;
+  }
+  .sidenav-label { display: none; }
+  .sidenav-item {
+    white-space: nowrap;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    padding: 8px 14px;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .sidenav-item.active { border-bottom-color: var(--main); font-weight: 600; }
+  .main { padding: 16px; overflow: visible; }
+  .plan-grid { grid-template-columns: 1fr; }
+  .url-grid { grid-template-columns: 1fr; }
+  .field-row { grid-template-columns: 1fr; }
+  .btn-save { min-height: 44px; }
+  .btn-back { min-height: 44px; min-width: 44px; }
+  .section { max-width: 100%; }
+  /* sidenav → dropdown on SP */
+  .sidenav { padding: 8px 12px; }
+  .sidenav-item { display: none; }
+  .sidenav-label { display: none; }
+  .section-select {
+    display: block;
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: inherit;
+    background: var(--white);
+    color: var(--text);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999' d='M5 6L0 0h10z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 32px;
+    min-height: 44px;
+  }
+}
+/* ── 対応エリア設定 ── */
+.area-mgr-filter { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.area-mgr-filter select { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; background: var(--white); }
+.area-mgr-filter input[type="text"] { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; background: var(--white); flex: 1; min-width: 120px; }
+.amgr-pref-auto:disabled { opacity: 1 !important; color: var(--text) !important; cursor: default !important; appearance: none !important; -webkit-appearance: none !important; background-image: none !important; }
+.area-mgr-add-card select.amgr-pref-auto:disabled { opacity: 1 !important; color: var(--text) !important; appearance: none !important; -webkit-appearance: none !important; background-image: none !important; }
+.area-mgr-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 12px; }
+.area-mgr-table th { background: var(--bg); border: 1px solid var(--border); padding: 7px 10px; text-align: left; font-weight: 600; font-size: 11px; color: var(--label); white-space: nowrap; }
+.area-mgr-table td { border: 1px solid var(--border); padding: 6px 10px; vertical-align: middle; }
+.area-mgr-table tr:hover td { background: #faf9ff; }
+.area-mgr-table .td-op { white-space: nowrap; width: 90px; }
+.area-mgr-empty { text-align: center; padding: 32px; color: var(--muted); font-size: 12px; }
+.area-mgr-add-card { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin-bottom: 12px; }
+.area-mgr-add-card .field { margin-bottom: 10px; }
+.area-mgr-add-card .field label { display: block; font-size: 11px; font-weight: 600; color: var(--label); margin-bottom: 4px; }
+.area-mgr-add-card .field input,
+.area-mgr-add-card .field select { width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; }
+.area-mgr-add-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn-area-add { padding: 8px 18px; background: var(--main); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; margin-right: 8px; }
+.btn-area-add:hover { opacity: .85; }
+.btn-area-cancel { padding: 8px 14px; background: var(--bg); color: var(--label); border: 1px solid var(--border); border-radius: 4px; font-size: 12px; cursor: pointer; }
+/* ── エリア行カード ── */
+.area-row-list { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
+.area-row { display:flex; align-items:center; gap:8px; padding:9px 14px; background:var(--white); border:1px solid var(--border); border-radius:6px; }
+.area-row-name { flex:1; font-size:13px; font-weight:500; color:var(--text); }
+.area-row-sub { font-size:11px; color:var(--muted); margin-top:1px; }
+.area-row-pts { font-size:12px; font-weight:700; color:var(--main); white-space:nowrap; min-width:36px; text-align:right; }
+.area-row-stats { font-size:11px; color:var(--muted); white-space:nowrap; }
+.area-row-edit { display:none; flex-direction:column; gap:8px; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:6px; margin-bottom:6px; }
+.area-row-edit.open { display:flex; }
+.area-edit-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+.area-edit-grid .field { margin:0; }
+.area-edit-grid .field label { display:block; font-size:10px; font-weight:600; color:var(--label); margin-bottom:3px; }
+.area-edit-grid .field input, .area-edit-grid .field select { width:100%; padding:4px 7px; border:1px solid var(--border); border-radius:4px; font-size:12px; font-family:inherit; }
+
+/* ── 未保存インジケーター ── */
+.save-btn-wrap { display:inline-block; position:relative; margin-top:16px; }
+.dirty-badge {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 7px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #F07200;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 5px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 2px 6px rgba(0,0,0,.18);
+}
+.dirty-badge::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: #F07200;
+}
+</style>
+<!-- Firebase Auth (認証チェックのみ) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script>
+(function() {
+  firebase.initializeApp({
+    apiKey: "AIzaSyCtKA71KjRHQvMPtYcURVjuSKaOanoEh7Y",
+    authDomain: "madoguchi-guidance.firebaseapp.com",
+    projectId: "madoguchi-guidance",
+    storageBucket: "madoguchi-guidance.firebasestorage.app",
+    messagingSenderId: "1080989158935",
+    appId: "1:1080989158935:web:4b75da9e3252e8086a5652"
+  });
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user || !(user.email || '').endsWith('@madoguchi.inc')) {
+      location.replace('login.html');
+    }
+  });
+})();
+</script>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<div class="header">
+  <a href="fuyouhin.html" class="header-logo"><img src="images/fuyouhin-logo.png" alt="不用品回収の窓口" height="32" style="display:block"></a>
+  <a href="fuyouhin.html" class="btn-back" style="margin-left:auto">戻る</a>
+</div>
+
+<div class="body">
+
+  <!-- サイドナビ -->
+  <div class="sidenav">
+    <div class="sidenav-label">設定項目</div>
+    <button class="sidenav-item active" onclick="showSection('plan', this)">📋 プラン設定</button>
+    <button class="sidenav-item" onclick="showSection('staff', this)">👤 担当者設定</button>
+    <button class="sidenav-item" onclick="showSection('text', this)">📝 テキスト設定</button>
+    <button class="sidenav-item" onclick="showSection('url', this)">🔗 URL設定</button>
+    <button class="sidenav-item" onclick="showSection('cs', this)">👤 CS担当者情報</button>
+    <button class="sidenav-item" onclick="showSection('payment', this)">💳 決済手段</button>
+    <button class="sidenav-item" onclick="showSection('area', this)">📍 対応エリア設定</button>
+    <select id="section-select" class="section-select" onchange="showSectionById(this.value)">
+      <option value="plan">📋 プラン設定</option>
+      <option value="staff">👤 担当者設定</option>
+      <option value="text">📝 テキスト設定</option>
+      <option value="url">🔗 URL設定</option>
+      <option value="cs">👤 CS担当者情報</option>
+      <option value="payment">💳 決済手段</option>
+      <option value="area">📍 対応エリア設定</option>
+    </select>
+  </div>
+
+  <!-- メインコンテンツ -->
+  <div class="main">
+
+    <!-- ── プラン設定 ── -->
+    <div class="section active" id="sec-plan">
+      <div class="section-title">プラン設定</div>
+      <div class="section-desc">各プランの月額・手数料・件数を設定します。資料作成時のデフォルト値として使用されます。</div>
+      <div class="plan-grid">
+
+        <div class="plan-card">
+          <div class="plan-card-head">ライト</div>
+          <div class="field"><label>月額費用（継続特典後・税抜）</label><input type="text" id="light-fee" placeholder="8万円"></div>
+          <div class="field"><label>成約手数料</label><input type="text" id="light-commission" placeholder="10%"></div>
+          <div class="field"><label>最低補償件数</label><input type="text" id="light-guarantee" placeholder="なし"></div>
+          <div class="field"><label>月間紹介件数（想定）</label><input type="text" id="light-monthly" placeholder="25〜35件"></div>
+          <div class="field"><label>契約期間</label><input type="text" id="light-contract-period" placeholder="なし"></div>
+          <div class="field"><label>6ヶ月紹介件数（想定）</label><input type="text" id="light-half" placeholder="—"></div>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-card-head">ベーシック</div>
+          <div class="field"><label>月額費用（継続特典後・税抜）</label><input type="text" id="basic-fee" placeholder="10万円"></div>
+          <div class="field"><label>成約手数料</label><input type="text" id="basic-commission" placeholder="5%"></div>
+          <div class="field"><label>最低補償件数</label><input type="text" id="basic-guarantee" placeholder="25件"></div>
+          <div class="field"><label>月間紹介件数（想定）</label><input type="text" id="basic-monthly" placeholder="40〜55件"></div>
+          <div class="field"><label>契約期間</label><input type="text" id="basic-contract-period" placeholder="6ヶ月契約"></div>
+          <div class="field"><label>6ヶ月紹介件数（想定）</label><input type="text" id="basic-half" placeholder="40〜55件"></div>
+        </div>
+
+        <div class="plan-card">
+          <div class="plan-card-head">プロ</div>
+          <div class="field"><label>月額費用（継続特典後・税抜）</label><input type="text" id="pro-fee" placeholder="15万円"></div>
+          <div class="field"><label>成約手数料</label><input type="text" id="pro-commission" placeholder="3%"></div>
+          <div class="field"><label>最低補償件数</label><input type="text" id="pro-guarantee" placeholder="40件"></div>
+          <div class="field"><label>月間紹介件数（想定）</label><input type="text" id="pro-monthly" placeholder="65〜80件"></div>
+          <div class="field"><label>契約期間</label><input type="text" id="pro-contract-period" placeholder="6ヶ月契約"></div>
+          <div class="field"><label>6ヶ月紹介件数（想定）</label><input type="text" id="pro-half" placeholder="65〜80件"></div>
+        </div>
+
+      </div>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-plan">未保存の変更があります</span>
+        <button id="btn-save-plan" class="btn-save" onclick="savePlanSection()">保存</button>
+      </div>
+    </div>
+
+    <!-- ── 担当者設定 ── -->
+    <div class="section" id="sec-staff">
+      <div class="section-title">担当者設定</div>
+      <div class="section-desc">資料作成時の「担当者」ドロップダウンとトップページのフィルターに反映されます。</div>
+      <div class="staff-list" id="staff-list"></div>
+      <button class="btn-add-staff" onclick="addStaff()">＋ 担当者を追加</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-staff">未保存の変更があります</span>
+        <button id="btn-save-staff" class="btn-save" onclick="saveStaffSection()">保存</button>
+      </div>
+    </div>
+
+    <!-- ── テキスト設定 ── -->
+    <div class="section" id="sec-text">
+      <div class="section-title">テキスト設定</div>
+      <div class="section-desc">資料内の固定文言をカスタマイズできます。</div>
+      <div class="field">
+        <label>④ 休業日の文言</label>
+        <textarea id="holiday-text" rows="4"></textarea>
+      </div>
+      <div class="field">
+        <label>⑤ 除外情報の文言</label>
+        <textarea id="exclude-text" rows="7"></textarea>
+      </div>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-text">未保存の変更があります</span>
+        <button id="btn-save-text" class="btn-save" onclick="saveTextSection()">保存</button>
+      </div>
+    </div>
+
+
+    <!-- ── CS担当者情報 ── -->
+    <div class="section" id="sec-cs">
+      <div class="section-title">CS担当者情報</div>
+      <div class="section-desc">名刺カードに表示するCS担当者の情報を設定します。</div>
+      <div class="cs-staff-list" id="cs-staff-list"></div>
+      <button class="btn-cs-add" onclick="csAdd()">＋ CS担当者を追加</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-cs">未保存の変更があります</span>
+        <button id="btn-save-cs" class="btn-save" onclick="saveCsSection()">保存</button>
+      </div>
+    </div>
+
+    <!-- ── 決済手段設定 ── -->
+    <div class="section" id="sec-payment">
+      <div class="section-title">決済手段</div>
+      <div class="section-desc">create.htmlフォームの決済手段と備考の選択肢を管理します。</div>
+      <div id="pm-list"></div>
+      <button class="btn-cs-add" onclick="pmAddMethod()" style="margin-top:8px">＋ 決済手段を追加</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-payment">未保存の変更があります</span>
+        <button id="btn-save-payment" class="btn-save" onclick="savePaymentSection()">保存</button>
+      </div>
+    </div>
+
+    <!-- ── 対応エリア設定 ── -->
+    <div class="section" id="sec-area">
+      <div class="section-title">対応エリア設定</div>
+      <div class="section-desc">エリアデータを管理します。変更はcreate.htmlのエリア選択に反映されます。</div>
+      <div class="area-mgr-filter">
+        <select id="amgr-region" onchange="amgrOnRegion()">
+          <option value="">すべての地方</option>
+          <option>北海道</option><option>東北</option><option>関東</option>
+          <option>中部</option><option>近畿</option><option>中国</option>
+          <option>四国</option><option>九州・沖縄</option>
+        </select>
+        <select id="amgr-pref" onchange="amgrRenderList()">
+          <option value="">すべての都道府県</option>
+        </select>
+        <input type="text" id="amgr-search" placeholder="市区町村・都道府県を検索…" oninput="amgrRenderList()">
+      </div>
+      <div id="amgr-list"></div>
+      <div id="amgr-add-form" style="display:none" class="area-mgr-add-card">
+        <div class="area-mgr-add-row">
+          <div class="field"><label>地方</label>
+            <select id="amgr-add-region" onchange="amgrAddOnRegion()">
+              <option value="">選択</option>
+              <option>北海道</option><option>東北</option><option>関東</option>
+              <option>中部</option><option>近畿</option><option>中国</option>
+              <option>四国</option><option>九州・沖縄</option>
+            </select>
+          </div>
+          <div class="field"><label>都道府県</label>
+            <select id="amgr-add-pref" disabled><option value="">先に地方を選択</option></select>
+          </div>
+          <div class="field"><label>市区町村</label>
+            <input type="text" id="amgr-add-city" placeholder="例：函館市">
+          </div>
+          <div class="field"><label>ポイント数</label>
+            <select id="amgr-add-pts" onchange="amgrAutoFillMinMax()">
+              <option value="">選択</option>
+              <option value="6">6pt</option>
+              <option value="5">5pt</option>
+              <option value="4">4pt</option>
+              <option value="3">3pt</option>
+              <option value="2">2pt</option>
+              <option value="1">1pt</option>
+              <option value="0.5">0.5pt</option>
+            </select>
+          </div>
+          <div class="field"><label>年間想定（下限）</label>
+            <input type="number" id="amgr-add-min" placeholder="—" disabled>
+          </div>
+          <div class="field"><label>年間想定（上限）</label>
+            <input type="number" id="amgr-add-max" placeholder="—" disabled>
+          </div>
+        </div>
+        <div style="margin-top:12px">
+          <button class="btn-area-add" onclick="amgrAddEntry()">追加</button>
+          <button class="btn-area-cancel" onclick="amgrHideAdd()">キャンセル</button>
+        </div>
+      </div>
+      <button class="btn-cs-add" onclick="amgrShowAdd()">＋ エリアを追加</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-area">未保存の変更があります</span>
+        <button id="btn-save-area" class="btn-save" onclick="saveAreaSection()">保存</button>
+      </div>
+    </div>
+    <!-- ── URL設定 ── -->
+    <div class="section" id="sec-url">
+      <div class="section-title">URL設定</div>
+      <div class="section-desc">資料作成時にフォームへ自動入力されるデフォルトURLです。</div>
+      <div class="url-grid">
+        <div class="field"><label>ログイン管理画面URL</label><input type="text" id="login-url" placeholder="https://business.gaihekiplus.com/sign_in"></div>
+        <div class="field"><label>ローン媒体資料URL</label><input type="text" id="loan-doc-url" placeholder="Googleドライブ等のURL"></div>
+        <div class="field"><label>ローン申込書URL</label><input type="text" id="loan-apply-url" placeholder="Googleドライブ等のURL"></div>
+        <div class="field"><label>現調完了ギフト申請フォームURL</label><input type="text" id="gift-survey-url" placeholder="申請フォームURL"></div>
+        <div class="field"><label>作業完了ギフト申請フォームURL</label><input type="text" id="gift-work-url" placeholder="申請フォームURL"></div>
+        <div class="field"><label>写真アップロードフォームURL</label><input type="text" id="photo-url" placeholder="GoogleフォームのURL等"></div>
+        <div class="field"><label>加盟店紹介ページURL</label><input type="text" id="store-page-url" placeholder="https://gaihekiplus.com/store/..."></div>
+      </div>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-url">未保存の変更があります</span>
+        <button id="btn-save-url" class="btn-save" onclick="saveUrlSection()">保存</button>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /body -->
+
+
+<div class="toast" id="toast">設定を保存しました</div>
+
+<script>
+const DEFAULT_SETTINGS = {
+  plans: {
+    light: { fee: '8万円',  commission: '10%', guarantee: 'なし', monthly: '25〜35件', half: '—', contractPeriod: '6ヶ月契約' },
+    basic: { fee: '10万円', commission: '5%',  guarantee: '25件',  monthly: '40〜55件', half: '40〜55件', contractPeriod: '6ヶ月契約' },
+    pro:   { fee: '15万円', commission: '3%',  guarantee: '40件',  monthly: '65〜80件', half: '65〜80件', contractPeriod: '6ヶ月契約' },
+  },
+  holidayText: '弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。\n配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。',
+  excludeText: '・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人（例：山田 太郎）\n上記にあてはまるお客様情報については、お手数ですが私までご報告ください。',
+  staffList: ['恩田雅史', '鈴木宏午', '皆川進太', '中村元彌', '松本そよ', '穴澤萌花', '亀井翼', '染葉健介', '杉本山東'],
+  loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '', loginUrl: 'https://business.gaihekiplus.com/sign_in',
+  paymentConfig: [
+    { id:'pm1', name:'クレジットカード', useGroups:true, groups:[
+      { id:'pg1', label:'先払い', notes:['1日決済（前日が振込期限）','11日決済（前日が振込期限）','16日決済（前日が振込期限）','21日決済（前日が振込期限）'] },
+      { id:'pg2', label:'後払い', notes:['末締め翌月20日決済（振込期限確認中）'] },
+    ]},
+    { id:'pm2', name:'口座振替', useGroups:false, groups:[
+      { id:'pg3', label:null, notes:['末締め翌月26日引き落とし（土日の場合は前倒し前営業日）'] },
+    ]},
+    { id:'pm3', name:'振り込み', useGroups:false, groups:[
+      { id:'pg4', label:null, notes:['末締め翌月20日引き落とし'] },
+    ]},
+  ],
+  csStaff: [
+    { id:'cs1', name:'飯塚来己',  bio:'お客様に寄り添ったサポートを心がけています。', phone:'' },
+    { id:'cs2', name:'留木涼花',  bio:'迅速・丁寧な対応をモットーにしています。', phone:'' },
+    { id:'cs3', name:'手光菜津美', bio:'何でもお気軽にご相談ください。', phone:'' },
+  ],
+};
+
+function getSettings() {
+  try {
+    const s = JSON.parse(localStorage.getItem('gaiheki_settings') || 'null');
+    if (!s) return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+    return {
+      ...DEFAULT_SETTINGS, ...s,
+      plans: {
+        light: { ...DEFAULT_SETTINGS.plans.light, ...(s.plans?.light || {}) },
+        basic: { ...DEFAULT_SETTINGS.plans.basic, ...(s.plans?.basic || {}) },
+        pro:   { ...DEFAULT_SETTINGS.plans.pro,   ...(s.plans?.pro   || {}) },
+      },
+      staffList: s.staffList?.length ? s.staffList : DEFAULT_SETTINGS.staffList,
+    };
+  } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); }
+}
+
+let staffList = [];
+
+
+/* ── CS担当者管理 ── */
+let csStaff = [];
+let csEditingId = null;
+let csIdCnt = 0;
+const csNewId = () => 'cs_' + (++csIdCnt) + '_' + Date.now();
+
+function csEsc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function csRenderList() {
+  const list = document.getElementById('cs-staff-list');
+  if (!list) return;
+  list.innerHTML = csStaff.map(st => {
+    const isOpen = csEditingId === st.id;
+    return `<div class="cs-staff-item" id="csitem-${st.id}">
+  <div class="cs-staff-view">
+    <div style="flex:1">
+      <div class="cs-staff-view-name">${csEsc(st.name || '（名前未設定）')}</div>
+      <div class="cs-staff-view-sub">${csEsc(st.phone || '')}${st.bio ? ' · ' + st.bio.slice(0,20) + '…' : ''}</div>
+    </div>
+    <button class="btn-bact-s" onclick="csToggleEdit('${st.id}')">${isOpen ? '閉じる' : '編集'}</button>
+    <button class="btn-bact-s" onclick="csDelete('${st.id}')" style="margin-left:4px">🗑️</button>
+  </div>
+  <div class="cs-staff-edit ${isOpen ? 'open' : ''}">
+    <div class="field"><label>名前</label>
+      <input type="text" value="${csEsc(st.name)}" oninput="csUpdate('${st.id}','name',this.value)" placeholder="例：飯塚来己">
+    </div>
+    <div class="field"><label>紹介文</label>
+      <textarea rows="3" oninput="csUpdate('${st.id}','bio',this.value)">${csEsc(st.bio)}</textarea>
+    </div>
+    <div class="field"><label>電話番号</label>
+      <input type="text" value="${csEsc(st.phone)}" oninput="this.value=fmtPhone(this.value);csUpdate('${st.id}','phone',this.value)" placeholder="ハイフンなしで入力してください">
+    </div>
+  </div>
+</div>`;
+  }).join('');
+}
+
+function csToggleEdit(id) {
+  csEditingId = (csEditingId === id) ? null : id;
+  csRenderList();
+}
+function csUpdate(id, field, value) {
+  const st = csStaff.find(x => x.id === id);
+  if (st) { st[field] = value; checkDirty('cs'); }
+}
+function csDelete(id) {
+  if (!confirm('削除しますか？')) return;
+  csStaff = csStaff.filter(x => x.id !== id);
+  if (csEditingId === id) csEditingId = null;
+  csRenderList();
+}
+function csAdd() {
+  const id = csNewId();
+  csStaff.push({ id, name: '', bio: '', phone: '' });
+  checkDirty('cs');
+  csEditingId = id;
+  csRenderList();
+  document.getElementById('csitem-' + id)?.scrollIntoView({ behavior: 'smooth' });
+}
+
+
+
+/* ── 決済手段管理 ── */
+let pmConfig = [];
+let pmIdCnt = 0;
+const pmNewId = () => 'pm_' + (++pmIdCnt) + '_' + Date.now();
+
+function pmRender() {
+  const list = document.getElementById('pm-list');
+  if (!list) return;
+  list.innerHTML = pmConfig.map((m, mi) => {
+    const groupsHTML = m.groups.map((g, gi) => {
+      const labelInput = m.useGroups
+        ? `<input class="pm-group-label" type="text" value="${escHtml(g.label||'')}" placeholder="グループ名" oninput="pmUpdateGroupLabel('${m.id}','${g.id}',this.value)">`
+        : `<span style="font-size:11px;color:var(--muted)">備考一覧</span>`;
+      const notesHTML = g.notes.map((n, ni) =>
+        `<div class="pm-note-row">
+          <input class="pm-note-input" type="text" value="${escHtml(n)}" oninput="pmUpdateNote('${m.id}','${g.id}',${ni},this.value)">
+          <button class="btn-pm-sm" onclick="pmDeleteNote('${m.id}','${g.id}',${ni})">✕</button>
+        </div>`
+      ).join('');
+      const delGroupBtn = m.useGroups ? `<button class="btn-pm-sm" onclick="pmDeleteGroup('${m.id}','${g.id}')">🗑️</button>` : '';
+      return `<div class="pm-group">
+  <div class="pm-group-head">${labelInput}${delGroupBtn}</div>
+  ${notesHTML}
+  <button class="btn-pm-add" onclick="pmAddNote('${m.id}','${g.id}')">＋ 備考を追加</button>
+</div>`;
+    }).join('');
+    const addGroupBtn = m.useGroups
+      ? `<button class="btn-pm-add" onclick="pmAddGroup('${m.id}')">＋ グループを追加</button>` : '';
+    return `<div class="pm-method">
+  <div class="pm-method-head">
+    <input class="pm-method-name" type="text" value="${escHtml(m.name)}" oninput="pmUpdateName('${m.id}',this.value)" placeholder="決済手段名">
+    <button class="pm-toggle-groups ${m.useGroups?'on':''}" onclick="pmToggleGroups('${m.id}')" title="グループ管理">${m.useGroups?'グループON':'グループOFF'}</button>
+    <button class="btn-pm-sm" onclick="pmDeleteMethod('${m.id}')">🗑️</button>
+  </div>
+  <div class="pm-body">${groupsHTML}${addGroupBtn}</div>
+</div>`;
+  }).join('');
+}
+
+function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function pmAddMethod() {
+  const id = pmNewId();
+  checkDirty('payment');
+  pmConfig.push({ id, name: '', useGroups: false, groups: [{ id: pmNewId(), label: null, notes: [] }] });
+  pmRender();
+}
+function pmDeleteMethod(id) {
+  if (!confirm('削除しますか？')) return;
+  pmConfig = pmConfig.filter(m => m.id !== id);
+  checkDirty('payment');
+  pmRender();
+}
+function pmUpdateName(id, name) {
+  const m = pmConfig.find(x => x.id === id); if (m) m.name = name;
+  checkDirty('payment');
+}
+function pmToggleGroups(id) {
+  const m = pmConfig.find(x => x.id === id);
+  if (!m) return;
+  m.useGroups = !m.useGroups;
+  if (m.useGroups && m.groups.length === 1 && !m.groups[0].label) m.groups[0].label = '';
+  checkDirty('payment');
+  pmRender();
+}
+function pmAddGroup(methodId) {
+  const m = pmConfig.find(x => x.id === methodId);
+  if (m) { m.groups.push({ id: pmNewId(), label: '', notes: [] }); checkDirty('payment'); }
+  pmRender();
+}
+function pmDeleteGroup(methodId, groupId) {
+  const m = pmConfig.find(x => x.id === methodId);
+  if (m) { m.groups = m.groups.filter(g => g.id !== groupId); checkDirty('payment'); }
+  pmRender();
+}
+function pmUpdateGroupLabel(methodId, groupId, label) {
+  const m = pmConfig.find(x => x.id === methodId);
+  const g = m?.groups.find(g => g.id === groupId);
+  if (g) g.label = label;
+  checkDirty('payment');
+}
+function pmAddNote(methodId, groupId) {
+  const m = pmConfig.find(x => x.id === methodId);
+  const g = m?.groups.find(g => g.id === groupId);
+  if (g) { g.notes.push(''); checkDirty('payment'); }
+  pmRender();
+}
+function pmDeleteNote(methodId, groupId, idx) {
+  const m = pmConfig.find(x => x.id === methodId);
+  const g = m?.groups.find(g => g.id === groupId);
+  if (g) { g.notes.splice(idx, 1); checkDirty('payment'); }
+  pmRender();
+}
+function pmUpdateNote(methodId, groupId, idx, value) {
+  const m = pmConfig.find(x => x.id === methodId);
+  const g = m?.groups.find(g => g.id === groupId);
+  if (g) g.notes[idx] = value;
+  checkDirty('payment');
+}
+
+function showSection(id, btn) {
+  if (!guardLeave(id)) return;
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.sidenav-item').forEach(b => b.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  if (btn) btn.classList.add('active');
+  const sel = document.getElementById('section-select');
+  if (sel) sel.value = id;
+}
+function showSectionById(id) {
+  showSection(id, null);
+}
+
+function renderStaffList() {
+  document.getElementById('staff-list').innerHTML = staffList.map((name, i) => `
+    <div class="staff-row" id="staff-row-${i}">
+      <span class="staff-row-name">${escHtml(name)}</span>
+      <button class="btn-edit" onclick="editStaff(${i})">編集</button>
+      <button class="btn-del"  onclick="removeStaff(${i})">削除</button>
+    </div>`).join('');
+}
+
+function editStaff(i) {
+  const row = document.getElementById('staff-row-' + i);
+  row.innerHTML = `
+    <input type="text" id="staff-inp-${i}" value="${escHtml(staffList[i])}"
+      onkeydown="if(event.key==='Enter')saveStaff(${i})">
+    <button class="btn-row-save" onclick="saveStaff(${i})">保存</button>
+    <button class="btn-del"  onclick="removeStaff(${i})">削除</button>`;
+  document.getElementById('staff-inp-' + i).focus();
+}
+
+function saveStaff(i) {
+  const val = (document.getElementById('staff-inp-' + i)?.value || '').trim();
+  if (!val) { staffList.splice(i, 1); }
+  else { staffList[i] = val; }
+  checkDirty('staff');
+  renderStaffList();
+}
+
+function addStaff() {
+  staffList.push('');
+  checkDirty('staff');
+  renderStaffList();
+  editStaff(staffList.length - 1);
+}
+
+function removeStaff(i) {
+  staffList.splice(i, 1);
+  checkDirty('staff');
+  renderStaffList();
+}
+
+
+
+/* ── 未保存変更管理 ── */
+const dirty = { plan:false, staff:false, text:false, cs:false, payment:false, url:false, area:false };
+
+function setDirty(sec) {
+  dirty[sec] = true;
+  const el = document.getElementById('dirty-' + sec);
+  if (el) el.style.display = 'inline';
+}
+function clearDirty(sec) {
+  dirty[sec] = false;
+  const el = document.getElementById('dirty-' + sec);
+  if (el) el.style.display = 'none';
+}
+function hasAnyDirty() {
+  return Object.values(dirty).some(Boolean);
+}
+function currentSecId() {
+  const el = document.querySelector('.section.active');
+  return el ? el.id.replace('sec-', '') : '';
+}
+function guardLeave(targetSec) {
+  const cur = currentSecId();
+  if (cur && dirty[cur] && cur !== targetSec) {
+    if (!confirm('保存されていない変更があります。ページを移動しますか？')) return false;
+    restoreSection(cur);
+    clearDirty(cur);
+  }
+  return true;
+}
+
+
+/* ── originalData: 最後に保存された状態のスナップショット ── */
+const originalData = {};
+
+function snapshotSection(sec) {
+  try {
+    switch(sec) {
+      case 'plan': {
+        const st = getSettings();
+        originalData.plan = JSON.parse(JSON.stringify(st.plans));
+        break;
+      }
+      case 'staff':
+        originalData.staff = staffList.slice();
+        break;
+      case 'text': {
+        const st = getSettings();
+        originalData.text = { holidayText: st.holidayText, excludeText: st.excludeText };
+        break;
+      }
+      case 'cs':
+        originalData.cs = JSON.parse(JSON.stringify(csStaff));
+        break;
+      case 'payment':
+        originalData.payment = JSON.parse(JSON.stringify(pmConfig));
+        break;
+      case 'url': {
+        const st = getSettings();
+        originalData.url = {
+          loanDocUrl: st.loanDocUrl || '', loanApplyUrl: st.loanApplyUrl || '',
+          giftSurveyUrl: st.giftSurveyUrl || '', giftWorkUrl: st.giftWorkUrl || '',
+          photoUrl: st.photoUrl || '', storePageUrl: st.storePageUrl || '',
+          loginUrl: st.loginUrl || '',
+        };
+        break;
+      }
+      case 'area':
+        originalData.area = JSON.parse(JSON.stringify(amgrData));
+        break;
+    }
+  } catch(e) { console.error('snapshotSection error:', sec, e); }
+}
+
+function restoreSection(sec) {
+  const d = originalData[sec];
+  if (!d) return;
+  try {
+    switch(sec) {
+      case 'plan':
+        ['light','basic','pro'].forEach(p => {
+          document.getElementById(`${p}-fee`).value            = d[p].fee || '';
+          document.getElementById(`${p}-commission`).value     = d[p].commission || '';
+          document.getElementById(`${p}-guarantee`).value      = d[p].guarantee || '';
+          document.getElementById(`${p}-monthly`).value        = d[p].monthly || '';
+          document.getElementById(`${p}-half`).value           = d[p].half || '';
+          document.getElementById(`${p}-contract-period`).value= d[p].contractPeriod || '';
+        });
+        break;
+      case 'staff':
+        staffList = d.slice();
+        renderStaffList();
+        break;
+      case 'text':
+        document.getElementById('holiday-text').value = d.holidayText || '';
+        document.getElementById('exclude-text').value = d.excludeText || '';
+        break;
+      case 'cs':
+        csStaff = JSON.parse(JSON.stringify(d));
+        csEditingId = null;
+        csRenderList();
+        break;
+      case 'payment':
+        pmConfig = JSON.parse(JSON.stringify(d));
+        pmRender();
+        break;
+      case 'url':
+        document.getElementById('loan-doc-url').value    = d.loanDocUrl || '';
+        document.getElementById('loan-apply-url').value  = d.loanApplyUrl || '';
+        document.getElementById('gift-survey-url').value = d.giftSurveyUrl || '';
+        document.getElementById('gift-work-url').value   = d.giftWorkUrl || '';
+        document.getElementById('photo-url').value       = d.photoUrl || '';
+        document.getElementById('store-page-url').value  = d.storePageUrl || '';
+        document.getElementById('login-url').value       = d.loginUrl || '';
+        break;
+      case 'area':
+        amgrData = JSON.parse(JSON.stringify(d));
+        amgrRenderList();
+        break;
+    }
+  } catch(e) { console.error('restoreSection error:', sec, e); }
+}
+
+
+/* ── 現在値取得（比較用） ── */
+function gatherCurrent(sec) {
+  try {
+    switch(sec) {
+      case 'plan': {
+        const plans = {};
+        ['light','basic','pro'].forEach(p => {
+          plans[p] = {
+            fee:            document.getElementById(`${p}-fee`)?.value || '',
+            commission:     document.getElementById(`${p}-commission`)?.value || '',
+            guarantee:      document.getElementById(`${p}-guarantee`)?.value || '',
+            monthly:        document.getElementById(`${p}-monthly`)?.value || '',
+            half:           document.getElementById(`${p}-half`)?.value || '',
+            contractPeriod: document.getElementById(`${p}-contract-period`)?.value || '',
+          };
+        });
+        return plans;
+      }
+      case 'staff':
+        return staffList.slice();
+      case 'text':
+        return {
+          holidayText: document.getElementById('holiday-text')?.value || '',
+          excludeText: document.getElementById('exclude-text')?.value || '',
+        };
+      case 'cs':
+        return JSON.parse(JSON.stringify(csStaff));
+      case 'payment':
+        return JSON.parse(JSON.stringify(pmConfig));
+      case 'url':
+        return {
+          loanDocUrl:    document.getElementById('loan-doc-url')?.value || '',
+          loanApplyUrl:  document.getElementById('loan-apply-url')?.value || '',
+          giftSurveyUrl: document.getElementById('gift-survey-url')?.value || '',
+          giftWorkUrl:   document.getElementById('gift-work-url')?.value || '',
+          photoUrl:      document.getElementById('photo-url')?.value || '',
+          storePageUrl:  document.getElementById('store-page-url')?.value || '',
+          loginUrl:      document.getElementById('login-url')?.value || '',
+        };
+      case 'area':
+        return JSON.parse(JSON.stringify(amgrData));
+    }
+  } catch(e) { return null; }
+  return null;
+}
+
+function checkDirty(sec) {
+  const orig = originalData[sec];
+  if (orig === undefined) return false;
+  const curr = gatherCurrent(sec);
+  if (curr === null) return false;
+  const isDirty = JSON.stringify(curr) !== JSON.stringify(orig);
+  if (isDirty) { setDirty(sec); } else { clearDirty(sec); }
+  return isDirty;
+}
+
+function saveSectionData(key, data) {
+  console.log('[saveSectionData] 開始 key=' + key);
+  console.log('[saveSectionData] 保存するデータ:', JSON.stringify(data, null, 2));
+  try {
+    const existing = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+    console.log('[saveSectionData] 既存のlocalStorage:', JSON.stringify(existing, null, 2));
+    const merged = { ...existing, ...data };
+    localStorage.setItem('gaiheki_settings', JSON.stringify(merged));
+    const verify = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+    console.log('[saveSectionData] 保存後のlocalStorage[' + key + ']:', verify[key] || merged);
+    console.log('[saveSectionData] 完了 key=' + key);
+  } catch(e) {
+    console.error('[saveSectionData] エラー key=' + key, e);
+    alert('保存中にエラーが発生しました: ' + e.message);
+    return;
+  }
+  const t = document.getElementById('toast');
+  if (!t) { console.warn('[saveSectionData] toast要素が見つかりません'); return; }
+  t.textContent = '保存しました';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function savePlanSection() {
+  console.log('保存ボタンクリック：プラン設定');
+  try {
+    const plans = {};
+    ['light','basic','pro'].forEach(p => {
+      const g = id => {
+        const el = document.getElementById(p + '-' + id);
+        console.log('  [plan] #' + p + '-' + id + ' =', el ? el.value : 'NOT FOUND');
+        return (el && el.value.trim()) ? el.value.trim() : DEFAULT_SETTINGS.plans[p][id];
+      };
+      plans[p] = { fee:g('fee'), commission:g('commission'), guarantee:g('guarantee'), monthly:g('monthly'), half:g('half'), contractPeriod:g('contract-period') };
+    });
+    clearDirty('plan');
+    saveSectionData('plans', { plans });
+    snapshotSection('plan');
+  } catch(e) { console.error('savePlanSection エラー:', e); }
+}
+
+function saveStaffSection() {
+  console.log('保存ボタンクリック：担当者設定');
+  console.log('  staffList =', staffList);
+  try {
+    clearDirty('staff');
+    saveSectionData('staffList', { staffList: [...staffList] });
+    snapshotSection('staff');
+  } catch(e) { console.error('saveStaffSection エラー:', e); }
+}
+
+function saveTextSection() {
+  console.log('保存ボタンクリック：テキスト設定');
+  try {
+    const holidayEl = document.getElementById('holiday-text');
+    const excludeEl = document.getElementById('exclude-text');
+    console.log('  #holiday-text =', holidayEl ? holidayEl.value : 'NOT FOUND');
+    console.log('  #exclude-text =', excludeEl ? excludeEl.value : 'NOT FOUND');
+    const data = {
+      holidayText: (holidayEl && holidayEl.value) ? holidayEl.value : DEFAULT_SETTINGS.holidayText,
+      excludeText: (excludeEl && excludeEl.value) ? excludeEl.value : DEFAULT_SETTINGS.excludeText,
+    };
+    clearDirty('text');
+    saveSectionData('text', data);
+    snapshotSection('text');
+  } catch(e) { console.error('saveTextSection エラー:', e); }
+}
+
+function saveCsSection() {
+  console.log('保存ボタンクリック：CS担当者情報');
+  console.log('  csStaff =', csStaff);
+  try {
+    clearDirty('cs');
+    saveSectionData('csStaff', { csStaff: JSON.parse(JSON.stringify(csStaff)) });
+    snapshotSection('cs');
+  } catch(e) { console.error('saveCsSection エラー:', e); }
+}
+
+function savePaymentSection() {
+  console.log('保存ボタンクリック：決済手段');
+  console.log('  pmConfig =', pmConfig);
+  try {
+    clearDirty('payment');
+    saveSectionData('paymentConfig', { paymentConfig: JSON.parse(JSON.stringify(pmConfig)) });
+    snapshotSection('payment');
+  } catch(e) { console.error('savePaymentSection エラー:', e); }
+}
+
+function saveUrlSection() {
+  console.log('保存ボタンクリック：URL設定');
+  try {
+    const ids = ['loan-doc-url','loan-apply-url','gift-survey-url','gift-work-url','photo-url','store-page-url','login-url'];
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      console.log('  #' + id + ' =', el ? el.value : 'NOT FOUND');
+    });
+    const data = {
+      loanDocUrl:    document.getElementById('loan-doc-url').value.trim(),
+      loanApplyUrl:  document.getElementById('loan-apply-url').value.trim(),
+      giftSurveyUrl: document.getElementById('gift-survey-url').value.trim(),
+      giftWorkUrl:   document.getElementById('gift-work-url').value.trim(),
+      photoUrl:      document.getElementById('photo-url').value.trim(),
+      storePageUrl:  document.getElementById('store-page-url').value.trim(),
+      loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
+    };
+    clearDirty('url');
+    saveSectionData('urls', data);
+    snapshotSection('url');
+  } catch(e) { console.error('saveUrlSection エラー:', e); }
+}
+
+
+/* ── 対応エリア管理 ── */
+let amgrData = [];
+
+const PT_RANGE = {
+  '6': [48, 60], '5': [40, 50], '4': [32, 40],
+  '3': [24, 30], '2': [16, 20], '1': [8, 10], '0.5': [0, 8]
+};
+
+function amgrLoad() {
+  try {
+    const s = localStorage.getItem('gaiheki_area_data');
+    amgrData = s ? JSON.parse(s) : [];
+  } catch(e) { amgrData = []; }
+  amgrPopulatePref();
+  if (!amgrData.length) {
+    document.getElementById('amgr-list').innerHTML =
+      '<div class="area-mgr-empty">データがありません。create.htmlを一度開くとデータが読み込まれます。<br>または「＋ エリアを追加」で手動追加してください。</div>';
+    return;
+  }
+  amgrRenderList();
+}
+
+function amgrOnRegion() {
+  const region = document.getElementById('amgr-region').value;
+  const prefSel = document.getElementById('amgr-pref');
+  const source = region ? amgrData.filter(d => d.region === region) : amgrData;
+  const prefs = [...new Set(source.map(d => d.pref))];
+  prefSel.innerHTML = '<option value="">すべての都道府県</option>' + prefs.map(p => `<option>${p}</option>`).join('');
+  if (prefs.length === 1) {
+    prefSel.value = prefs[0];
+    prefSel.disabled = true;
+    prefSel.classList.add('amgr-pref-auto');
+  } else {
+    prefSel.disabled = false;
+    prefSel.classList.remove('amgr-pref-auto');
+  }
+  amgrRenderList();
+}
+
+function amgrPopulatePref() {
+  const prefs = [...new Set(amgrData.map(d => d.pref))];
+  const prefSel = document.getElementById('amgr-pref');
+  prefSel.innerHTML = '<option value="">すべての都道府県</option>' + prefs.map(p => `<option>${p}</option>`).join('');
+}
+
+function amgrRenderList() {
+  const region = document.getElementById('amgr-region').value;
+  const pref   = document.getElementById('amgr-pref').value;
+  const q      = (document.getElementById('amgr-search')?.value || '').trim();
+  let rows = amgrData;
+  if (region) rows = rows.filter(d => d.region === region);
+  if (pref)   rows = rows.filter(d => d.pref === pref);
+  if (q)      rows = rows.filter(d => d.city.includes(q) || d.pref.includes(q));
+  const listEl = document.getElementById('amgr-list');
+  if (!rows.length) {
+    listEl.innerHTML = '<div class="area-mgr-empty">該当するエリアがありません。</div>';
+    return;
+  }
+  listEl.innerHTML = '<div class="area-row-list">' +
+    rows.map(d => {
+      const gi = amgrData.indexOf(d);
+      return `<div>
+        <div class="area-row" id="amgr-row-${gi}">
+          <div style="flex:1">
+            <div class="area-row-name">${escHtml(d.pref)}　${escHtml(d.city)}</div>
+            <div class="area-row-sub">${escHtml(d.region)}</div>
+          </div>
+          <span class="area-row-stats">${d.min}〜${d.max}件</span>
+          <span class="area-row-pts">${d.points}pt</span>
+          <button class="btn-edit" onclick="amgrEdit(${gi})">編集</button>
+          <button class="btn-del"  onclick="amgrDelete(${gi})">削除</button>
+        </div>
+        <div class="area-row-edit" id="amgr-edit-${gi}">
+          <div class="area-edit-grid">
+            <div class="field"><label>地方</label><input type="text" id="ae-region-${gi}" value="${escHtml(d.region)}"></div>
+            <div class="field"><label>都道府県</label><input type="text" id="ae-pref-${gi}" value="${escHtml(d.pref)}"></div>
+            <div class="field"><label>市区町村</label><input type="text" id="ae-city-${gi}" value="${escHtml(d.city)}"></div>
+            <div class="field"><label>ポイント</label>
+              <select id="ae-pts-${gi}" onchange="amgrEditAutoFill(${gi})">
+                ${['6','5','4','3','2','1','0.5'].map(v => `<option value="${v}"${parseFloat(v)===d.points?' selected':''}>${v}pt</option>`).join('')}
+              </select>
+            </div>
+            <div class="field"><label>年間（下限）</label><input type="number" id="ae-min-${gi}" value="${d.min}"></div>
+            <div class="field"><label>年間（上限）</label><input type="number" id="ae-max-${gi}" value="${d.max}"></div>
+          </div>
+          <div style="margin-top:8px">
+            <button class="btn-row-save" onclick="amgrSaveEdit(${gi})">保存</button>
+            <button class="btn-del" style="margin-left:6px" onclick="amgrCloseEdit(${gi})">キャンセル</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('') + '</div>';
+}
+
+function amgrEdit(gi) {
+  document.getElementById('amgr-edit-' + gi).classList.toggle('open');
+}
+function amgrCloseEdit(gi) {
+  document.getElementById('amgr-edit-' + gi).classList.remove('open');
+}
+function amgrEditAutoFill(gi) {
+  const pts = document.getElementById('ae-pts-' + gi).value;
+  const range = PT_RANGE[pts];
+  if (range) {
+    document.getElementById('ae-min-' + gi).value = range[0];
+    document.getElementById('ae-max-' + gi).value = range[1];
+  }
+}
+
+function amgrSaveEdit(gi) {
+  amgrData[gi] = {
+    region: document.getElementById('ae-region-'+gi).value.trim(),
+    pref:   document.getElementById('ae-pref-'+gi).value.trim(),
+    city:   document.getElementById('ae-city-'+gi).value.trim(),
+    points: parseFloat(document.getElementById('ae-pts-'+gi).value) || 1,
+    min:    parseInt(document.getElementById('ae-min-'+gi).value) || 0,
+    max:    parseInt(document.getElementById('ae-max-'+gi).value) || 0,
+  };
+  checkDirty('area');
+  amgrCloseEdit(gi);
+  amgrRenderList();
+}
+
+function amgrDelete(gi) {
+  if (!confirm('「' + amgrData[gi].pref + ' ' + amgrData[gi].city + '」を削除しますか？')) return;
+  amgrData.splice(gi, 1);
+  checkDirty('area');
+  amgrRenderList();
+}
+
+function amgrShowAdd() {
+  const filterRegion = document.getElementById('amgr-region').value;
+  const filterPref   = document.getElementById('amgr-pref').value;
+  const addRegionSel = document.getElementById('amgr-add-region');
+  const addPrefSel   = document.getElementById('amgr-add-pref');
+
+  // 共通リセット
+  document.getElementById('amgr-add-city').value = '';
+  document.getElementById('amgr-add-pts').value  = '';
+  document.getElementById('amgr-add-min').value  = '';
+  document.getElementById('amgr-add-max').value  = '';
+
+  if (filterRegion) {
+    // 地方をフィルター値に固定
+    addRegionSel.value = filterRegion;
+    addRegionSel.disabled = true;
+    addRegionSel.classList.add('amgr-pref-auto');
+    amgrAddOnRegion(); // pref 選択肢を生成（北海道は自動選択＋disabled）
+
+    if (filterPref && !addPrefSel.disabled) {
+      // 都道府県もフィルター値に固定（北海道以外の多都道府県地方）
+      addPrefSel.value = filterPref;
+      addPrefSel.disabled = true;
+      addPrefSel.classList.add('amgr-pref-auto');
+    }
+  } else {
+    // フィルター未選択: 通常通り
+    addRegionSel.value = '';
+    addRegionSel.disabled = false;
+    addRegionSel.classList.remove('amgr-pref-auto');
+    addPrefSel.innerHTML = '<option value="">先に地方を選択</option>';
+    addPrefSel.disabled = true;
+    addPrefSel.classList.remove('amgr-pref-auto');
+  }
+
+  document.getElementById('amgr-add-form').style.display = '';
+}
+function amgrHideAdd() {
+  document.getElementById('amgr-add-form').style.display = 'none';
+  const addRegionSel = document.getElementById('amgr-add-region');
+  const addPrefSel   = document.getElementById('amgr-add-pref');
+  addRegionSel.disabled = false;
+  addRegionSel.classList.remove('amgr-pref-auto');
+  addPrefSel.disabled = false;
+  addPrefSel.classList.remove('amgr-pref-auto');
+}
+
+function amgrAddOnRegion() {
+  const region = document.getElementById('amgr-add-region').value;
+  const prefSel = document.getElementById('amgr-add-pref');
+  if (!region) {
+    prefSel.innerHTML = '<option value="">先に地方を選択</option>';
+    prefSel.disabled = true;
+    prefSel.classList.remove('amgr-pref-auto');
+    return;
+  }
+  const prefs = [...new Set(amgrData.filter(d => d.region === region).map(d => d.pref))];
+  prefSel.innerHTML = '<option value="">選択</option>' + prefs.map(p => `<option>${p}</option>`).join('');
+  if (prefs.length === 1) {
+    prefSel.value = prefs[0];
+    prefSel.disabled = true;
+    prefSel.classList.add('amgr-pref-auto');
+  } else {
+    prefSel.disabled = false;
+    prefSel.classList.remove('amgr-pref-auto');
+  }
+}
+
+function amgrAutoFillMinMax() {
+  const pts = document.getElementById('amgr-add-pts').value;
+  const range = PT_RANGE[pts];
+  if (range) {
+    document.getElementById('amgr-add-min').value = range[0];
+    document.getElementById('amgr-add-max').value = range[1];
+  }
+}
+
+function amgrAddEntry() {
+  const region = document.getElementById('amgr-add-region').value.trim();
+  const pref   = document.getElementById('amgr-add-pref').value.trim();
+  const city   = document.getElementById('amgr-add-city').value.trim();
+  const pts    = parseFloat(document.getElementById('amgr-add-pts').value);
+  const mn     = parseInt(document.getElementById('amgr-add-min').value);
+  const mx     = parseInt(document.getElementById('amgr-add-max').value);
+  if (!region || !pref || !city || isNaN(pts)) {
+    alert('地方・都道府県・市区町村・ポイント数は必須です');
+    return;
+  }
+  amgrData.push({ region, pref, city, points: pts, min: mn || 0, max: mx || 0 });
+  checkDirty('area');
+  amgrHideAdd();
+  amgrRenderList();
+}
+
+function saveAreaSection() {
+  try {
+    localStorage.setItem('gaiheki_area_data', JSON.stringify(amgrData));
+    clearDirty('area');
+    snapshotSection('area');
+    console.log('[settings] saveAreaSection: saved', amgrData.length, 'entries');
+  } catch(e) {
+    console.error('[settings] saveAreaSection error:', e);
+    alert('保存中にエラーが発生しました: ' + e.message);
+    return;
+  }
+  const t = document.getElementById('toast');
+  if (!t) return;
+  t.textContent = '保存しました';
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+function saveSettings() {
+  const plans = {};
+  ['light', 'basic', 'pro'].forEach(p => {
+    const get = id => document.getElementById(`${p}-${id}`).value.trim();
+    plans[p] = {
+      fee:            get('fee')             || DEFAULT_SETTINGS.plans[p].fee,
+      commission:     get('commission')      || DEFAULT_SETTINGS.plans[p].commission,
+      guarantee:      get('guarantee')       || DEFAULT_SETTINGS.plans[p].guarantee,
+      monthly:        get('monthly')         || DEFAULT_SETTINGS.plans[p].monthly,
+      half:           get('half')            || DEFAULT_SETTINGS.plans[p].half,
+      contractPeriod: get('contract-period') || DEFAULT_SETTINGS.plans[p].contractPeriod,
+    };
+  });
+
+  const settings = {
+    plans,
+    holidayText:   document.getElementById('holiday-text').value   || DEFAULT_SETTINGS.holidayText,
+    excludeText:   document.getElementById('exclude-text').value   || DEFAULT_SETTINGS.excludeText,
+    staffList:     [...staffList],
+    loanDocUrl:    document.getElementById('loan-doc-url').value.trim(),
+    loanApplyUrl:  document.getElementById('loan-apply-url').value.trim(),
+    giftSurveyUrl: document.getElementById('gift-survey-url').value.trim(),
+    giftWorkUrl:   document.getElementById('gift-work-url').value.trim(),
+    photoUrl:      document.getElementById('photo-url').value.trim(),
+    storePageUrl:  document.getElementById('store-page-url').value.trim(),
+    loginUrl:      document.getElementById('login-url').value.trim() || DEFAULT_SETTINGS.loginUrl,
+    csStaff:       JSON.parse(JSON.stringify(csStaff)),
+    paymentConfig: JSON.parse(JSON.stringify(pmConfig)),
+  };
+
+  localStorage.setItem('gaiheki_settings', JSON.stringify(settings));
+
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* ── 初期化 ── */
+(function() {
+  const s = getSettings();
+
+  ['light', 'basic', 'pro'].forEach(p => {
+    document.getElementById(`${p}-fee`).value             = s.plans[p].fee;
+    document.getElementById(`${p}-commission`).value      = s.plans[p].commission;
+    document.getElementById(`${p}-guarantee`).value       = s.plans[p].guarantee;
+    document.getElementById(`${p}-monthly`).value         = s.plans[p].monthly;
+    document.getElementById(`${p}-half`).value            = s.plans[p].half;
+    document.getElementById(`${p}-contract-period`).value = s.plans[p].contractPeriod;
+  });
+
+  staffList = [...s.staffList];
+  renderStaffList();
+
+  document.getElementById('holiday-text').value   = s.holidayText;
+  document.getElementById('exclude-text').value   = s.excludeText;
+  document.getElementById('loan-doc-url').value   = s.loanDocUrl;
+  document.getElementById('loan-apply-url').value = s.loanApplyUrl;
+  document.getElementById('gift-survey-url').value= s.giftSurveyUrl;
+  document.getElementById('gift-work-url').value  = s.giftWorkUrl;
+  document.getElementById('photo-url').value      = s.photoUrl;
+  document.getElementById('store-page-url').value = s.storePageUrl;
+  document.getElementById('login-url').value      = s.loginUrl;
+
+  // CS担当者: localStorageにデータがなければデフォルトを強制書き込み
+  const raw = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+  if (!raw.csStaff || !raw.csStaff.length) {
+    raw.csStaff = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.csStaff));
+    localStorage.setItem('gaiheki_settings', JSON.stringify(raw));
+    csStaff = raw.csStaff;
+  } else {
+    csStaff = raw.csStaff;
+  }
+  csRenderList();
+
+  // 決済手段: localStorageにデータがなければデフォルトを強制書き込み
+  const raw2 = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+  if (!raw2.paymentConfig || !raw2.paymentConfig.length) {
+    raw2.paymentConfig = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.paymentConfig));
+    localStorage.setItem('gaiheki_settings', JSON.stringify(raw2));
+    pmConfig = raw2.paymentConfig;
+  } else {
+    pmConfig = raw2.paymentConfig;
+  }
+  pmRender();
+  amgrLoad();
+
+  // ── 各セクションの初期状態をスナップショット ──
+  ['plan','staff','text','cs','payment','url','area'].forEach(snapshotSection);
+  // ── 未保存変更: セクション別 input イベント委任 ──
+  ['sec-plan','sec-text','sec-url'].forEach(id => {
+    document.getElementById(id).addEventListener('input', () => {
+      const sec = id.replace('sec-', '');
+      checkDirty(sec);
+    });
+  });
+
+  // ── 未保存変更: ナビゲーション保護 ──
+  // ロゴ・戻るボタン
+  document.querySelectorAll('a[href="fuyouhin.html"]').forEach(a => {
+    a.addEventListener('click', e => {
+      if (hasAnyDirty()) {
+        if (!confirm('保存されていない変更があります。ページを移動しますか？')) {
+          e.preventDefault();
+        }
+      }
+    });
+  });
+  // ブラウザ戻るボタン
+  window.addEventListener('beforeunload', e => {
+    if (hasAnyDirty()) {
+      e.preventDefault();
+      e.returnValue = '';
+    }
+  });
+
+})();
+</script>
+</body>
+</html>

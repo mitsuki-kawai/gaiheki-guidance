@@ -1,0 +1,2495 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>不用品回収の窓口 初回ガイダンス資料作成</title>
+<style>
+:root {
+  --main:   #3F3277;
+  --accent: #F07200;
+  --bg:     #F3F3F3;
+  --text:   #1a1a1a;
+  --white:  #ffffff;
+  --border: #d0d0d0;
+  --label:  #555555;
+  --muted:  #999999;
+  --nav-w:  210px;
+  --form-w: 348px;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;
+  background: var(--bg); color: var(--text); font-size: 14px;
+  line-height: 1.6; overflow: hidden;
+}
+
+/* ── 3ペインレイアウト ── */
+.app { display: grid; grid-template-columns: var(--nav-w) 1fr var(--form-w); height: 100vh; overflow: hidden; }
+
+/* ── 左ナビ ── */
+.nav { background: var(--white); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.nav-logo { padding: 20px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-start; }
+.nav-logo .back-link { display: inline-block; font-size: 12px; font-weight: 600; color: var(--muted); text-decoration: none; margin-top: 8px; margin-bottom: 8px; padding: 3px 8px 3px 0; border-radius: 4px; transition: background .12s, color .12s; }
+.nav-logo .back-link:hover { background: var(--bg); color: var(--main); }
+.nav-logo .brand, .nav-logo a.brand { font-size: 18px; font-weight: 800; letter-spacing: -0.5px; text-decoration: none; color: var(--text); display: block; }
+.nav-logo .brand span, .nav-logo a.brand span { color: var(--main); }
+.nav-logo a.brand:hover { opacity: 0.8; }
+.nav-logo .sub { display: none; }
+.nav-list { padding: 16px 0; overflow-y: auto; flex: 1; }
+.nav-item { display: block; width: 100%; padding: 9px 20px; font-size: 12px; font-weight: 400; color: var(--label); background: none; border: none; border-left: 3px solid transparent; text-align: left; cursor: pointer; transition: color .12s, border-color .12s; margin-bottom: 1px; }
+.nav-item:hover { color: var(--main); }
+.nav-item.active { color: var(--main); border-left-color: var(--main); font-weight: 600; }
+
+/* ── プレビュー ── */
+.preview { overflow-y: auto; overflow-x: hidden; padding: 0; background: #d8d8d8; }
+#pages-container { display: flex; flex-direction: column; align-items: center; gap: 32px; padding: 24px 0 40px; }
+
+/* ── A4ページ ── */
+.a4-page { width: 794px; min-height: 1123px; background: var(--white); position: relative; flex-shrink: 0; box-shadow: 0 2px 8px rgba(0,0,0,.18); }
+
+/* ページヘッダーバー */
+.page-hbar { background: var(--main); color: var(--white); padding: 13px 32px; display: flex; justify-content: space-between; align-items: center; }
+.phb-l { display: flex; align-items: baseline; gap: 10px; }
+.phb-brand { font-size: 17px; font-weight: 800; letter-spacing: -0.5px; }
+.phb-title { font-size: 11px; opacity: .85; letter-spacing: .04em; }
+
+/* ドキュメントメタ（1ページのみ） */
+.doc-meta { padding: 11px 32px 10px; border-bottom: 2px solid var(--main); display: flex; justify-content: space-between; align-items: flex-end; }
+.doc-recipient { font-size: 13px; color: var(--label); }
+.doc-recipient strong { font-size: 15px; font-weight: 700; color: var(--text); }
+.doc-issued { font-size: 11px; color: var(--muted); }
+
+/* ページコンテンツ */
+.page-content { padding: 10px 32px 24px; }
+
+/* ── 書類テーブル ── */
+.doc-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+.doc-table td { border: 1px solid var(--border); vertical-align: top; padding: 8px 12px; }
+
+/* セクションヘッダー行 */
+.sh td {
+  background: #eeecf8; color: var(--main);
+  font-size: 11.5px; font-weight: 700;
+  padding: 8px 12px;
+  border-top: 1px solid var(--border) !important;
+  border-left: 1px solid var(--border) !important;
+  letter-spacing: .02em;
+}
+.sh .sh-badge { float: right; font-weight: 400; font-size: 10px; color: #8a7fc7; margin-top: 1px; }
+
+/* ギャップ行 */
+
+/* キーセル */
+.k { background: var(--bg) !important; color: var(--main) !important; font-size: 11.5px !important; font-weight: 600 !important; width: 220px !important; min-width: 220px !important; max-width: 220px !important; vertical-align: middle !important; white-space: nowrap !important; padding: 8px 20px !important; }
+
+/* バリューセル */
+.v { background: var(--white); color: var(--text); font-size: 11.5px; }
+
+/* アクセント値（オレンジ強調） */
+.va { color: var(--accent); font-weight: 700; font-size: 15px; }
+.va-sm { color: var(--accent); font-weight: 700; }
+
+/* サブノート */
+.sub-note { font-size: 10px; color: var(--muted); margin-left: 8px; font-weight: 400; }
+.note { font-size: 11.5px; color: var(--label); line-height: 1.75; }
+
+/* エリアタグ */
+.tag { background: #eeecf8; color: var(--main); border-radius: 3px; padding: 2px 8px; font-size: 11px; display: inline-block; margin: 2px 3px 2px 0; }
+
+/* ログインボックス */
+.login-box { background: #1e1e2e; color: #cdd6f4; border-radius: 3px; padding: 12px 14px; font-family: 'Courier New', monospace; font-size: 12px; }
+.lb-row { display: flex; gap: 10px; margin-bottom: 6px; }
+.lb-row:last-child { margin-bottom: 0; }
+.lb-k { color: #6c7086; min-width: 80px; flex-shrink: 0; }
+.lb-url { color: #89b4fa; word-break: break-all; }
+.lb-val { color: #a6e3a1; font-weight: 600; word-break: break-all; }
+
+/* ステップリスト */
+.steps { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.steps li { display: flex; gap: 10px; align-items: flex-start; font-size: 12px; line-height: 1.6; }
+.sn { min-width: 20px; height: 20px; border-radius: 50%; background: var(--main); color: var(--white); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+/* 写真例タグ */
+.photo-tag { background: var(--bg); border: 1px solid var(--border); border-radius: 3px; padding: 2px 8px; font-size: 11px; display: inline-block; margin: 2px 3px 2px 0; }
+
+/* ピル */
+.pill-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+.pill { background: #f4fbf7; color: #2a7a50; border: 1px solid #c8e8d5; border-radius: 3px; padding: 2px 8px; font-size: 11px; }
+
+/* Amazonカード */
+.amz-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.amz-card { border: 1px solid var(--border); border-radius: 3px; padding: 10px 12px; }
+.amz-badge { font-size: 10px; font-weight: 700; background: #ff9900; color: var(--white); border-radius: 2px; padding: 1px 5px; display: inline-block; margin-bottom: 5px; }
+.amz-amount { font-size: 17px; font-weight: 800; }
+.amz-cond { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+/* URL表示 */
+.url-val { color: var(--main); font-size: 11.5px; word-break: break-all; text-decoration: none; }
+a.url-val:hover { text-decoration: underline; }
+a.lb-url { color: #89b4fa; text-decoration: none; word-break: break-all; }
+a.lb-url:hover { text-decoration: underline; }
+
+/* ページフッター */
+.page-footer { position: absolute; bottom: 16px; left: 0; right: 0; text-align: center; font-size: 11px; color: var(--muted); letter-spacing: .06em; }
+
+/* ── 右フォーム ── */
+.form-pane { background: var(--white); border-left: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
+.form-header { padding: 16px 20px 12px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.form-header .fh-title { font-size: 13px; font-weight: 700; }
+.form-header .fh-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.page-tabs { display: flex; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+.ptab { flex: 1; padding: 10px 4px; text-align: center; font-size: 11px; font-weight: 500; color: var(--muted); cursor: pointer; border: none; background: none; border-bottom: 2px solid transparent; transition: color .12s, border-color .12s; }
+.ptab.active { color: var(--main); border-bottom-color: var(--main); font-weight: 700; }
+.ptab:hover:not(.active) { color: var(--main); }
+.form-scroll { overflow-y: auto; flex: 1; padding: 16px 20px 24px; }
+.f-sec { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--main); margin: 10px 0 5px; padding-bottom: 4px; border-bottom: 1px solid #e8e5f4; }
+.f-sec:first-child { margin-top: 0; }
+.field { margin-bottom: 7px; }
+.field label { display: block; font-size: 11px; font-weight: 500; color: var(--label); margin-bottom: 4px; }
+.field label .req { color: var(--accent); margin-left: 2px; }
+.field input, .field select, .field textarea { width: 100%; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; background: var(--white); color: var(--text); font-family: inherit; transition: border-color .12s; appearance: none; -webkit-appearance: none; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--main); }
+.field textarea { resize: vertical; min-height: 56px; }
+.field select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999' d='M5 6L0 0h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 10px center; padding-right: 28px; }
+.field-row { display: flex; gap: 8px; }
+.field-row .field { flex: 1; }
+.fnote { font-size: 10px; color: var(--muted); margin-top: 3px; }
+.area-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 7px; min-height: 4px; }
+.area-tag { background: #eeecf8; color: var(--main); border-radius: 4px; padding: 3px 8px; font-size: 11px; display: flex; align-items: center; gap: 4px; }
+.area-tag button { background: none; border: none; color: var(--main); cursor: pointer; font-size: 14px; line-height: 1; padding: 0; opacity: .6; }
+.area-tag button:hover { opacity: 1; }
+.area-add { display: flex; gap: 6px; }
+.area-select-row { display: flex; gap: 5px; margin-bottom: 6px; }
+.area-select-row select { flex: 1; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; font-family: inherit; background: var(--white); }
+.area-select-row select:disabled { opacity: .45; cursor: not-allowed; }
+.area-select-row select.area-pref-auto { opacity: 1; color: var(--text); cursor: default; appearance: none; -webkit-appearance: none; background-image: none; }
+#payment_note:disabled { color: #1a1a1a !important; }
+.area-city-list { max-height: 180px; overflow-y: auto; border: 1px solid var(--border); border-radius: 4px; background: var(--white); margin-bottom: 7px; }
+.area-city-item { display: flex; align-items: center; gap: 7px; padding: 5px 10px; border-bottom: 1px solid #f0f0f0; font-size: 11.5px; cursor: pointer; }
+.area-city-item:last-child { border-bottom: none; }
+.area-city-item:hover { background: #faf9ff; }
+.area-city-item input[type="checkbox"] { flex-shrink: 0; accent-color: var(--main); cursor: pointer; width: 13px; height: 13px; }
+.area-city-name { flex: 1; color: var(--text); }
+.area-city-stats { font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+.area-city-pts { font-size: 10.5px; font-weight: 700; color: var(--main); white-space: nowrap; min-width: 26px; text-align: right; }
+.area-summary { font-size: 11px; color: var(--label); background: #f7f6fb; border-radius: 4px; padding: 5px 10px; margin-top: 2px; line-height: 1.7; }
+.radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
+.radio-option { display: inline-flex; align-items: center; cursor: pointer; padding: 4px 12px; border: 1px solid #ccc; border-radius: 20px; font-size: 11px; color: #999; background: var(--white); transition: all .12s; user-select: none; }
+.radio-option:has(input:checked) { border-color: var(--main); background: var(--main); color: var(--white); font-weight: 600; }
+.radio-option input[type="radio"] { display: none; }
+.area-add input { flex: 1; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; }
+.area-add button { padding: 7px 12px; background: var(--main); color: var(--white); border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; white-space: nowrap; transition: opacity .12s; }
+.area-add button:hover { opacity: .85; }
+.form-actions { padding: 12px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; flex-shrink: 0; }
+.btn-save { flex: 1; padding: 10px; background: var(--main); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; transition: opacity .12s; }
+.btn-save:hover { opacity: .85; }
+.btn-pdf { padding: 10px 14px; background: var(--accent); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; white-space: nowrap; }
+.btn-pdf:hover { opacity: .85; }
+/* ── CS名刺カード ── */
+.cs-card { background: #fff; border-radius: 8px; border: 1px solid #e0e0e0; padding: 24px; margin: 32px auto; max-width: 620px; }
+.cs-card-name { font-size: 16px; font-weight: 700; color: var(--main); margin-bottom: 4px; }
+.cs-card-body { display: flex; align-items: flex-start; gap: 0; }
+.cs-card-left { width: 40%; flex-shrink: 0; }
+.cs-card-photo { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 4px; display: block; image-rendering: auto; image-rendering: high-quality; }
+.cs-card-no-photo { width: 100%; aspect-ratio: 4/3; background: #eeecf8; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--main); }
+.cs-card-phone-row { font-size: 12px; color: var(--label); margin-top: 12px; }
+.cs-line-block { background: #06C755; color: #fff; border-radius: 6px; padding: 6px 10px; margin-top: 8px; display: flex; flex-direction: row-reverse; align-items: center; gap: 12px; }
+.cs-line-block-text { flex: 1; font-size: 11px; line-height: 1.6; }
+.cs-line-block-msg { font-size: 13px; font-weight: bold; text-align: center; }
+.cs-card-qr { width: 50px; height: 50px; max-width: 50px; object-fit: contain; border-radius: 4px; flex-shrink: 0; border: 3px solid white; }
+.cs-card-right { flex: 1; padding-left: 32px; }
+.cs-card-bio { font-size: 11.5px; color: var(--label); line-height: 1.75; }
+
+/* ── 共有・閲覧モード ── */
+
+
+/* ── 印刷（A4） ── */
+
+.sp-toggle-btn { display: none; }
+.sp-nav-right { display: none; }
+.pc-back-link { display: inline-block; }
+
+/* ── Responsive ── */
+@media (max-width: 1023px) {
+  :root { --nav-w: 120px; --form-w: 300px; }
+  .nav-item { padding: 8px 12px; font-size: 11px; }
+  .a4-page { min-height: auto; }
+}
+@media (max-width: 767px) {
+  body { overflow: hidden; }
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+  }
+  /* ナビ → 上部水平タブ */
+  .nav {
+    flex-direction: row;
+    height: auto;
+    flex-shrink: 0;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .nav-logo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 12px;
+    gap: 8px;
+    border-bottom: none;
+    border-right: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .nav-logo .back-link { margin-bottom: 0; font-size: 11px; padding: 2px 6px; }
+  .nav-logo a.brand { font-size: 14px; }
+  .nav-logo .brand img { height: 28px; }
+  .nav-logo .sub { display: none; }
+  .nav-list {
+    display: flex;
+    flex-direction: row;
+    padding: 0;
+    overflow-x: auto;
+    flex: 1;
+    align-items: stretch;
+    gap: 0;
+  }
+  .nav-item {
+    padding: 10px 12px;
+    border-left: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    font-size: 10px;
+    flex-shrink: 0;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .nav-item.active { border-bottom-color: var(--main); border-left-color: transparent; }
+  /* フォーム → 上、プレビュー → 下 */
+  .form-pane {
+    order: 1;
+    border-left: none;
+    border-bottom: 1px solid var(--border);
+    flex: 0 0 auto;
+    max-height: 45vh;
+    overflow-y: auto;
+  }
+  .preview {
+    order: 2;
+    flex: 1;
+    overflow: auto;
+    padding: 12px 0;
+  }
+  .a4-page { min-height: auto; }
+  .form-actions { padding: 8px 16px; }
+  .btn-save, .btn-pdf { min-height: 44px; }
+  .f-sec:first-child { margin-top: 0; }
+
+  /* SP: デフォルトはプレビュー表示 */
+  .form-pane { display: none; }
+  .preview { flex: 1; order: 1; }
+  /* フォームモード時 */
+  body.sp-form-mode {
+    overflow-y: auto;
+  }
+  body.sp-form-mode .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: var(--white);
+  }
+  body.sp-form-mode .app {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+    min-height: 100vh;
+  }
+  body.sp-form-mode .form-pane {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    overflow: visible;
+  }
+  body.sp-form-mode .form-scroll {
+    overflow: visible;
+    flex: none;
+    height: auto;
+    background: #ffffff;
+  }
+  body.sp-form-mode .form-actions {
+    position: static;
+  }
+  body.sp-form-mode .preview { display: none; }
+  body.sp-form-mode .nav-list { display: none; }
+  /* SP ヘッダー: ロゴ左・ボタン右 */
+  .nav-logo {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 56px;
+    width: 100%;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    padding: 0 16px !important;
+    gap: 12px;
+  }
+  .nav-logo .brand { flex: 1; }
+  .nav-logo .back-link { margin-bottom: 0; }
+  .nav-logo .pc-back-link { display: none; }
+  .sp-nav-right {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .nav-logo .sub { display: none; }
+  .sp-nav-right { display: flex; }
+  .sp-toggle-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    font-size: 18px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background .12s;
+    line-height: 1;
+  }
+  .sp-toggle-btn:hover { background: #e8e5f4; }
+  /* nav-listはSPでは非表示(ページジャンプ不要)にしてもよいが残す */
+  .nav-list { display: none; }
+
+}
+
+@media print {
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  body { overflow: visible; background: white; }
+  .app { display: block; height: auto; }
+  .nav, .form-pane { display: none !important; }
+  body.sp-form-mode .preview { display: block !important; }
+  body.sp-form-mode .form-pane { display: none !important; }
+  body.sp-form-mode .app { height: auto !important; overflow: visible !important; }
+  /* プレビューコンテナ: 余白・隙間を完全除去 */
+  .preview { overflow: visible; padding: 0; background: white; display: block !important;
+             width: 100%; transform: none !important; }
+  #pages-container { gap: 0 !important; padding: 0 !important; margin: 0 !important;
+                     display: block !important; transform: none !important;
+                     width: 100% !important; }
+  /* A4ページ: page-break-after を廃止、内部での切れ防止に変更 */
+  .a4-page { width: 100% !important; min-height: 0 !important;
+             margin: 0 !important; padding: 0 !important;
+             box-shadow: none !important;
+             page-break-inside: avoid; break-inside: avoid;
+             page-break-after: auto; break-after: auto;
+             transform: none !important; }
+  /* 2ページ目以降は改ページを前に入れる */
+  .a4-page + .a4-page { page-break-before: always; break-before: page; }
+  .page-hbar { padding: 8px 10mm; }
+  .doc-meta { padding: 6px 10mm; }
+  .page-content { padding: 8px 10mm 12px; }
+  .page-footer { display: none; }
+  /* セル・セクション途中切れ防止 */
+  .doc-table tr { page-break-inside: avoid; break-inside: avoid; }
+  .sh { page-break-after: avoid; break-after: avoid; }
+  .doc-table td { border: 1px solid #d0d0d0 !important; }
+  .sh td { border-top: 1px solid #d0d0d0 !important; border-left: 1px solid #d0d0d0 !important; }
+  @page { size: A4; margin: 8mm; }
+}
+</style>
+<!-- Firebase Auth (認証チェックのみ) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
+<script>
+(function() {
+  firebase.initializeApp({
+    apiKey: "AIzaSyCtKA71KjRHQvMPtYcURVjuSKaOanoEh7Y",
+    authDomain: "madoguchi-guidance.firebaseapp.com",
+    projectId: "madoguchi-guidance",
+    storageBucket: "madoguchi-guidance.firebasestorage.app",
+    messagingSenderId: "1080989158935",
+    appId: "1:1080989158935:web:4b75da9e3252e8086a5652"
+  });
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user || !(user.email || '').endsWith('@madoguchi.inc')) {
+      location.replace('login.html');
+    }
+  });
+})();
+</script>
+</head>
+<body>
+<div class="app">
+
+<!-- ══ 左ナビ ══ -->
+<div class="nav">
+  <div class="nav-logo">
+    <a href="fuyouhin.html" class="brand"><img src="images/fuyouhin-logo.png" alt="不用品回収の窓口" height="32" style="display:block"></a>
+    <a href="fuyouhin.html" class="back-link pc-back-link">戻る</a>
+    <div class="sub">ガイダンス資料作成</div>
+    <div class="sp-nav-right">
+      <button class="sp-toggle-btn" id="sp-toggle-btn" onclick="toggleSPView()" aria-label="フォーム表示切替">📝</button>
+      <a href="fuyouhin.html" class="back-link">戻る</a>
+    </div>
+  </div>
+  <div class="nav-list">
+    <button class="nav-item active" onclick="scrollToPage('p1')" id="nav-p1">ご確認事項</button>
+    <button class="nav-item" onclick="scrollToPage('p2')" id="nav-p2">写真ご提供のお願い</button>
+    <button class="nav-item" onclick="scrollToPage('p3')" id="nav-p3">現調 / 成約に繋げるための施策</button>
+    <button class="nav-item" onclick="scrollToPage('p4')" id="nav-p4">CS担当者</button>
+  </div>
+</div>
+
+<!-- ══ プレビュー ══ -->
+<div class="preview" id="preview-scroll">
+<div id="pages-container">
+
+<!-- ━━━ PAGE 1 ━━━ -->
+<div class="a4-page" id="p1">
+  <div class="page-hbar">
+    <div class="phb-l"><span class="phb-brand">不用品回収の窓口</span></div>
+    <div style="text-align:right;line-height:1.6">
+      <div style="font-size:12px;font-weight:700">宛先：<strong id="p-company">（会社名・担当者名）</strong> 様</div>
+      <div style="font-size:10px;opacity:.85" id="p-date"></div>
+    </div>
+  </div>
+  <div class="page-content">
+    <table class="doc-table">
+      <colgroup><col style="width:220px"><col><col style="width:220px"><col></colgroup>
+
+      <tr class="sh"><td colspan="4">① 料金について</td></tr>
+      <tr><td class="k">契約プラン</td><td class="v" colspan="3" id="p-plan">—</td></tr>
+      <tr>
+        <td class="k" style="vertical-align:middle;white-space:nowrap">月額費用（税抜）</td>
+        <td class="v" style="vertical-align:middle"><span id="p-fee">—</span></td>
+        <td class="k" style="vertical-align:middle;white-space:nowrap">成約手数料</td>
+        <td class="v" style="vertical-align:middle"><span id="p-commission">—</span></td>
+      </tr>
+      <tr>
+        <td class="k" style="vertical-align:middle">契約期間</td>
+        <td class="v" colspan="3" style="vertical-align:middle"><span id="p-period">—</span><div style="font-size:10px;color:var(--muted);margin-top:2px">※ご契約は自動更新　※退会希望の場合、14日前に管理画面から申請が必要</div></td>
+      </tr>
+      <tr>
+        <td class="k" style="white-space:nowrap">紹介件数想定（月間）</td>
+        <td class="v" id="p-monthly">—</td>
+        <td class="k" style="white-space:nowrap">紹介件数想定（6ヶ月）</td>
+        <td class="v" id="p-half">—</td>
+      </tr>
+      <tr>
+        <td class="k">最低保証</td>
+        <td class="v" colspan="3"><span id="p-guarantee">—</span><span class="sub-note">※返金がある場合は６ヶ月後となります。</span></td>
+      </tr>
+
+
+      <tr class="sh"><td colspan="4">② 対応エリア</td></tr>
+      <tr><td colspan="4" class="v" id="p-areas" style="padding:8px 20px"><span style="font-size:11px;color:var(--muted)">エリアが未設定です</span></td></tr>
+
+
+      <tr class="sh"><td colspan="4">③ お支払いについて</td></tr>
+      <tr><td class="k">決済手段</td><td class="v" colspan="3" id="p-pay-status">—</td></tr>
+      <tr><td class="k">備考</td><td class="v" colspan="3" id="p-pay-note">—</td></tr>
+
+
+      <tr class="sh"><td colspan="4">④ 休業日について</td></tr>
+      <tr><td colspan="4" class="v note" style="padding:8px 20px">弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。<br>配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。</td></tr>
+
+
+      <tr class="sh"><td colspan="4">⑤ 除外となり得るお客様情報について</td></tr>
+      <tr><td colspan="4" class="v note" id="p-exclude-text" style="padding:8px 20px">・30日以内の、同一人物からの重複申込<br>・使用されていない電話番号<br>・別人の人（例：山田 太郎）<br>上記にあてはまるお客様情報については、お手数ですが私までご報告ください。</td></tr>
+
+
+
+
+      <tr class="sh"><td colspan="4">⑦ 顧客管理システムのログイン情報について</td></tr>
+      <tr><td class="k">ログインURL</td><td class="v" colspan="3"><a class="url-val" id="p-login-url" href="#" target="_blank">—</a></td></tr>
+      <tr><td class="k">ID</td><td class="v" id="p-login-id" colspan="3">—</td></tr>
+
+
+      <tr class="sh"><td colspan="4">⑧ ご成約報告について</td></tr>
+      <tr><td colspan="4" class="v note" style="padding:8px 20px">①お客様情報→②案件メモ下→③新規登録から報告→④お客様からの入金確認後、成約手数料のお振込をお願い致します。</td></tr>
+
+    </table>
+  </div>
+</div><!-- /p1 -->
+
+<!-- ━━━ PAGE 2 ━━━ -->
+<div class="a4-page" id="p2">
+  <div class="page-hbar">
+    <div class="phb-l"><span class="phb-brand">不用品回収の窓口</span></div>
+    <div style="text-align:right;line-height:1.6">
+      <div style="font-size:12px;font-weight:700">宛先：<strong id="p-company2">（会社名・担当者名）</strong> 様</div>
+      <div style="font-size:10px;opacity:.85" id="p-date2"></div>
+    </div>
+  </div>
+  <div class="page-content"><div style="max-width:760px;margin:0;font-size:11.5px;color:var(--label);line-height:1.9;padding:0 8px">
+
+    <div style="font-size:20px;font-weight:700;color:var(--text);margin-top:40px;margin-bottom:18px">現場・会社の写真ご提供のお願い</div>
+
+    <div style="line-height:1.4">
+      <div style="margin-bottom:12px">
+    </div>
+
+    <div style="margin-top:32px;margin-bottom:12px">
+      <span style="display:inline-block;background:#e8e6f3;color:var(--main);font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:4px">実際に写真の掲載をお願いしている理由</span><br>
+      ・実際に成約率やアポ率が高くなるというデータが出ている<br>
+      ・施工の丁寧さや雰囲気が伝わりやすく満足度が上がる<br>
+      ・結果的に利益が伸びる
+    </div>
+
+    <div style="margin-bottom:12px">
+      スマホ撮影の写真でも問題ありませんので、<br>
+      下記フォームより2〜5枚ほどご提供をお願いいたします。
+    </div>
+
+    <div style="margin-bottom:24px">
+      ▼写真アップロードフォーム<br>
+      <a class="url-val" id="p-photo-url" href="#" target="_blank">（URL未設定）</a>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <strong>【おすすめの写真例】</strong><br>
+      ・施工中の様子（職人さんの手元や後ろ姿など）<br>
+      ・会社外観や社内の様子<br>
+      ・スタッフ集合写真、看板、車両など<br>
+      <div style="display:flex;gap:8px;margin-top:10px;margin-bottom:8px">
+        <img src="images/gaiheki/photo1.jpg" alt="施工写真1" style="flex:1;min-width:0;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:#e8e8e8" onerror="this.style.background='#e8e8e8';this.style.display='block';this.removeAttribute('src')">
+        <img src="images/gaiheki/photo2.jpg" alt="施工写真2" style="flex:1;min-width:0;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:#e8e8e8" onerror="this.style.background='#e8e8e8';this.style.display='block';this.removeAttribute('src')">
+        <img src="images/gaiheki/photo3.jpg" alt="施工写真3" style="flex:1;min-width:0;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:#e8e8e8" onerror="this.style.background='#e8e8e8';this.style.display='block';this.removeAttribute('src')">
+      </div>
+      <span style="color:var(--muted)">※お送りいただいた素材は掲載前に確認のうえ、内容に問題のない範囲で使用いたします。</span>
+    </div>
+
+    <div style="margin-bottom:12px">
+      お手数おかけしてしまいますが、<br>
+      ご協力のほど、どうぞよろしくお願いいたします。
+    </div>
+
+    <div style="margin-bottom:48px">
+      ▼加盟店様の紹介ページ<br>
+      <a class="url-val" id="p-store-url" href="#" target="_blank">（URL未設定）</a>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <strong>【管理画面へ追加で欲しい機能について】</strong><br>
+      普段、使っている機能や管理システム等が弊社管理画面にもあれば便利なのに！！<br>
+      のようなことがあればお願い致します！
+    </div>
+
+  </div></div>
+</div><!-- /page-content -->
+</div><!-- /p2 -->
+<!-- ━━━ PAGE 3 ━━━ -->
+<div class="a4-page" id="p3">
+  <div class="page-hbar">
+    <div class="phb-l"><span class="phb-brand">不用品回収の窓口</span></div>
+    <div style="text-align:right;line-height:1.6">
+      <div style="font-size:12px;font-weight:700">宛先：<strong id="p-company3">（会社名・担当者名）</strong> 様</div>
+      <div style="font-size:10px;opacity:.85" id="p-date3"></div>
+    </div>
+  </div>
+  <div class="page-content"><div style="max-width:760px;margin:0;font-size:11.5px;color:var(--label);line-height:1.9;padding:0 8px">
+
+    <div style="font-size:20px;font-weight:700;color:var(--text);margin-top:40px;margin-bottom:8px">＜現調 / 成約に繋げるための施策＞</div>
+
+    <div style="margin-top:8px;margin-bottom:12px">
+      <span style="display:inline-block;background:#e8e6f3;color:var(--main);font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:4px">【ローンについて】</span><br>
+      <strong>エンドユーザー様向けローン</strong>を導入することとなりました。<br>
+      外壁・屋根工事は高額になりやすく、<br>
+      「金額で迷われる」「今は難しいと言われる」<br>
+      といった理由で失注してしまうケースも少なくありません。
+    </div>
+
+    <div style="margin-bottom:12px">
+      ローンが利用可能になることで、<br>
+      ・月々払いでのご提案が可能<br>
+      ・予算で迷われているお客様の後押し<br>
+      ・ワンランク上の工事提案がしやすくなる<br>
+      → 結果として成約率向上が期待できます。
+    </div>
+
+    <div style="margin-bottom:12px">
+      <strong>【加盟店様の費用負担・手数料負担はございません。】</strong><br>
+      <span style="color:var(--muted)">※お客様にも所定の審査がございます。</span>
+    </div>
+
+    <div style="margin-bottom:4px">
+      導入をご希望の加盟店様は、<br>
+      下記資料をお目通しいただけますと幸いです。
+    </div>
+
+    <div style="margin-bottom:4px">
+      <div style="font-weight:600;margin-bottom:2px">【媒体資料】</div>
+      <a href="https://drive.google.com/file/d/1eYcxVHQ9Bdwpe0sgHwFJ5QHvQeRa-9oX/view?usp=sharing" target="_blank" style="display:inline-flex;align-items:center;gap:5px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:1px 6px;line-height:1.4;text-decoration:none;color:var(--text);font-size:13px;transition:background .12s" onmouseover="this.style.background='#e8eaed'" onmouseout="this.style.background='#f1f3f4'">📄 【madoguchi様】業務協定契約のご提案_Ver2.0_20251201 (1) (1).pdf</a>
+    </div>
+
+    <div style="margin-bottom:24px">
+      <div style="font-weight:600;margin-bottom:2px">【お申込書】</div>
+      <a href="https://drive.google.com/file/d/1YWvqYl0y2YJdtkg9s-9Umu8nKb_xF_c8/view?usp=sharing" target="_blank" style="display:inline-flex;align-items:center;gap:5px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:1px 6px;line-height:1.4;text-decoration:none;color:var(--text);font-size:13px;transition:background .12s" onmouseover="this.style.background='#e8eaed'" onmouseout="this.style.background='#f1f3f4'">📄 【アプラス】加盟店契約希望申出書.pdf</a>
+    </div>
+
+    <div style="margin-top:24px;margin-bottom:12px">
+      <span style="display:inline-block;background:#e8e6f3;color:var(--main);font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:8px">【下記、弊社からお支払いをさせて頂きます！】</span><br>
+      <strong>アマギフ1000円　現地調査完了＆お見積書提示</strong><br>
+      <a class="url-val" href="https://docs.google.com/forms/d/e/1FAIpQLSfRrZcyFszZbp4Qrb_HJ2NTVMfgzRu-NoAT2buCPvu8tWBvmQ/viewform?usp=dialog" target="_blank">https://docs.google.com/forms/d/e/1FAIpQLSfRrZcyFszZbp4Qrb_HJ2NTVMfgzRu-NoAT2buCPvu8tWBvmQ/viewform?usp=dialog</a>
+    </div>
+
+    <div style="margin-bottom:24px">
+      <strong>作業金額の1%のアマギフ　作業完了後</strong><br>
+      <a class="url-val" href="https://docs.google.com/forms/d/e/1FAIpQLSc6mL6HfKFGRqIBVfyBSCxbvmeMIZL9Jn6HeThZyb0G_nHV4w/viewform?usp=di" target="_blank">https://docs.google.com/forms/d/e/1FAIpQLSc6mL6HfKFGRqIBVfyBSCxbvmeMIZL9Jn6HeThZyb0G_nHV4w/viewform?usp=di</a>
+    </div>
+
+    <div style="margin-bottom:12px">
+      <strong>＜使い方＞</strong><br>
+      現地調査完了でAmazonギフト1000円分、作業完了でさらに金額の1％分のAmazonギフトをプレゼントさせていただきます。<br>
+      これを営業トークのフックとして使っていただくことが可能なので、まずは現地見積もりにつなげるために「Amazonギフト券」をフックにして、現地見積もりのアポイントを打診してみてください。<br>
+      なお、Amazonギフト自体は弊社から直接お客様にお送りする形となります。
+    </div>
+
+  </div></div>
+</div><!-- /p3 -->
+
+<!-- ━━━ PAGE 4 ━━━ -->
+<div class="a4-page" id="p4">
+  <div class="page-hbar">
+    <div class="phb-l"><span class="phb-brand">不用品回収の窓口</span></div>
+    <div style="text-align:right;line-height:1.6">
+      <div style="font-size:12px;font-weight:700">宛先：<strong id="p-company4">（会社名・担当者名）</strong> 様</div>
+      <div style="font-size:10px;opacity:.85" id="p-date4"></div>
+    </div>
+  </div>
+  <div class="page-content" id="p4-content">
+    <div style="text-align:center;color:var(--muted);padding:60px 0;font-size:13px">CS担当者情報が設定されていません</div>
+  </div>
+</div><!-- /p4 -->
+
+
+</div><!-- /#pages-container -->
+</div><!-- /.preview -->
+
+<!-- ══ 右フォーム ══ -->
+<div class="form-pane">
+  <div class="form-header">
+    <div class="fh-title">フォーム入力</div>
+    <div class="fh-sub">入力内容がリアルタイムで資料に反映されます</div>
+  </div>
+  <div class="form-scroll">
+
+    <div id="fp1">
+      <div class="f-sec">ガイダンスステータス</div>
+      <div class="field">
+        <div class="radio-group">
+          <label class="radio-option"><input type="radio" name="guidance_status" id="status_pending" value="未実施" checked> 未実施</label>
+          <label class="radio-option"><input type="radio" name="guidance_status" id="status_done" value="実施済み"> 実施済み</label>
+        </div>
+      </div>
+      <div class="field">
+        <label>発行日</label>
+        <input type="date" id="issue_date" oninput="render()">
+      </div>
+      <div class="f-sec">担当者</div>
+      <div class="field">
+        <label>営業担当者<span class="req">*</span></label>
+        <select id="assignee" onchange="render()">
+          <option value="">選択してください</option>
+          <option value="恩田雅史">恩田雅史</option>
+          <option value="鈴木宏午">鈴木宏午</option>
+          <option value="皆川進太">皆川進太</option>
+          <option value="中村元彌">中村元彌</option>
+          <option value="松本そよ">松本そよ</option>
+          <option value="穴澤萌花">穴澤萌花</option>
+          <option value="亀井翼">亀井翼</option>
+          <option value="染葉健介">染葉健介</option>
+          <option value="杉本山東">杉本山東</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>CS担当者</label>
+        <select id="cs_assignee" onchange="render()">
+          <option value="">選択してください</option>
+          <option value="飯塚来己">飯塚来己</option>
+          <option value="留木涼花">留木涼花</option>
+          <option value="手光菜津美">手光菜津美</option>
+        </select>
+      </div>
+      <div class="f-sec">業者情報</div>
+      <div class="field">
+        <label>会社名<span style="color:var(--accent);margin-left:2px">*</span></label>
+        <input type="text" id="company" placeholder="例：株式会社〇〇塗装" oninput="render()" required>
+      </div>
+      <div class="field">
+        <label>担当者名</label>
+        <input type="text" id="contact_name" placeholder="例：山田太郎" oninput="render()">
+      </div>
+      <div class="f-sec">契約プラン</div>
+      <div class="field">
+        <label>プラン</label>
+        <select id="plan" onchange="updatePlanDefaults();render()">
+          <option value="light">ライト</option>
+          <option value="basic" selected>ベーシック</option>
+          <option value="pro">プロ</option>
+        </select>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>月額費用（税抜）</label>
+          <input type="text" id="monthly_fee" placeholder="例：7万円" oninput="render()">
+        </div>
+        <div class="field">
+          <label>成約手数料</label>
+          <input type="text" id="commission" placeholder="5%" oninput="render()">
+        </div>
+      </div>
+      <div class="field">
+        <label>最低保証</label>
+        <input type="text" id="guarantee" placeholder="25件" oninput="render()">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label>月間紹介件数（想定）</label>
+          <input type="text" id="monthly_est" placeholder="5〜8件" oninput="render()">
+        </div>
+        <div class="field">
+          <label>6ヶ月紹介件数</label>
+          <input type="text" id="half_est" placeholder="40〜55件" oninput="render()">
+        </div>
+      </div>
+      <div class="f-sec">対応エリア</div>
+      <div class="area-select-row">
+        <select id="area-region" onchange="areaOnRegion()">
+          <option value="">地方を選択</option>
+          <option>北海道</option><option>東北</option><option>関東</option>
+          <option>中部</option><option>近畿</option><option>中国</option>
+          <option>四国</option><option>九州・沖縄</option>
+        </select>
+        <select id="area-pref" onchange="areaOnPref()" disabled><option value="">都道府県</option></select>
+      </div>
+      <input type="text" id="area-search" placeholder="市区町村を検索…" oninput="areaFilterCities()" style="display:none;width:100%;padding:4px 8px;border:1px solid var(--border);border-radius:4px;font-size:11px;font-family:inherit;margin-bottom:4px;box-sizing:border-box">
+      <div class="area-city-list" id="area-city-list" style="display:none"></div>
+      <div class="area-tags" id="area-tags"></div>
+      <div class="area-summary" id="area-summary" style="display:none"></div>
+      <div class="f-sec">お支払い</div>
+      <div class="field">
+        <label>決済手段</label>
+        <select id="payment_status" onchange="updatePaymentNoteOptions();render()">
+          <option value="">選択してください</option>
+          <option value="クレジットカード">クレジットカード</option>
+          <option value="口座振替">口座振替</option>
+          <option value="振り込み">振り込み</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>備考</label>
+        <select id="payment_note" onchange="render()"></select>
+      </div>
+      <div class="f-sec">顧客管理システム</div>
+      <div class="field">
+        <label>ID</label>
+        <input type="text" id="login_id" placeholder="メールアドレス等" oninput="render()">
+      </div>
+
+    </div>
+
+
+
+  </div><!-- /form-scroll -->
+  <div class="form-actions">
+    <button class="btn-pdf" onclick="printDoc()">🖨️ PDF</button>
+    <button class="btn-save" onclick="saveCase()">保存して一覧へ</button>
+  </div>
+</div>
+
+</div><!-- /.app -->
+
+<script>
+let areas = []; // [{pref,city,points,min,max}]
+const AREA_DATA = [
+  {region:"北海道",pref:"北海道",city:"函館市",points:2.0,min:16,max:20},
+  {region:"北海道",pref:"北海道",city:"旭川市",points:2.0,min:16,max:20},
+  {region:"北海道",pref:"北海道",city:"札幌市北区",points:2.0,min:16,max:20},
+  {region:"北海道",pref:"北海道",city:"札幌市南区",points:2.0,min:16,max:20},
+  {region:"北海道",pref:"北海道",city:"札幌市手稲区",points:2.0,min:16,max:20},
+  {region:"北海道",pref:"北海道",city:"札幌市東区",points:2.0,min:16,max:20},
+  {region:"北海道",pref:"北海道",city:"札幌市清田区",points:2.0,min:16,max:20},
+  {region:"北海道",pref:"北海道",city:"苫小牧市",points:2.0,min:16,max:20},
+  {region:"北海道",pref:"北海道",city:"勇払郡",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"北広島市",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"千歳市",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"小樽市",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"帯広市",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"恵庭市",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"札幌市中央区",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"札幌市厚別区",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"札幌市白石区",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"札幌市西区",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"札幌市豊平区",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"江別市",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"滝川市",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"石狩市",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"釧路市",points:1.0,min:8,max:10},
+  {region:"北海道",pref:"北海道",city:"上川郡",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"中川郡",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"余市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"北斗市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"北見市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"名寄市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"士別市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"夕張市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"室蘭市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"富良野市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"岩見沢市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"根室市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"深川市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"留萌市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"登別市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"石狩郡",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"網走市",points:0.5,min:0,max:8},
+  {region:"北海道",pref:"北海道",city:"芦別市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"岩手県",city:"盛岡市",points:3.0,min:24,max:30},
+  {region:"東北",pref:"秋田県",city:"秋田市",points:3.0,min:24,max:30},
+  {region:"東北",pref:"宮城県",city:"仙台市泉区",points:2.0,min:16,max:20},
+  {region:"東北",pref:"宮城県",city:"仙台市青葉区",points:2.0,min:16,max:20},
+  {region:"東北",pref:"山形県",city:"山形市",points:2.0,min:16,max:20},
+  {region:"東北",pref:"山形県",city:"鶴岡市",points:2.0,min:16,max:20},
+  {region:"東北",pref:"岩手県",city:"北上市",points:2.0,min:16,max:20},
+  {region:"東北",pref:"福島県",city:"いわき市",points:2.0,min:16,max:20},
+  {region:"東北",pref:"福島県",city:"福島市",points:2.0,min:16,max:20},
+  {region:"東北",pref:"福島県",city:"郡山市",points:2.0,min:16,max:20},
+  {region:"東北",pref:"青森県",city:"弘前市",points:2.0,min:16,max:20},
+  {region:"東北",pref:"青森県",city:"青森市",points:2.0,min:16,max:20},
+  {region:"東北",pref:"宮城県",city:"仙台市太白区",points:1.0,min:8,max:10},
+  {region:"東北",pref:"宮城県",city:"仙台市宮城野区",points:1.0,min:8,max:10},
+  {region:"東北",pref:"宮城県",city:"仙台市若林区",points:1.0,min:8,max:10},
+  {region:"東北",pref:"宮城県",city:"名取市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"宮城県",city:"塩竈市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"宮城県",city:"大崎市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"宮城県",city:"宮城郡",points:1.0,min:8,max:10},
+  {region:"東北",pref:"宮城県",city:"栗原市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"宮城県",city:"気仙沼市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"宮城県",city:"登米市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"宮城県",city:"石巻市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"山形県",city:"南陽市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"山形県",city:"酒田市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"岩手県",city:"一関市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"岩手県",city:"大船渡市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"岩手県",city:"奥州市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"岩手県",city:"岩手郡",points:1.0,min:8,max:10},
+  {region:"東北",pref:"岩手県",city:"紫波郡",points:1.0,min:8,max:10},
+  {region:"東北",pref:"岩手県",city:"花巻市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"福島県",city:"伊達市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"福島県",city:"会津若松市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"福島県",city:"喜多方市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"福島県",city:"白河市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"福島県",city:"須賀川市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"秋田県",city:"大仙市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"秋田県",city:"大館市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"秋田県",city:"湯沢市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"秋田県",city:"潟上市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"青森県",city:"三沢市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"青森県",city:"上北郡",points:1.0,min:8,max:10},
+  {region:"東北",pref:"青森県",city:"八戸市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"青森県",city:"黒石市",points:1.0,min:8,max:10},
+  {region:"東北",pref:"宮城県",city:"富谷市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"宮城県",city:"岩沼市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"宮城県",city:"東松島市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"宮城県",city:"白石市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"宮城県",city:"角田市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"山形県",city:"上山市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"山形県",city:"天童市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"山形県",city:"新庄市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"山形県",city:"東田川郡",points:0.5,min:0,max:8},
+  {region:"東北",pref:"山形県",city:"米沢市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"山形県",city:"長井市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"岩手県",city:"二戸市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"岩手県",city:"八幡平市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"岩手県",city:"宮古市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"岩手県",city:"滝沢市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"岩手県",city:"遠野市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"岩手県",city:"釜石市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"福島県",city:"二本松市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"福島県",city:"南相馬市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"福島県",city:"本宮市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"福島県",city:"田村市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"福島県",city:"相馬市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"福島県",city:"西白河郡",points:0.5,min:0,max:8},
+  {region:"東北",pref:"秋田県",city:"北秋田市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"秋田県",city:"横手市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"秋田県",city:"由利本荘市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"秋田県",city:"能代市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"青森県",city:"むつ市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"青森県",city:"五所川原市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"青森県",city:"十和田市",points:0.5,min:0,max:8},
+  {region:"東北",pref:"青森県",city:"平川市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"栃木県",city:"宇都宮市",points:6.0,min:48,max:60},
+  {region:"関東",pref:"千葉県",city:"船橋市",points:4.0,min:32,max:40},
+  {region:"関東",pref:"東京都",city:"世田谷区",points:4.0,min:32,max:40},
+  {region:"関東",pref:"東京都",city:"八王子市",points:4.0,min:32,max:40},
+  {region:"関東",pref:"東京都",city:"大田区",points:4.0,min:32,max:40},
+  {region:"関東",pref:"東京都",city:"練馬区",points:4.0,min:32,max:40},
+  {region:"関東",pref:"神奈川県",city:"横須賀市",points:4.0,min:32,max:40},
+  {region:"関東",pref:"千葉県",city:"松戸市",points:3.0,min:24,max:30},
+  {region:"関東",pref:"千葉県",city:"柏市",points:3.0,min:24,max:30},
+  {region:"関東",pref:"埼玉県",city:"川口市",points:3.0,min:24,max:30},
+  {region:"関東",pref:"埼玉県",city:"川越市",points:3.0,min:24,max:30},
+  {region:"関東",pref:"埼玉県",city:"越谷市",points:3.0,min:24,max:30},
+  {region:"関東",pref:"東京都",city:"板橋区",points:3.0,min:24,max:30},
+  {region:"関東",pref:"東京都",city:"町田市",points:3.0,min:24,max:30},
+  {region:"関東",pref:"東京都",city:"足立区",points:3.0,min:24,max:30},
+  {region:"関東",pref:"神奈川県",city:"平塚市",points:3.0,min:24,max:30},
+  {region:"関東",pref:"神奈川県",city:"藤沢市",points:3.0,min:24,max:30},
+  {region:"関東",pref:"群馬県",city:"前橋市",points:3.0,min:24,max:30},
+  {region:"関東",pref:"群馬県",city:"高崎市",points:3.0,min:24,max:30},
+  {region:"関東",pref:"千葉県",city:"佐倉市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"千葉県",city:"八千代市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"千葉県",city:"千葉市中央区",points:2.0,min:16,max:20},
+  {region:"関東",pref:"千葉県",city:"市原市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"千葉県",city:"市川市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"千葉県",city:"我孫子市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"千葉県",city:"野田市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"埼玉県",city:"上尾市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"埼玉県",city:"久喜市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"埼玉県",city:"所沢市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"埼玉県",city:"春日部市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"埼玉県",city:"熊谷市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"埼玉県",city:"草加市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"東京都",city:"中野区",points:2.0,min:16,max:20},
+  {region:"関東",pref:"東京都",city:"小平市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"東京都",city:"府中市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"東京都",city:"杉並区",points:2.0,min:16,max:20},
+  {region:"関東",pref:"東京都",city:"江戸川区",points:2.0,min:16,max:20},
+  {region:"関東",pref:"東京都",city:"目黒区",points:2.0,min:16,max:20},
+  {region:"関東",pref:"東京都",city:"葛飾区",points:2.0,min:16,max:20},
+  {region:"関東",pref:"東京都",city:"西多摩郡",points:2.0,min:16,max:20},
+  {region:"関東",pref:"栃木県",city:"栃木市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"栃木県",city:"足利市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"神奈川県",city:"小田原市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"神奈川県",city:"横浜市南区",points:2.0,min:16,max:20},
+  {region:"関東",pref:"神奈川県",city:"横浜市旭区",points:2.0,min:16,max:20},
+  {region:"関東",pref:"神奈川県",city:"横浜市港北区",points:2.0,min:16,max:20},
+  {region:"関東",pref:"神奈川県",city:"相模原市中央区",points:2.0,min:16,max:20},
+  {region:"関東",pref:"神奈川県",city:"相模原市南区",points:2.0,min:16,max:20},
+  {region:"関東",pref:"神奈川県",city:"茅ヶ崎市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"神奈川県",city:"鎌倉市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"群馬県",city:"伊勢崎市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"群馬県",city:"太田市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"茨城県",city:"つくば市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"茨城県",city:"ひたちなか市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"茨城県",city:"日立市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"茨城県",city:"水戸市",points:2.0,min:16,max:20},
+  {region:"関東",pref:"茨城県",city:"稲敷郡",points:2.0,min:16,max:20},
+  {region:"関東",pref:"千葉県",city:"いすみ市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"八街市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"千葉市緑区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"千葉市花見川区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"千葉市若葉区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"印旛郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"印西市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"君津市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"四街道市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"大網白里市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"富津市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"富里市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"山武市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"山武郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"成田市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"旭市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"木更津市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"東金市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"流山市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"白井市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"習志野市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"茂原市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"袖ケ浦市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"銚子市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"鎌ケ谷市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"香取市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"香取郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"鴨川市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"さいたま市北区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"さいたま市南区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"さいたま市大宮区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"さいたま市岩槻区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"さいたま市桜区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"さいたま市浦和区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"さいたま市西区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"さいたま市見沼区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"三郷市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"児玉郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"入間市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"入間郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"北葛飾郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"吉川市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"坂戸市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"幸手市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"戸田市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"日高市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"朝霞市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"本庄市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"東松山市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"桶川市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"比企郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"深谷市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"狭山市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"蓮田市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"飯能市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"鴻巣市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"埼玉県",city:"鶴ヶ島市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"三鷹市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"北区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"品川区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"国分寺市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"国立市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"墨田区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"小金井市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"文京区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"新宿区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"日野市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"昭島市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"東久留米市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"東大和市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"東村山市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"武蔵村山市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"武蔵野市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"江東区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"清瀬市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"渋谷区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"港区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"狛江市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"稲城市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"立川市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"荒川区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"西東京市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"調布市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"豊島区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"東京都",city:"青梅市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"栃木県",city:"さくら市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"栃木県",city:"下都賀郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"栃木県",city:"佐野市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"栃木県",city:"大田原市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"栃木県",city:"小山市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"栃木県",city:"日光市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"栃木県",city:"真岡市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"栃木県",city:"芳賀郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"栃木県",city:"那須塩原市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"栃木県",city:"那須郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"栃木県",city:"鹿沼市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"三浦市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"三浦郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"中郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"厚木市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"大和市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"川崎市中原区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"川崎市多摩区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"川崎市宮前区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"川崎市川崎区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"川崎市幸区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"川崎市高津区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"川崎市麻生区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"座間市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"愛甲郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市中区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市保土ケ谷区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市戸塚区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市栄区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市泉区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市港南区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市瀬谷区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市磯子区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市神奈川区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市緑区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市都筑区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市金沢区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市青葉区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"横浜市鶴見区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"海老名市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"相模原市緑区",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"秦野市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"綾瀬市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"足柄上郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"逗子市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"神奈川県",city:"高座郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"群馬県",city:"佐波郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"群馬県",city:"北群馬郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"群馬県",city:"吾妻郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"群馬県",city:"安中市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"群馬県",city:"富岡市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"群馬県",city:"桐生市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"群馬県",city:"沼田市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"群馬県",city:"渋川市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"群馬県",city:"邑楽郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"かすみがうら市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"下妻市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"北茨城市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"取手市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"古河市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"土浦市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"坂東市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"守谷市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"常総市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"東茨城郡",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"桜川市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"潮来市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"牛久市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"神栖市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"稲敷市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"笠間市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"筑西市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"結城市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"那珂市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"鉾田市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"鹿嶋市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"茨城県",city:"龍ケ崎市",points:1.0,min:8,max:10},
+  {region:"関東",pref:"千葉県",city:"勝浦市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"千葉県",city:"匝瑳市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"千葉県",city:"千葉市稲毛区",points:0.5,min:0,max:8},
+  {region:"関東",pref:"千葉県",city:"千葉市美浜区",points:0.5,min:0,max:8},
+  {region:"関東",pref:"千葉県",city:"南房総市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"千葉県",city:"浦安市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"千葉県",city:"長生郡",points:0.5,min:0,max:8},
+  {region:"関東",pref:"千葉県",city:"館山市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"さいたま市中央区",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"さいたま市緑区",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"ふじみ野市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"八潮市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"加須市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"北本市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"和光市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"富士見市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"志木市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"新座市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"白岡市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"秩父市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"秩父郡",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"羽生市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"蕨市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"埼玉県",city:"行田市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"東京都",city:"あきる野市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"東京都",city:"中央区",points:0.5,min:0,max:8},
+  {region:"関東",pref:"東京都",city:"千代田区",points:0.5,min:0,max:8},
+  {region:"関東",pref:"東京都",city:"台東区",points:0.5,min:0,max:8},
+  {region:"関東",pref:"東京都",city:"多摩市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"東京都",city:"福生市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"東京都",city:"羽村市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"栃木県",city:"下野市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"栃木県",city:"矢板市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"栃木県",city:"那須烏山市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"神奈川県",city:"伊勢原市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"神奈川県",city:"南足柄市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"神奈川県",city:"横浜市西区",points:0.5,min:0,max:8},
+  {region:"関東",pref:"群馬県",city:"みどり市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"群馬県",city:"藤岡市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"群馬県",city:"館林市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"茨城県",city:"つくばみらい市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"茨城県",city:"小美玉市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"茨城県",city:"常陸大宮市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"茨城県",city:"常陸太田市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"茨城県",city:"石岡市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"茨城県",city:"行方市",points:0.5,min:0,max:8},
+  {region:"関東",pref:"茨城県",city:"那珂郡",points:0.5,min:0,max:8},
+  {region:"関東",pref:"茨城県",city:"高萩市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"岐阜県",city:"岐阜市",points:4.0,min:32,max:40},
+  {region:"中部",pref:"愛知県",city:"一宮市",points:3.0,min:24,max:30},
+  {region:"中部",pref:"静岡県",city:"静岡市清水区",points:3.0,min:24,max:30},
+  {region:"中部",pref:"岐阜県",city:"各務原市",points:2.0,min:16,max:20},
+  {region:"中部",pref:"岐阜県",city:"大垣市",points:2.0,min:16,max:20},
+  {region:"中部",pref:"岐阜県",city:"郡上市",points:2.0,min:16,max:20},
+  {region:"中部",pref:"愛知県",city:"名古屋市緑区",points:2.0,min:16,max:20},
+  {region:"中部",pref:"愛知県",city:"岡崎市",points:2.0,min:16,max:20},
+  {region:"中部",pref:"愛知県",city:"豊川市",points:2.0,min:16,max:20},
+  {region:"中部",pref:"愛知県",city:"豊橋市",points:2.0,min:16,max:20},
+  {region:"中部",pref:"愛知県",city:"豊田市",points:2.0,min:16,max:20},
+  {region:"中部",pref:"新潟県",city:"新潟市西蒲区",points:2.0,min:16,max:20},
+  {region:"中部",pref:"福井県",city:"福井市",points:2.0,min:16,max:20},
+  {region:"中部",pref:"長野県",city:"松本市",points:2.0,min:16,max:20},
+  {region:"中部",pref:"静岡県",city:"浜松市中央区",points:2.0,min:16,max:20},
+  {region:"中部",pref:"富山県",city:"富山市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"富山県",city:"高岡市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"山梨県",city:"北杜市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"山梨県",city:"南アルプス市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"山梨県",city:"南都留郡",points:1.0,min:8,max:10},
+  {region:"中部",pref:"山梨県",city:"富士吉田市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"山梨県",city:"甲府市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"山梨県",city:"甲斐市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"山梨県",city:"韮崎市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"岐阜県",city:"可児市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"岐阜県",city:"多治見市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"岐阜県",city:"揖斐郡",points:1.0,min:8,max:10},
+  {region:"中部",pref:"岐阜県",city:"羽島市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"岐阜県",city:"高山市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"あま市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"丹羽郡",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"刈谷市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"半田市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"名古屋市中川区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"名古屋市中村区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"名古屋市千種区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"名古屋市南区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"名古屋市名東区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"名古屋市守山区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"名古屋市昭和区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"名古屋市港区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"名古屋市西区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"大府市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"安城市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"小牧市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"尾張旭市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"愛知郡",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"愛西市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"春日井市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"東海市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"江南市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"海部郡",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"瀬戸市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"知多市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"知多郡",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"碧南市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"稲沢市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"蒲郡市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"西尾市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"愛知県",city:"豊明市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"新潟県",city:"上越市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"新潟県",city:"南魚沼市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"新潟県",city:"新潟市中央区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"新潟県",city:"新潟市東区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"新潟県",city:"新潟市秋葉区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"新潟県",city:"新潟市西区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"新潟県",city:"新発田市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"新潟県",city:"燕市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"新潟県",city:"長岡市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"石川県",city:"七尾市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"石川県",city:"金沢市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"福井県",city:"越前市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"長野県",city:"上田市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"長野県",city:"中野市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"長野県",city:"佐久市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"長野県",city:"北佐久郡",points:1.0,min:8,max:10},
+  {region:"中部",pref:"長野県",city:"千曲市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"長野県",city:"塩尻市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"長野県",city:"安曇野市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"長野県",city:"岡谷市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"長野県",city:"茅野市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"長野県",city:"諏訪郡",points:1.0,min:8,max:10},
+  {region:"中部",pref:"長野県",city:"長野市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"三島市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"伊東市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"伊豆の国市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"伊豆市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"富士宮市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"富士市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"島田市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"御殿場市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"掛川市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"沼津市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"浜松市浜名区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"湖西市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"焼津市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"磐田市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"藤枝市",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"静岡市葵区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"静岡市駿河区",points:1.0,min:8,max:10},
+  {region:"中部",pref:"静岡県",city:"駿東郡",points:1.0,min:8,max:10},
+  {region:"中部",pref:"富山県",city:"南砺市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"富山県",city:"射水市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"富山県",city:"氷見市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"富山県",city:"魚津市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"山梨県",city:"上野原市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"山梨県",city:"大月市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"山梨県",city:"甲州市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"山梨県",city:"笛吹市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"岐阜県",city:"下呂市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"岐阜県",city:"中津川市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"岐阜県",city:"土岐市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"岐阜県",city:"恵那市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"岐阜県",city:"関市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"岐阜県",city:"飛騨市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"みよし市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"北名古屋市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"名古屋市中区",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"名古屋市北区",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"名古屋市天白区",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"名古屋市熱田区",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"名古屋市瑞穂区",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"岩倉市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"常滑市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"弥富市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"日進市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"津島市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"清須市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"犬山市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"田原市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"愛知県",city:"長久手市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"新潟県",city:"三条市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"新潟県",city:"佐渡市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"新潟県",city:"十日町市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"新潟県",city:"新潟市北区",points:0.5,min:0,max:8},
+  {region:"中部",pref:"新潟県",city:"新潟市南区",points:0.5,min:0,max:8},
+  {region:"中部",pref:"新潟県",city:"村上市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"新潟県",city:"柏崎市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"石川県",city:"加賀市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"石川県",city:"白山市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"石川県",city:"能美市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"石川県",city:"輪島市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"福井県",city:"勝山市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"福井県",city:"敦賀市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"福井県",city:"鯖江市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"長野県",city:"伊那市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"長野県",city:"大町市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"長野県",city:"小諸市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"長野県",city:"諏訪市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"長野県",city:"須坂市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"長野県",city:"飯田市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"長野県",city:"駒ヶ根市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"静岡県",city:"御前崎市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"静岡県",city:"熱海市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"静岡県",city:"牧之原市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"静岡県",city:"菊川市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"静岡県",city:"袋井市",points:0.5,min:0,max:8},
+  {region:"中部",pref:"静岡県",city:"裾野市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"東大阪市",points:4.0,min:32,max:40},
+  {region:"近畿",pref:"兵庫県",city:"神戸市北区",points:3.0,min:24,max:30},
+  {region:"近畿",pref:"大阪府",city:"枚方市",points:3.0,min:24,max:30},
+  {region:"近畿",pref:"三重県",city:"三重郡",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"三重県",city:"松阪市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"三重県",city:"津市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"京都府",city:"京都市伏見区",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"京都府",city:"京都市左京区",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"兵庫県",city:"加古川市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"兵庫県",city:"姫路市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"兵庫県",city:"尼崎市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"兵庫県",city:"川西市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"兵庫県",city:"明石市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"兵庫県",city:"西宮市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"和歌山県",city:"和歌山市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"大阪府",city:"八尾市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"大阪府",city:"堺市東区",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"大阪府",city:"堺市西区",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"大阪府",city:"大阪市平野区",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"大阪府",city:"富田林市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"大阪府",city:"寝屋川市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"大阪府",city:"松原市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"大阪府",city:"豊中市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"大阪府",city:"高槻市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"奈良県",city:"奈良市",points:2.0,min:16,max:20},
+  {region:"近畿",pref:"三重県",city:"伊勢市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"三重県",city:"伊賀市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"三重県",city:"南牟婁郡",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"三重県",city:"名張市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"三重県",city:"四日市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"三重県",city:"多気郡",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"三重県",city:"桑名市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"三重県",city:"鈴鹿市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"亀岡市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"京丹後市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"京田辺市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"京都市下京区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"京都市中京区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"京都市北区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"京都市南区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"京都市右京区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"京都市山科区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"京都市西京区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"宇治市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"相楽郡",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"舞鶴市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"京都府",city:"長岡京市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"三木市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"三田市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"丹波市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"伊丹市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"加西市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"宝塚市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"小野市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"洲本市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"淡路市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"神戸市兵庫区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"神戸市垂水区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"神戸市灘区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"神戸市西区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"神戸市長田区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"神戸市須磨区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"兵庫県",city:"芦屋市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"和歌山県",city:"日高郡",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"和歌山県",city:"紀の川市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"南河内郡",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"吹田市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"和泉市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"堺市中区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"堺市北区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"堺市南区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"堺市堺区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"堺市美原区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大東市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市住之江区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市住吉区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市城東区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市大正区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市天王寺区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市東住吉区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市東成区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市東淀川区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市淀川区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市生野区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市西成区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市西淀川区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市都島区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪市阿倍野区",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"大阪狭山市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"守口市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"岸和田市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"摂津市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"柏原市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"池田市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"河内長野市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"泉佐野市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"泉南市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"泉南郡",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"箕面市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"羽曳野市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"茨木市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"貝塚市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"門真市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"阪南市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"大阪府",city:"高石市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"奈良県",city:"北葛城郡",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"奈良県",city:"山辺郡",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"奈良県",city:"桜井市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"奈良県",city:"橿原市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"奈良県",city:"生駒市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"奈良県",city:"磯城郡",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"滋賀県",city:"大津市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"滋賀県",city:"彦根市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"滋賀県",city:"東近江市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"滋賀県",city:"甲賀市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"滋賀県",city:"米原市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"滋賀県",city:"草津市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"滋賀県",city:"近江八幡市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"滋賀県",city:"高島市",points:1.0,min:8,max:10},
+  {region:"近畿",pref:"三重県",city:"いなべ市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"三重県",city:"亀山市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"三重県",city:"北牟婁郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"三重県",city:"員弁郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"三重県",city:"度会郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"三重県",city:"志摩市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"三重県",city:"桑名郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"三重県",city:"熊野市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"三重県",city:"鳥羽市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"与謝郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"久世郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"京都市上京区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"京都市東山区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"八幡市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"南丹市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"向日市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"城陽市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"木津川市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"綴喜郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"綾部市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"京都府",city:"船井郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"たつの市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"丹波篠山市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"加古郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"加東市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"南あわじ市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"宍粟市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"川辺郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"揖保郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"朝来市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"相生市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"神崎郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"神戸市中央区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"神戸市東灘区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"美方郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"西脇市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"豊岡市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"赤穂市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"赤穂郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"養父市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"兵庫県",city:"高砂市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"和歌山県",city:"伊都郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"和歌山県",city:"岩出市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"和歌山県",city:"新宮市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"和歌山県",city:"有田市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"和歌山県",city:"有田郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"和歌山県",city:"橋本市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"和歌山県",city:"海南市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"交野市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"四條畷市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"大阪市中央区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"大阪市北区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"大阪市旭区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"大阪市此花区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"大阪市浪速区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"大阪市港区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"大阪市福島区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"大阪市西区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"大阪市鶴見区",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"泉大津市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"大阪府",city:"藤井寺市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"奈良県",city:"五條市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"奈良県",city:"吉野郡",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"奈良県",city:"大和郡山市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"奈良県",city:"大和高田市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"奈良県",city:"天理市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"奈良県",city:"宇陀市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"奈良県",city:"御所市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"奈良県",city:"葛城市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"奈良県",city:"香芝市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"滋賀県",city:"守山市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"滋賀県",city:"栗東市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"滋賀県",city:"湖南市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"滋賀県",city:"野洲市",points:0.5,min:0,max:8},
+  {region:"近畿",pref:"滋賀県",city:"長浜市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"岡山県",city:"倉敷市",points:3.0,min:24,max:30},
+  {region:"中国",pref:"広島県",city:"福山市",points:3.0,min:24,max:30},
+  {region:"中国",pref:"岡山県",city:"岡山市南区",points:2.0,min:16,max:20},
+  {region:"中国",pref:"広島県",city:"呉市",points:2.0,min:16,max:20},
+  {region:"中国",pref:"山口県",city:"下関市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"山口県",city:"山口市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"山口県",city:"山陽小野田市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"岡山県",city:"岡山市中区",points:1.0,min:8,max:10},
+  {region:"中国",pref:"岡山県",city:"岡山市北区",points:1.0,min:8,max:10},
+  {region:"中国",pref:"岡山県",city:"岡山市東区",points:1.0,min:8,max:10},
+  {region:"中国",pref:"岡山県",city:"津山市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"岡山県",city:"玉野市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"岡山県",city:"総社市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"岡山県",city:"赤磐市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"島根県",city:"出雲市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"広島県",city:"三原市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"広島県",city:"安芸郡",points:1.0,min:8,max:10},
+  {region:"中国",pref:"広島県",city:"尾道市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"広島県",city:"広島市中区",points:1.0,min:8,max:10},
+  {region:"中国",pref:"広島県",city:"広島市佐伯区",points:1.0,min:8,max:10},
+  {region:"中国",pref:"広島県",city:"広島市南区",points:1.0,min:8,max:10},
+  {region:"中国",pref:"広島県",city:"広島市安佐北区",points:1.0,min:8,max:10},
+  {region:"中国",pref:"広島県",city:"広島市安佐南区",points:1.0,min:8,max:10},
+  {region:"中国",pref:"広島県",city:"広島市西区",points:1.0,min:8,max:10},
+  {region:"中国",pref:"広島県",city:"廿日市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"広島県",city:"東広島市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"鳥取県",city:"米子市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"鳥取県",city:"鳥取市",points:1.0,min:8,max:10},
+  {region:"中国",pref:"山口県",city:"下松市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"山口県",city:"光市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"山口県",city:"周南市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"山口県",city:"宇部市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"山口県",city:"萩市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"山口県",city:"防府市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"岡山県",city:"井原市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"岡山県",city:"備前市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"岡山県",city:"浅口市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"岡山県",city:"真庭市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"岡山県",city:"高梁市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"島根県",city:"大田市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"島根県",city:"安来市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"島根県",city:"松江市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"島根県",city:"浜田市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"島根県",city:"益田市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"広島県",city:"三次市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"広島県",city:"大竹市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"広島県",city:"広島市安芸区",points:0.5,min:0,max:8},
+  {region:"中国",pref:"広島県",city:"広島市東区",points:0.5,min:0,max:8},
+  {region:"中国",pref:"広島県",city:"庄原市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"広島県",city:"府中市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"広島県",city:"江田島市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"鳥取県",city:"倉吉市",points:0.5,min:0,max:8},
+  {region:"中国",pref:"鳥取県",city:"境港市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"愛媛県",city:"松山市",points:3.0,min:24,max:30},
+  {region:"四国",pref:"香川県",city:"高松市",points:3.0,min:24,max:30},
+  {region:"四国",pref:"愛媛県",city:"今治市",points:2.0,min:16,max:20},
+  {region:"四国",pref:"愛媛県",city:"西条市",points:2.0,min:16,max:20},
+  {region:"四国",pref:"徳島県",city:"徳島市",points:1.0,min:8,max:10},
+  {region:"四国",pref:"徳島県",city:"板野郡",points:1.0,min:8,max:10},
+  {region:"四国",pref:"徳島県",city:"鳴門市",points:1.0,min:8,max:10},
+  {region:"四国",pref:"愛媛県",city:"伊予郡",points:1.0,min:8,max:10},
+  {region:"四国",pref:"愛媛県",city:"四国中央市",points:1.0,min:8,max:10},
+  {region:"四国",pref:"愛媛県",city:"大洲市",points:1.0,min:8,max:10},
+  {region:"四国",pref:"愛媛県",city:"宇和島市",points:1.0,min:8,max:10},
+  {region:"四国",pref:"愛媛県",city:"新居浜市",points:1.0,min:8,max:10},
+  {region:"四国",pref:"香川県",city:"さぬき市",points:1.0,min:8,max:10},
+  {region:"四国",pref:"香川県",city:"丸亀市",points:1.0,min:8,max:10},
+  {region:"四国",pref:"香川県",city:"仲多度郡",points:1.0,min:8,max:10},
+  {region:"四国",pref:"香川県",city:"観音寺市",points:1.0,min:8,max:10},
+  {region:"四国",pref:"高知県",city:"高知市",points:1.0,min:8,max:10},
+  {region:"四国",pref:"徳島県",city:"吉野川市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"徳島県",city:"小松島市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"徳島県",city:"美馬市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"徳島県",city:"阿南市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"愛媛県",city:"上浮穴郡",points:0.5,min:0,max:8},
+  {region:"四国",pref:"愛媛県",city:"伊予市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"愛媛県",city:"東温市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"愛媛県",city:"西予市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"香川県",city:"三豊市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"香川県",city:"善通寺市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"香川県",city:"坂出市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"香川県",city:"東かがわ市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"高知県",city:"南国市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"高知県",city:"土佐清水市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"高知県",city:"宿毛市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"高知県",city:"須崎市",points:0.5,min:0,max:8},
+  {region:"四国",pref:"高知県",city:"高知市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"大分県",city:"大分市",points:4.0,min:32,max:40},
+  {region:"九州・沖縄",pref:"宮崎県",city:"宮崎市",points:4.0,min:32,max:40},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"鹿児島市",points:3.0,min:24,max:30},
+  {region:"九州・沖縄",pref:"大分県",city:"中津市",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"宮崎県",city:"都城市",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"沖縄県",city:"那覇市",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"熊本県",city:"熊本市北区",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"熊本県",city:"熊本市東区",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"福岡県",city:"久留米市",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"福岡県",city:"北九州市八幡西区",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"福岡県",city:"北九州市小倉南区",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"福岡県",city:"福岡市南区",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"福岡県",city:"福岡市東区",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"福岡県",city:"遠賀郡",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"長崎県",city:"長崎市",points:2.0,min:16,max:20},
+  {region:"九州・沖縄",pref:"佐賀県",city:"三養基郡",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"佐賀県",city:"佐賀市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"佐賀県",city:"唐津市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"佐賀県",city:"神埼郡",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"佐賀県",city:"鳥栖市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"大分県",city:"佐伯市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"大分県",city:"別府市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"大分県",city:"国東市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"大分県",city:"宇佐市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"大分県",city:"杵築市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"大分県",city:"竹田市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"宮崎県",city:"延岡市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"宮崎県",city:"日南市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"沖縄県",city:"うるま市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"沖縄県",city:"中頭郡",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"沖縄県",city:"南城市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"沖縄県",city:"名護市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"沖縄県",city:"宜野湾市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"沖縄県",city:"沖縄市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"沖縄県",city:"浦添市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"沖縄県",city:"石垣市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"沖縄県",city:"豊見城市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"熊本県",city:"人吉市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"熊本県",city:"八代市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"熊本県",city:"天草市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"熊本県",city:"熊本市南区",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"熊本県",city:"玉名市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"熊本県",city:"玉名郡",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"熊本県",city:"菊池郡",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"中間市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"北九州市若松区",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"北九州市門司区",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"古賀市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"大牟田市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"太宰府市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"宗像市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"小郡市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"柳川市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"田川市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"直方市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"福岡市中央区",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"福岡市博多区",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"福岡市早良区",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"福岡市西区",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"福津市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"筑紫野市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"糟屋郡",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"糸島市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"那珂川市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"福岡県",city:"飯塚市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"長崎県",city:"佐世保市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"長崎県",city:"諫早市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"姶良市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"指宿市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"日置市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"薩摩川内市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"霧島市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"鹿児島郡",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"鹿屋市",points:1.0,min:8,max:10},
+  {region:"九州・沖縄",pref:"佐賀県",city:"伊万里市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"佐賀県",city:"多久市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"佐賀県",city:"嬉野市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"佐賀県",city:"小城市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"佐賀県",city:"杵島郡",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"佐賀県",city:"武雄市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"佐賀県",city:"神埼市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"佐賀県",city:"西松浦郡",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"佐賀県",city:"鹿島市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"大分県",city:"日田市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"大分県",city:"由布市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"大分県",city:"臼杵市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"大分県",city:"豊後大野市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"宮崎県",city:"えびの市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"宮崎県",city:"串間市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"宮崎県",city:"児湯郡",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"宮崎県",city:"小林市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"宮崎県",city:"日向市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"宮崎県",city:"西都市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"沖縄県",city:"国頭郡",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"沖縄県",city:"宮古島市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"沖縄県",city:"島尻郡",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"沖縄県",city:"糸満市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"熊本県",city:"合志市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"熊本県",city:"宇城市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"熊本県",city:"山鹿市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"熊本県",city:"水俣市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"熊本県",city:"熊本市中央区",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"熊本県",city:"熊本市西区",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"熊本県",city:"荒尾市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"熊本県",city:"菊池市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"福岡県",city:"嘉麻市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"福岡県",city:"大川市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"福岡県",city:"大野城市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"福岡県",city:"宮若市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"福岡県",city:"春日市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"福岡県",city:"朝倉市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"福岡県",city:"田川郡",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"福岡県",city:"福岡市城南区",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"福岡県",city:"筑後市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"福岡県",city:"行橋市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"福岡県",city:"豊前市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"長崎県",city:"五島市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"長崎県",city:"壱岐市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"長崎県",city:"大村市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"長崎県",city:"対馬市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"長崎県",city:"西海市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"長崎県",city:"雲仙市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"いちき串木野市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"出水市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"南さつま市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"奄美市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"志布志市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"曽於市",points:0.5,min:0,max:8},
+  {region:"九州・沖縄",pref:"鹿児島県",city:"阿久根市",points:0.5,min:0,max:8},
+];
+// AREA_DATA は組み込みデフォルト。設定画面での変更は localStorage 'gaiheki_area_data' に保存
+let _cachedAreaData = null;
+function getAreaData() {
+  if (_cachedAreaData) return _cachedAreaData;
+  try {
+    const s = localStorage.getItem('gaiheki_area_data');
+    if (s) { _cachedAreaData = JSON.parse(s); return _cachedAreaData; }
+  } catch(e) {}
+  return AREA_DATA;
+}
+// 初回ロード時に localStorage を初期化（設定画面から参照するため）
+(function() {
+  if (!localStorage.getItem('gaiheki_area_data')) {
+    try { localStorage.setItem('gaiheki_area_data', JSON.stringify(AREA_DATA)); } catch(e) {}
+  }
+})();
+
+
+
+
+/* ── 設定デフォルト値 ── */
+const DEFAULT_SETTINGS = {
+  plans: {
+    light: { fee: '8万円',  commission: '10%', guarantee: 'なし', monthly: '25〜35件', half: '—', contractPeriod: '6ヶ月契約' },
+    basic: { fee: '10万円', commission: '5%',  guarantee: '25件',  monthly: '40〜55件', half: '40〜55件', contractPeriod: '6ヶ月契約' },
+    pro:   { fee: '15万円', commission: '3%',  guarantee: '40件',  monthly: '65〜80件', half: '65〜80件', contractPeriod: '6ヶ月契約' },
+  },
+  holidayText: '弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。\n配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。',
+  excludeText: '・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人（例：山田 太郎）\n上記にあてはまるお客様情報については、お手数ですが私までご報告ください。',
+  staffList: ['恩田雅史', '鈴木宏午', '皆川進太', '中村元彌', '松本そよ', '穴澤萌花', '亀井翼', '染葉健介', '杉本山東'],
+  loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '', loginUrl: 'https://business.gaihekiplus.com/sign_in',
+  paymentConfig: [
+    { id:'pm1', name:'クレジットカード', useGroups:true, groups:[
+      { id:'pg1', label:'先払い', notes:['1日決済（前日が振込期限）','11日決済（前日が振込期限）','16日決済（前日が振込期限）','21日決済（前日が振込期限）'] },
+      { id:'pg2', label:'後払い', notes:['末締め翌月20日決済（振込期限確認中）'] },
+    ]},
+    { id:'pm2', name:'口座振替', useGroups:false, groups:[{ id:'pg3', label:null, notes:['末締め翌月26日引き落とし（土日の場合は前倒し前営業日）'] }] },
+    { id:'pm3', name:'振り込み', useGroups:false, groups:[{ id:'pg4', label:null, notes:['末締め翌月20日引き落とし'] }] },
+  ],
+  csStaff: [
+    { id:'cs1', name:'飯塚来己',  bio:'お客様に寄り添ったサポートを心がけています。', phone:'' },
+    { id:'cs2', name:'留木涼花',  bio:'迅速・丁寧な対応をモットーにしています。', phone:'' },
+    { id:'cs3', name:'手光菜津美', bio:'何でもお気軽にご相談ください。', phone:'' },
+  ],
+};
+
+let _settingsOverride = null; // 既存案件編集時に snapshot で上書き
+
+function getSettings() {
+  if (_settingsOverride) return _settingsOverride;
+  try {
+    const s = JSON.parse(localStorage.getItem('gaiheki_settings') || 'null');
+    if (!s) return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
+    return {
+      ...DEFAULT_SETTINGS, ...s,
+      plans: {
+        light: { ...DEFAULT_SETTINGS.plans.light, ...(s.plans?.light || {}) },
+        basic: { ...DEFAULT_SETTINGS.plans.basic, ...(s.plans?.basic || {}) },
+        pro:   { ...DEFAULT_SETTINGS.plans.pro,   ...(s.plans?.pro   || {}) },
+      },
+      staffList:     s.staffList?.length ? s.staffList : DEFAULT_SETTINGS.staffList,
+      csStaff:       s.csStaff?.length   ? s.csStaff   : DEFAULT_SETTINGS.csStaff,
+      paymentConfig: s.paymentConfig?.length ? s.paymentConfig : DEFAULT_SETTINGS.paymentConfig,
+    };
+  } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_SETTINGS)); }
+}
+
+
+
+
+/* ── 共有URL生成 ── */
+
+function printDoc() {
+  const wasFormMode = document.body.classList.contains('sp-form-mode');
+  if (wasFormMode) {
+    document.body.classList.remove('sp-form-mode');
+    const tb = document.getElementById('sp-toggle-btn');
+    if (tb) tb.textContent = '📝';
+  }
+  // document.title を変更してPDFのデフォルトファイル名を設定
+  const origTitle = document.title;
+  const co = (v('company') || v('contact_name') || '会社名').replace(/[/\\:*?"<>|]/g, '_');
+  const dt = new Date().toLocaleDateString('ja-JP', {year:'numeric',month:'2-digit',day:'2-digit'}).replace(/\//g, '');
+  document.title = `${co}_ガイダンス資料_${dt}`;
+  // afterprint で元の状態に戻す
+  const restore = () => {
+    document.title = origTitle;
+    if (wasFormMode) {
+      document.body.classList.add('sp-form-mode');
+      const tb = document.getElementById('sp-toggle-btn');
+      if (tb) tb.textContent = '📄';
+    }
+    window.removeEventListener('afterprint', restore);
+  };
+  window.addEventListener('afterprint', restore);
+  window.print();
+}
+
+function toggleSPView() {
+  const isFormMode = document.body.classList.toggle('sp-form-mode');
+  const btn = document.getElementById('sp-toggle-btn');
+  if (btn) btn.textContent = isFormMode ? '📄' : '📝';
+  // フォーム表示時はページ先頭にスクロール
+  if (isFormMode) window.scrollTo(0, 0);
+}
+
+
+/* ── プレビュースケーリング ── */
+function scalePreview() {
+  const preview = document.querySelector('.preview');
+  const container = document.getElementById('pages-container');
+  if (!preview || !container) return;
+  // 一旦リセットして自然な高さを計測
+  container.style.transform = '';
+  container.style.marginBottom = '';
+  const NATURAL_W = 794;
+  const NATURAL_H = 1123; // A4の自然な高さ
+  const availW = preview.clientWidth - 32;
+  const scale = Math.min(1, availW / NATURAL_W);
+  // 各ページのmin-heightをscale後のA4高さに設定
+  const scaledMinH = Math.floor(NATURAL_H * scale);
+  document.querySelectorAll('.a4-page').forEach(page => {
+    page.style.minHeight = scaledMinH + 'px';
+  });
+  if (scale < 1) {
+    const naturalH = container.scrollHeight; // transform前に計測
+    container.style.transform = 'scale(' + scale + ')';
+    container.style.transformOrigin = 'top center';
+    // scale後の実表示高さに合わせてmarginBottomで余白を補正
+    container.style.marginBottom = (-naturalH * (1 - scale)) + 'px';
+  }
+}
+window.addEventListener('resize', scalePreview);
+
+
+function fmtPhoneDisplay(v) {
+  if (!v) return v;
+  const d = v.replace(/\D/g, '');
+  if (d.length === 11) return d.slice(0,3) + '-' + d.slice(3,7) + '-' + d.slice(7);
+  if (d.length === 10) return d.slice(0,2) + '-' + d.slice(2,6) + '-' + d.slice(6);
+  return v; // すでにハイフンがあるかその他
+}
+
+function csPhotoFallback(el) {
+  el.outerHTML = '<div class="cs-card-no-photo">👤</div>';
+}
+
+function renderP4() {
+  const content = document.getElementById('p4-content');
+  if (!content) return;
+  const name = v('cs_assignee');
+  if (!name) {
+    content.innerHTML = '<div style="text-align:center;color:var(--muted);padding:60px 0;font-size:13px">CS担当者情報が設定されていません</div>';
+    return;
+  }
+  const s = getSettings();
+  const staff = (s.csStaff || []).find(st => st.name === name);
+  if (!staff) {
+    content.innerHTML = `<div style="text-align:center;color:var(--muted);padding:60px 0;font-size:13px">${esc(name)} の情報が設定されていません</div>`;
+    return;
+  }
+  const photoMap = {
+    '飯塚来己':  'images/iizuka.jpg',
+    '留木涼花':  'images/tomeki.jpg',
+    '手光菜津美': 'images/tebika.jpg',
+  };
+  const lineQrMap = {
+    '飯塚来己':  'images/line_iizuka.jpg',
+    '留木涼花':  'images/line_tomeki.jpg',
+    '手光菜津美': 'images/line_tebika.jpg',
+  };
+  const photoSrc = photoMap[staff.name] || '';
+  const lineQrSrc = lineQrMap[staff.name] || '';
+  const photoHtml = photoSrc
+    ? `<img class="cs-card-photo" src="${photoSrc}" alt="${esc(staff.name)}" onerror="csPhotoFallback(this)">`
+    : `<div class="cs-card-no-photo">👤</div>`;
+  const qrHtml = lineQrSrc
+    ? `<img class="cs-card-qr" src="${lineQrSrc}" alt="LINE QR" onerror="this.style.display='none'">`
+    : `<div style="font-size:10px;color:var(--muted)">未設定</div>`;
+  content.innerHTML = `
+    <div style="padding:32px 40px">
+      <div class="cs-card">
+        <div class="cs-card-name">${esc(staff.name)}</div>
+        <div class="cs-card-body">
+          <div class="cs-card-left">
+            ${photoHtml}
+            ${staff.phone ? `<div class="cs-card-phone-row">📞電話番号：<span onclick="(function(){if(confirm('${esc(staff.phone)}に電話しますか？')){window.location.href='tel:${esc(staff.phone)}'}})()" style="cursor:pointer;text-decoration:underline">${esc(fmtPhoneDisplay(staff.phone))}</span></div>` : ''}
+            <div class="cs-line-block">
+              <div class="cs-line-block-text">
+                <div class="cs-line-block-msg">何かあったらお気軽に<br>ご連絡ください。</div>
+              </div>
+              ${qrHtml}
+            </div>
+          </div>
+          <div class="cs-card-right">
+            <div class="cs-card-bio">${staff.bio ? esc(staff.bio) : ''}</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function scrollToPage(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+  document.querySelectorAll('.nav-item').forEach(btn => btn.classList.remove('active'));
+  document.getElementById('nav-' + id)?.classList.add('active');
+}
+
+
+function updatePaymentNoteOptions() {
+  const status = v('payment_status');
+  const sel = document.getElementById('payment_note');
+  if (!sel) return;
+  if (!status) {
+    sel.innerHTML = '<option value="">決済手段を選択してください</option>';
+    sel.disabled = true;
+    sel.style.opacity = '0.45';
+    sel.style.cursor = 'not-allowed';
+    render();
+    return;
+  }
+  sel.disabled = false;
+  sel.style.opacity = '';
+  sel.style.cursor = '';
+  const s = getSettings();
+  const method = (s.paymentConfig || []).find(m => m.name === status);
+  if (!method) { sel.innerHTML = ''; render(); return; }
+  let html = '';
+  let allOpts = [];
+  method.groups.forEach(g => {
+    const optsHtml = g.notes.map(o => `<option value="${o}">${o}</option>`).join('');
+    html += (g.label && method.useGroups) ? `<optgroup label="${g.label}">${optsHtml}</optgroup>` : optsHtml;
+    allOpts = allOpts.concat(g.notes);
+  });
+  if (allOpts.length === 1) {
+    sel.innerHTML = html;
+    sel.value = allOpts[0];
+    sel.disabled = true;
+    sel.style.opacity = '0.6';
+    sel.style.backgroundImage = 'none';
+  } else {
+    sel.innerHTML = '<option value="">選択してください</option>' + html;
+    sel.value = '';
+    sel.disabled = false;
+    sel.style.opacity = '';
+    sel.style.backgroundImage = '';
+  }
+  render();
+}
+
+function populatePaymentMethodSelect() {
+  const sel = document.getElementById('payment_status');
+  if (!sel) return;
+  const s = getSettings();
+  const methods = (s.paymentConfig || []).map(m => m.name);
+  const cur = sel.value;
+  const opts = methods.length
+    ? methods.map(m => `<option value="${m}"${m===cur?' selected':''}>${m}</option>`).join('')
+    : '<option value="クレジットカード">クレジットカード</option><option value="口座振替">口座振替</option><option value="振り込み">振り込み</option>';
+  sel.innerHTML = '<option value="">選択してください</option>' + opts;
+}
+
+function updatePlanDefaults() {
+  const plan = document.getElementById('plan').value;
+  const d = getSettings().plans[plan] || DEFAULT_SETTINGS.plans[plan];
+  document.getElementById('monthly_fee').value = d.fee;
+  document.getElementById('commission').value  = d.commission;
+  document.getElementById('guarantee').value   = d.guarantee;
+  document.getElementById('monthly_est').value = d.monthly;
+  document.getElementById('half_est').value    = d.half;
+}
+
+function populateAssigneeSelect() {
+  const list = getSettings().staffList;
+  const sel = document.getElementById('assignee');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">選択してください</option>' +
+    list.map(n => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+  if (cur) sel.value = cur;
+}
+
+function areaOnRegion() {
+  const region = document.getElementById('area-region').value;
+  const prefSel = document.getElementById('area-pref');
+  const cityList = document.getElementById('area-city-list');
+  const searchEl = document.getElementById('area-search');
+  prefSel.innerHTML = '<option value="">都道府県</option>';
+  prefSel.disabled = true;
+  prefSel.classList.remove('area-pref-auto');
+  cityList.style.display = 'none';
+  cityList.innerHTML = '';
+  searchEl.style.display = 'none';
+  searchEl.value = '';
+  if (!region) return;
+  const prefs = [...new Set(getAreaData().filter(d => d.region === region).map(d => d.pref))];
+  prefSel.innerHTML = '<option value="">都道府県</option>' + prefs.map(p => `<option>${p}</option>`).join('');
+  // 北海道は都道府県が1つなので自動選択してdisabled
+  if (prefs.length === 1) {
+    prefSel.value = prefs[0];
+    prefSel.disabled = true;
+    prefSel.classList.add('area-pref-auto');
+    areaOnPref();
+  } else {
+    prefSel.disabled = false;
+    prefSel.classList.remove('area-pref-auto');
+  }
+}
+function areaOnPref() {
+  const pref = document.getElementById('area-pref').value;
+  const cityList = document.getElementById('area-city-list');
+  const searchEl = document.getElementById('area-search');
+  cityList.innerHTML = '';
+  searchEl.value = '';
+  if (!pref) {
+    cityList.style.display = 'none';
+    searchEl.style.display = 'none';
+    return;
+  }
+  searchEl.style.display = '';
+  areaRenderCities(pref, '');
+  cityList.style.display = '';
+}
+function areaRenderCities(pref, query) {
+  const cityList = document.getElementById('area-city-list');
+  const q = query.trim();
+  const cities = getAreaData().filter(d => d.pref === pref);
+  cityList.innerHTML = cities
+    .filter(c => !q || c.city.includes(q) || areas.some(a => a.pref === pref && a.city === c.city))
+    .map(c => {
+      const checked = areas.some(a => a.pref === pref && a.city === c.city) ? 'checked' : '';
+      return `<label class="area-city-item">
+        <input type="checkbox" ${checked} onchange="onCityCheck('${esc(pref)}','${esc(c.city)}',this)">
+        <span class="area-city-name">${esc(c.city)}</span>
+        <span class="area-city-stats">${c.min}〜${c.max}件</span>
+        <span class="area-city-pts">${c.points}pt</span>
+      </label>`;
+    }).join('');
+}
+function areaFilterCities() {
+  const pref = document.getElementById('area-pref').value;
+  const q = document.getElementById('area-search').value;
+  if (pref) areaRenderCities(pref, q);
+}
+function onCityCheck(pref, city, cb) {
+  if (cb.checked) {
+    if (!areas.some(a => a.pref === pref && a.city === city)) {
+      const data = getAreaData().find(d => d.pref === pref && d.city === city);
+      if (data) areas.push({ pref, city, points: data.points, min: data.min, max: data.max });
+    }
+  } else {
+    const idx = areas.findIndex(a => a.pref === pref && a.city === city);
+    if (idx !== -1) areas.splice(idx, 1);
+  }
+  renderAreaTags();
+  render();
+}
+function removeArea(i) {
+  areas.splice(i, 1);
+  renderAreaTags();
+  const pref = document.getElementById('area-pref').value;
+  const q = document.getElementById('area-search').value;
+  if (pref) areaRenderCities(pref, q);
+  render();
+}
+function renderAreaTags() {
+  const tagsEl = document.getElementById('area-tags');
+  const summEl = document.getElementById('area-summary');
+  tagsEl.innerHTML = areas.map((a, i) =>
+    `<div class="area-tag">${esc(a.pref + ' ' + a.city)}<button onclick="removeArea(${i})">×</button></div>`
+  ).join('');
+  if (areas.length) {
+    const pts = areas.reduce((s, a) => s + a.points, 0);
+    const mn  = areas.reduce((s, a) => s + a.min, 0);
+    const mx  = areas.reduce((s, a) => s + a.max, 0);
+    summEl.innerHTML =
+      `合計：<strong>${pts}pt</strong> / 年間 <strong>${mn}〜${mx}件</strong>`;
+    summEl.style.display = '';
+  } else {
+    summEl.style.display = 'none';
+  }
+}
+
+function v(id) { return (document.getElementById(id)?.value || '').trim(); }
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function render() {
+  const planLabel = {light:'LIGHT（ライト）', basic:'BASIC（ベーシック）', pro:'PRO（プロ）'};
+  const s = getSettings();
+  const co = v('company'), cn = v('contact_name');
+  const isDefault = !co && !cn;
+  const recipient = co && cn ? co + '　' + cn : (co || cn || '（会社名・担当者名）');
+  ['p-company','p-company2','p-company3','p-company4'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) { el.textContent = recipient; el.style.color = isDefault ? 'var(--muted)' : ''; }
+  });
+  setVal('p-sales-assignee', v('assignee'));
+  setVal('p-cs-assignee',    v('cs_assignee'));
+  const dv = v('issue_date');
+  let dateLabel;
+  if (dv) {
+    const [y,m,d] = dv.split('-');
+    dateLabel = y + '年' + parseInt(m) + '月' + parseInt(d) + '日';
+  } else {
+    dateLabel = new Date().toLocaleDateString('ja-JP',{year:'numeric',month:'long',day:'numeric'});
+  }
+  set('p-date', '発行日：' + dateLabel);
+  set('p-date2', '発行日：' + dateLabel);
+  set('p-date3', '発行日：' + dateLabel);
+  set('p-date4', '発行日：' + dateLabel);
+  renderP4();
+  setVal('p-plan',       planLabel[v('plan')]);
+  setVal('p-fee',        v('monthly_fee'));
+  setVal('p-commission', v('commission'));
+  setVal('p-period',     (s.plans[v('plan')] || s.plans.basic).contractPeriod);
+  setVal('p-monthly',    v('monthly_est'));
+  setVal('p-half',       v('half_est'));
+  setVal('p-guarantee',  v('guarantee'));
+
+  const ap = document.getElementById('p-areas');
+  if (areas.length) {
+    const pts = areas.reduce((s, a) => s + a.points, 0);
+    const mn  = areas.reduce((s, a) => s + a.min, 0);
+    const mx  = areas.reduce((s, a) => s + a.max, 0);
+    ap.innerHTML =
+      '<div style="margin-bottom:6px">' +
+      areas.map(a => `<span class="tag">${esc(a.pref + ' ' + a.city)}</span>`).join('') +
+      '</div>' +
+      `<div style="font-size:11px;color:var(--label)">合計ポイント：<strong>${pts}pt</strong>　年間想定件数：<strong>${mn}〜${mx}件</strong></div>`;
+  } else {
+    ap.innerHTML = '<span style="font-size:11px;color:var(--muted)">エリアが未設定です</span>';
+  }
+
+  setVal('p-pay-status', v('payment_status'));
+  setVal('p-pay-note',   v('payment_note'));
+  setVal('p-login-id',   v('login_id'));
+  setLink('p-photo-url',   s.photoUrl);
+  setLink('p-store-url',   s.storePageUrl);
+  setLink('p-loan-doc',    s.loanDocUrl);
+  setLink('p-loan-apply',  s.loanApplyUrl);
+  setLink('p-gift-survey', s.giftSurveyUrl);
+  setLink('p-gift-work',   s.giftWorkUrl);
+  setLink('p-login-url',   s.loginUrl);
+  set('p-holiday-text', s.holidayText);
+}
+
+function set(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const empty = !val;
+  el.textContent = empty ? '—' : val;
+  el.style.color = empty ? 'var(--muted)' : '';
+}
+
+function setLink(id, url) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const valid = url && url.startsWith('http');
+  el.textContent = valid ? url : '（URL未設定）';
+  if (el.tagName === 'A') {
+    el.href = valid ? url : '#';
+    el.style.pointerEvents = valid ? '' : 'none';
+    el.style.color = valid ? '' : 'var(--muted)';
+  }
+}
+
+function getCases() {
+  try { return JSON.parse(localStorage.getItem('gaiheki_cases') || '[]'); } catch(e) { return []; }
+}
+function collectFormData() {
+  const statusEl = document.querySelector('input[name="guidance_status"]:checked');
+  const fields = ['assignee','cs_assignee','company','contact_name','issue_date','plan','monthly_fee','commission','guarantee',
+    'monthly_est','half_est','payment_status','payment_note','login_id'];
+  const data = {};
+  data.guidance_status = statusEl ? statusEl.value : '未実施';
+  fields.forEach(f => { const el = document.getElementById(f); if(el) data[f] = el.value; });
+  data.areas = [...areas];
+  return data;
+}
+
+
+function collectSettingsSnapshot() {
+  const s = getSettings();
+  return {
+    plans:         JSON.parse(JSON.stringify(s.plans)),
+    paymentConfig: JSON.parse(JSON.stringify(s.paymentConfig)),
+    holidayText:   s.holidayText   || '',
+    excludeText:   s.excludeText   || '',
+    loginUrl:      s.loginUrl      || '',
+    photoUrl:      s.photoUrl      || '',
+    storePageUrl:  s.storePageUrl  || '',
+    loanDocUrl:    s.loanDocUrl    || '',
+    loanApplyUrl:  s.loanApplyUrl  || '',
+    giftSurveyUrl: s.giftSurveyUrl || '',
+    giftWorkUrl:   s.giftWorkUrl   || '',
+  };
+}
+
+function saveCase() {
+  if (!v('company')) { alert('会社名を入力してください'); return; }
+  if (!v('assignee')) { alert('担当者を選択してください'); return; }
+  const editId = new URLSearchParams(location.search).get('id');
+  const id = editId || 'case_' + Date.now();
+  const existing = getCases();
+  const existingCase = existing.find(c => c.id === id);
+  const caseData = {
+    id, assignee: v('assignee'), company: v('company') || v('contact_name'), plan: v('plan'),
+    guidance_status: (document.querySelector('input[name="guidance_status"]:checked') || {}).value || '未実施',
+    createdAt: existingCase ? existingCase.createdAt : new Date().toISOString().split('T')[0],
+    formData: collectFormData(),
+    settingsSnapshot: collectSettingsSnapshot()
+  };
+  const cases = existing.filter(c => c.id !== id);
+  cases.unshift(caseData);
+  localStorage.setItem('gaiheki_cases', JSON.stringify(cases));
+  location.href = 'fuyouhin.html';
+}
+
+(function init() {
+  populateAssigneeSelect();
+
+  const editId = new URLSearchParams(location.search).get('id');
+  if (!editId) {
+    const staffParam = new URLSearchParams(location.search).get('staff');
+    if (staffParam) { const el = document.getElementById('assignee'); if(el) el.value = staffParam; }
+    document.getElementById('issue_date').value = new Date().toISOString().split('T')[0];
+    updatePlanDefaults();
+    populatePaymentMethodSelect();
+    updatePaymentNoteOptions();
+    render();
+    renderP4();
+    scalePreview();
+    return;
+  }
+  const c = getCases().find(c => c.id === editId);
+  if (!c) { updatePlanDefaults(); render(); return; }
+  // スナップショットがあれば設定値として優先使用（新規はlocalStorageを使用）
+  if (c.settingsSnapshot) {
+    const base = JSON.parse(JSON.stringify(getSettings())); // staffList/csStaff は現在値
+    _settingsOverride = Object.assign(base, c.settingsSnapshot);
+  }
+  const d = c.formData;
+  ['assignee','cs_assignee','company','contact_name','issue_date','plan','monthly_fee','commission','guarantee',
+   'monthly_est','half_est','payment_status','payment_note','login_id'].forEach(f => {
+    const el = document.getElementById(f);
+    if (el && d[f] !== undefined) el.value = d[f];
+  });
+  if (d.guidance_status) {
+    const r = document.querySelector(`input[name="guidance_status"][value="${d.guidance_status}"]`);
+    if (r) r.checked = true;
+  }
+  if (Array.isArray(d.areas)) {
+    d.areas.forEach(a => {
+      if (typeof a === 'string') {
+        // 旧フォーマット（文字列）は表示のみ（ポイントなし）
+        areas.push({ pref: a, city: '', points: 0, min: 0, max: 0 });
+      } else { areas.push(a); }
+    });
+    renderAreaTags();
+  }
+  populatePaymentMethodSelect();
+  updatePaymentNoteOptions();
+  const pnEl = document.getElementById('payment_note');
+  if (pnEl && d.payment_note) pnEl.value = d.payment_note;
+  render();
+  renderP4();
+  scalePreview();
+})();
+</script>
+
+
+<script>
+/* ── Firestore 連携（create.html） ── */
+(function () {
+  'use strict';
+  var _cache = []; // Firestore キャッシュ
+
+  /* getCases をオーバーライド: Firestoreキャッシュを返す */
+  window.getCases = function () { return _cache; };
+
+  /* saveCase をオーバーライド: Firestoreに保存 */
+  window.saveCase = function () {
+    if (!v('company')) { alert('会社名を入力してください'); return; }
+    if (!v('assignee')) { alert('担当者を選択してください'); return; }
+
+    var editId = new URLSearchParams(location.search).get('id');
+    var id = editId || Date.now().toString();
+    var existingCase = _cache.find(function (c) { return c.id === id; });
+
+    var caseData = {
+      id: id,
+      assignee: v('assignee'),
+      company: v('company') || v('contact_name'),
+      plan: v('plan'),
+      guidance_status: (document.querySelector('input[name="guidance_status"]:checked') || {}).value || '未実施',
+      createdAt: existingCase ? existingCase.createdAt : new Date().toISOString().split('T')[0],
+      formData: collectFormData(),
+      settingsSnapshot: collectSettingsSnapshot()
+    };
+
+    console.log('[FS] 案件保存開始:', id);
+    var db = firebase.firestore();
+    db.collection('cases').doc(id).set(caseData)
+      .then(function () {
+        console.log('[FS] 案件保存成功:', id);
+        // templates/gaiheki を caseSnapshots/{id} にコピー（スナップショット）
+        return db.collection('templates').doc('gaiheki').get()
+          .then(function(tmplDoc) {
+            if (!tmplDoc.exists) return;
+            return db.collection('caseSnapshots').doc(id).set({
+              caseId: id,
+              blocks: tmplDoc.data().blocks,
+              createdAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+          })
+          .catch(function(e){ console.warn('[FS] snapshot warn:', e.message); });
+      })
+      .then(function () {
+        location.href = 'fuyouhin.html';
+      })
+      .catch(function (e) {
+        console.error('[FS] 案件保存失敗:', e.code, e.message);
+        alert('保存に失敗しました: ' + e.message);
+      });
+  };
+
+  /* 編集モード: onAuthStateChanged 内でFirestoreから案件を読み込みフォームを再描画 */
+  firebase.auth().onAuthStateChanged(function (user) {
+    if (!user) return;
+    var editId = new URLSearchParams(location.search).get('id');
+    if (!editId) return;
+
+    firebase.firestore().collection('cases').doc(editId).get()
+      .then(function (doc) {
+        if (!doc.exists) { console.warn('[FS] 案件なし:', editId); return; }
+        var c = doc.data();
+        _cache = [c];
+
+        // 設定スナップショットを適用
+        if (c.settingsSnapshot && typeof getSettings === 'function') {
+          var base = JSON.parse(JSON.stringify(getSettings()));
+          window._settingsOverride = Object.assign(base, c.settingsSnapshot);
+        }
+
+        // フォームを再描画
+        var d = c.formData;
+        if (!d) return;
+        ['assignee','cs_assignee','company','contact_name','issue_date','plan',
+         'monthly_fee','commission','guarantee','monthly_est','half_est',
+         'payment_status','payment_note','login_id'].forEach(function (f) {
+          var el = document.getElementById(f);
+          if (el && d[f] !== undefined) el.value = d[f];
+        });
+        if (d.guidance_status) {
+          var r = document.querySelector('input[name="guidance_status"][value="' + d.guidance_status + '"]');
+          if (r) r.checked = true;
+        }
+        if (typeof areas !== 'undefined') {
+          areas.length = 0;
+          if (Array.isArray(d.areas)) {
+            d.areas.forEach(function (a) {
+              areas.push(typeof a === 'string' ? { pref: a, city: '', points: 0, min: 0, max: 0 } : a);
+            });
+          }
+          if (typeof renderAreaTags === 'function') renderAreaTags();
+        }
+        if (typeof populatePaymentMethodSelect === 'function') populatePaymentMethodSelect();
+        if (typeof updatePaymentNoteOptions === 'function') updatePaymentNoteOptions();
+        var pnEl = document.getElementById('payment_note');
+        if (pnEl && d.payment_note) pnEl.value = d.payment_note;
+        if (typeof render === 'function') render();
+        if (typeof renderP4 === 'function') renderP4();
+        console.log('[FS] 編集データ読み込み完了:', editId);
+      })
+      .catch(function (e) { console.error('[FS] 案件読み込みエラー:', e.code, e.message); });
+  });
+})();
+</script>
+
+<script>
+/* ── サイドバー ナビ ハイライト（IntersectionObserver） ── */
+(function () {
+  var preview = document.getElementById('preview-scroll');
+  if (!preview || !window.IntersectionObserver) return;
+
+  var PAGE_IDS = ['p1', 'p2', 'p3', 'p4'];
+  var visibleSet = new Set();
+
+  function syncNav() {
+    // p1→p4 の順で最初に visible なページをアクティブに
+    var activeId = null;
+    for (var i = 0; i < PAGE_IDS.length; i++) {
+      if (visibleSet.has(PAGE_IDS[i])) { activeId = PAGE_IDS[i]; break; }
+    }
+    if (!activeId) return;
+    document.querySelectorAll('.nav-item').forEach(function (btn) {
+      btn.classList.remove('active');
+    });
+    var navEl = document.getElementById('nav-' + activeId);
+    if (navEl) navEl.classList.add('active');
+  }
+
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        visibleSet.add(entry.target.id);
+      } else {
+        visibleSet.delete(entry.target.id);
+      }
+    });
+    syncNav();
+  }, {
+    root: preview,       // プレビューペインを基準
+    threshold: 0.15      // 15%以上見えたらアクティブ
+  });
+
+  PAGE_IDS.forEach(function (id) {
+    var el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+})();
+</script>
+</body>
+</html>
