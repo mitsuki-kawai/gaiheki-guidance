@@ -370,35 +370,38 @@ a.lb-url:hover { text-decoration: underline; }
 }
 
 @media print {
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   body { overflow: visible; background: white; }
   .app { display: block; height: auto; }
   .nav, .form-pane { display: none !important; }
-  /* プレビューエリア: transform リセット・フル幅 */
-  .preview { overflow: visible; padding: 0; background: white; display: block !important;
-             width: 100%; transform: none !important; }
-  #pages-container { gap: 0; padding: 0; display: block;
-                     transform: none !important; width: 100% !important;
-                     margin-bottom: 0 !important; }
-  /* SP印刷: sp-form-mode の上書き */
   body.sp-form-mode .preview { display: block !important; }
   body.sp-form-mode .form-pane { display: none !important; }
   body.sp-form-mode .app { height: auto !important; overflow: visible !important; }
-  /* A4ページ: @page margin 分を引いた幅でフル印刷 */
-  .a4-page { width: 100%; min-height: auto; margin: 0;
-             page-break-after: always; break-after: page;
+  /* プレビューコンテナ: 余白・隙間を完全除去 */
+  .preview { overflow: visible; padding: 0; background: white; display: block !important;
+             width: 100%; transform: none !important; }
+  #pages-container { gap: 0 !important; padding: 0 !important; margin: 0 !important;
+                     display: block !important; transform: none !important;
+                     width: 100% !important; }
+  /* A4ページ: page-break-after を廃止、内部での切れ防止に変更 */
+  .a4-page { width: 100% !important; min-height: 0 !important;
+             margin: 0 !important; padding: 0 !important;
+             box-shadow: none !important;
+             page-break-inside: avoid; break-inside: avoid;
+             page-break-after: auto; break-after: auto;
              transform: none !important; }
+  /* 2ページ目以降は改ページを前に入れる */
+  .a4-page + .a4-page { page-break-before: always; break-before: page; }
   .page-hbar { padding: 8px 10mm; }
-  .doc-meta { padding: 6px 10mm 6px; }
-  .page-content { padding: 10px 10mm 16px; }
+  .doc-meta { padding: 6px 10mm; }
+  .page-content { padding: 8px 10mm 12px; }
   .page-footer { display: none; }
-  /* セル途中ページ切れ防止 */
+  /* セル・セクション途中切れ防止 */
   .doc-table tr { page-break-inside: avoid; break-inside: avoid; }
   .sh { page-break-after: avoid; break-after: avoid; }
-  /* 背景色・ボーダー印刷対応 */
-  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
   .doc-table td { border: 1px solid #d0d0d0 !important; }
   .sh td { border-top: 1px solid #d0d0d0 !important; border-left: 1px solid #d0d0d0 !important; }
-  @page { size: A4; margin: 10mm; }
+  @page { size: A4; margin: 8mm; }
 }
 </style>
 <!-- Firebase Auth (認証チェックのみ) -->
