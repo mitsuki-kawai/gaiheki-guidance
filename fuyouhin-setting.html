@@ -296,7 +296,7 @@ a.header-logo:hover { opacity: 0.8; }
 
 <!-- ヘッダー -->
 <div class="header">
-  <a href="fuyouhin.html" class="header-logo"><img src="fuyouhin-logo.png" alt="不用品回収の窓口" height="32" style="display:block"></a>
+  <a href="fuyouhin.html" class="header-logo"><img src="fuyouhin-logo.png" alt="不用品回収の窓口" style="display:block" height="32"></a>
   <a href="fuyouhin.html" class="btn-back" style="margin-left:auto">戻る</a>
 </div>
 
@@ -521,7 +521,7 @@ const DEFAULT_SETTINGS = {
   },
   holidayText: '弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。\n配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。',
   excludeText: '・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人（例：山田 太郎）\n上記にあてはまるお客様情報については、お手数ですが私までご報告ください。',
-  staffList: ['恩田雅史', '鈴木宏午', '皆川進太', '中村元彌', '松本そよ', '穴澤萌花', '亀井翼', '染葉健介', '杉本山東'],
+  staffList: ['植杉達樹', '富田凜', '前田優真', '橋本佳治', '永泉沙也花', '山田大起', '小池克侑'],
   loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '', loginUrl: 'https://business.gaihekiplus.com/sign_in',
   paymentConfig: [
     { id:'pm1', name:'クレジットカード', useGroups:true, groups:[
@@ -544,7 +544,7 @@ const DEFAULT_SETTINGS = {
 
 function getSettings() {
   try {
-    const s = JSON.parse(localStorage.getItem('gaiheki_settings') || 'null');
+    const s = JSON.parse(localStorage.getItem('fuyouhin_settings') || 'null');
     if (!s) return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
     return {
       ...DEFAULT_SETTINGS, ...s,
@@ -961,11 +961,11 @@ function saveSectionData(key, data) {
   console.log('[saveSectionData] 開始 key=' + key);
   console.log('[saveSectionData] 保存するデータ:', JSON.stringify(data, null, 2));
   try {
-    const existing = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+    const existing = JSON.parse(localStorage.getItem('fuyouhin_settings') || '{}');
     console.log('[saveSectionData] 既存のlocalStorage:', JSON.stringify(existing, null, 2));
     const merged = { ...existing, ...data };
-    localStorage.setItem('gaiheki_settings', JSON.stringify(merged));
-    const verify = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+    localStorage.setItem('fuyouhin_settings', JSON.stringify(merged));
+    const verify = JSON.parse(localStorage.getItem('fuyouhin_settings') || '{}');
     console.log('[saveSectionData] 保存後のlocalStorage[' + key + ']:', verify[key] || merged);
     console.log('[saveSectionData] 完了 key=' + key);
   } catch(e) {
@@ -1079,7 +1079,7 @@ const PT_RANGE = {
 
 function amgrLoad() {
   try {
-    const s = localStorage.getItem('gaiheki_area_data');
+    const s = localStorage.getItem('fuyouhin_area_data');
     amgrData = s ? JSON.parse(s) : [];
   } catch(e) { amgrData = []; }
   amgrPopulatePref();
@@ -1295,7 +1295,7 @@ function amgrAddEntry() {
 
 function saveAreaSection() {
   try {
-    localStorage.setItem('gaiheki_area_data', JSON.stringify(amgrData));
+    localStorage.setItem('fuyouhin_area_data', JSON.stringify(amgrData));
     clearDirty('area');
     snapshotSection('area');
     console.log('[settings] saveAreaSection: saved', amgrData.length, 'entries');
@@ -1341,7 +1341,7 @@ function saveSettings() {
     paymentConfig: JSON.parse(JSON.stringify(pmConfig)),
   };
 
-  localStorage.setItem('gaiheki_settings', JSON.stringify(settings));
+  localStorage.setItem('fuyouhin_settings', JSON.stringify(settings));
 
   const toast = document.getElementById('toast');
   toast.classList.add('show');
@@ -1379,10 +1379,10 @@ function escHtml(s) {
   document.getElementById('login-url').value      = s.loginUrl;
 
   // CS担当者: localStorageにデータがなければデフォルトを強制書き込み
-  const raw = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+  const raw = JSON.parse(localStorage.getItem('fuyouhin_settings') || '{}');
   if (!raw.csStaff || !raw.csStaff.length) {
     raw.csStaff = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.csStaff));
-    localStorage.setItem('gaiheki_settings', JSON.stringify(raw));
+    localStorage.setItem('fuyouhin_settings', JSON.stringify(raw));
     csStaff = raw.csStaff;
   } else {
     csStaff = raw.csStaff;
@@ -1390,10 +1390,10 @@ function escHtml(s) {
   csRenderList();
 
   // 決済手段: localStorageにデータがなければデフォルトを強制書き込み
-  const raw2 = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+  const raw2 = JSON.parse(localStorage.getItem('fuyouhin_settings') || '{}');
   if (!raw2.paymentConfig || !raw2.paymentConfig.length) {
     raw2.paymentConfig = JSON.parse(JSON.stringify(DEFAULT_SETTINGS.paymentConfig));
-    localStorage.setItem('gaiheki_settings', JSON.stringify(raw2));
+    localStorage.setItem('fuyouhin_settings', JSON.stringify(raw2));
     pmConfig = raw2.paymentConfig;
   } else {
     pmConfig = raw2.paymentConfig;

@@ -433,7 +433,7 @@ a.lb-url:hover { text-decoration: underline; }
 <!-- ══ 左ナビ ══ -->
 <div class="nav">
   <div class="nav-logo">
-    <a href="osouji.html" class="brand"><img src="osouji-logo.png" alt="おそうじ合衆国" height="32" style="display:block"></a>
+    <a href="osouji.html" class="brand"><img src="osouji-logo.png" alt="おそうじ合衆国" style="display:block" height="32"></a>
     <a href="osouji.html" class="back-link pc-back-link">戻る</a>
     <div class="sub">ガイダンス資料作成</div>
     <div class="sp-nav-right">
@@ -1769,15 +1769,15 @@ let _cachedAreaData = null;
 function getAreaData() {
   if (_cachedAreaData) return _cachedAreaData;
   try {
-    const s = localStorage.getItem('gaiheki_area_data');
+    const s = localStorage.getItem('osouji_area_data');
     if (s) { _cachedAreaData = JSON.parse(s); return _cachedAreaData; }
   } catch(e) {}
   return AREA_DATA;
 }
 // 初回ロード時に localStorage を初期化（設定画面から参照するため）
 (function() {
-  if (!localStorage.getItem('gaiheki_area_data')) {
-    try { localStorage.setItem('gaiheki_area_data', JSON.stringify(AREA_DATA)); } catch(e) {}
+  if (!localStorage.getItem('osouji_area_data')) {
+    try { localStorage.setItem('osouji_area_data', JSON.stringify(AREA_DATA)); } catch(e) {}
   }
 })();
 
@@ -1815,7 +1815,7 @@ let _settingsOverride = null; // 既存案件編集時に snapshot で上書き
 function getSettings() {
   if (_settingsOverride) return _settingsOverride;
   try {
-    const s = JSON.parse(localStorage.getItem('gaiheki_settings') || 'null');
+    const s = JSON.parse(localStorage.getItem('osouji_settings') || 'null');
     if (!s) return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
     return {
       ...DEFAULT_SETTINGS, ...s,
@@ -2371,7 +2371,7 @@ function saveCase() {
 
     console.log('[FS] 案件保存開始:', id);
     var db = firebase.firestore();
-    db.collection('cases').doc(id).set(caseData)
+    db.collection('cases_osouji').doc(id).set(caseData)
       .then(function () {
         console.log('[FS] 案件保存成功:', id);
         // templates/gaiheki を caseSnapshots/{id} にコピー（スナップショット）
@@ -2401,7 +2401,7 @@ function saveCase() {
     var editId = new URLSearchParams(location.search).get('id');
     if (!editId) return;
 
-    firebase.firestore().collection('cases').doc(editId).get()
+    firebase.firestore().collection('cases_osouji').doc(editId).get()
       .then(function (doc) {
         if (!doc.exists) { console.warn('[FS] 案件なし:', editId); return; }
         var c = doc.data();

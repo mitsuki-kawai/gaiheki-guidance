@@ -2371,7 +2371,7 @@ function saveCase() {
 
     console.log('[FS] 案件保存開始:', id);
     var db = firebase.firestore();
-    db.collection('cases').doc(id).set(caseData)
+    db.collection('cases_gaiheki').doc(id).set(caseData)
       .then(function () {
         console.log('[FS] 案件保存成功:', id);
         // templates/gaiheki を caseSnapshots/{id} にコピー（スナップショット）
@@ -2401,7 +2401,7 @@ function saveCase() {
     var editId = new URLSearchParams(location.search).get('id');
     if (!editId) return;
 
-    firebase.firestore().collection('cases').doc(editId).get()
+    firebase.firestore().collection('cases_gaiheki').doc(editId).get()
       .then(function (doc) {
         if (!doc.exists) { console.warn('[FS] 案件なし:', editId); return; }
         var c = doc.data();

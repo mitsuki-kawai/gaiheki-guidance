@@ -197,7 +197,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 <!-- ── ヘッダー ── -->
 <div class="header">
   <div class="header-logo">
-    <img src="fuyouhin-logo.png" alt="不用品回収の窓口" height="32" style="display:block;margin-bottom:2px">
+    <img src="fuyouhin-logo.png" alt="不用品回収の窓口" style="display:block;margin-bottom:2px" height="32">
   </div>
   <a href="fuyouhin-setting.html" class="btn-settings">⚙ 設定</a>
   <button class="btn-new" onclick="goToCreate()">＋ 新規作成</button>
@@ -427,7 +427,7 @@ document.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
     if (!confirm('この案件を削除しますか？')) return;
-    firebase.firestore().collection('cases').doc(id).delete()
+    firebase.firestore().collection('cases_fuyouhin').doc(id).delete()
       .then(function () { console.log('[FS] 案件削除:', id); })
       .catch(function (e) { console.error('[FS] 削除エラー:', e.code, e.message); });
   };
@@ -457,7 +457,7 @@ document.addEventListener('click', function(e) {
     if (el.widget) el.widget.style.display = '';
 
     console.log('[FS] Firestore監視開始');
-    firebase.firestore().collection('cases').onSnapshot(
+    firebase.firestore().collection('cases_fuyouhin').onSnapshot(
       function (snap) {
         _cache = snap.docs.map(function (d) {
           return Object.assign({ id: d.id }, d.data());
