@@ -207,6 +207,37 @@ a.header-logo:hover { opacity: 0.8; }
     min-height: 44px;
   }
 }
+/* ── 対応エリア設定 ── */
+.area-mgr-filter { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+.area-mgr-filter select { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; background: var(--white); }
+.area-mgr-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 12px; }
+.area-mgr-table th { background: var(--bg); border: 1px solid var(--border); padding: 7px 10px; text-align: left; font-weight: 600; font-size: 11px; color: var(--label); white-space: nowrap; }
+.area-mgr-table td { border: 1px solid var(--border); padding: 6px 10px; vertical-align: middle; }
+.area-mgr-table tr:hover td { background: #faf9ff; }
+.area-mgr-table .td-op { white-space: nowrap; width: 90px; }
+.area-mgr-empty { text-align: center; padding: 32px; color: var(--muted); font-size: 12px; }
+.area-mgr-add-card { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin-bottom: 12px; }
+.area-mgr-add-card .field { margin-bottom: 10px; }
+.area-mgr-add-card .field label { display: block; font-size: 11px; font-weight: 600; color: var(--label); margin-bottom: 4px; }
+.area-mgr-add-card .field input,
+.area-mgr-add-card .field select { width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; }
+.area-mgr-add-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.btn-area-add { padding: 8px 18px; background: var(--main); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; margin-right: 8px; }
+.btn-area-add:hover { opacity: .85; }
+.btn-area-cancel { padding: 8px 14px; background: var(--bg); color: var(--label); border: 1px solid var(--border); border-radius: 4px; font-size: 12px; cursor: pointer; }
+/* ── エリア行カード ── */
+.area-row-list { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
+.area-row { display:flex; align-items:center; gap:8px; padding:9px 14px; background:var(--white); border:1px solid var(--border); border-radius:6px; }
+.area-row-name { flex:1; font-size:13px; font-weight:500; color:var(--text); }
+.area-row-sub { font-size:11px; color:var(--muted); margin-top:1px; }
+.area-row-pts { font-size:12px; font-weight:700; color:var(--main); white-space:nowrap; min-width:36px; text-align:right; }
+.area-row-stats { font-size:11px; color:var(--muted); white-space:nowrap; }
+.area-row-edit { display:none; flex-direction:column; gap:8px; padding:10px 14px; background:var(--bg); border:1px solid var(--border); border-radius:6px; margin-bottom:6px; }
+.area-row-edit.open { display:flex; }
+.area-edit-grid { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+.area-edit-grid .field { margin:0; }
+.area-edit-grid .field label { display:block; font-size:10px; font-weight:600; color:var(--label); margin-bottom:3px; }
+.area-edit-grid .field input, .area-edit-grid .field select { width:100%; padding:4px 7px; border:1px solid var(--border); border-radius:4px; font-size:12px; font-family:inherit; }
 </style>
 </head>
 <body>
@@ -337,7 +368,7 @@ a.header-logo:hover { opacity: 0.8; }
           <option>中部</option><option>近畿</option><option>中国</option>
           <option>四国</option><option>九州・沖縄</option>
         </select>
-        <select id="amgr-pref" onchange="amgrRenderList()" disabled>
+        <select id="amgr-pref" onchange="amgrRenderList()">
           <option value="">すべての都道府県</option>
         </select>
       </div>
@@ -404,26 +435,6 @@ a.header-logo:hover { opacity: 0.8; }
   </div><!-- /main -->
 </div><!-- /body -->
 
-/* ── 対応エリア設定 ── */
-.area-mgr-filter { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
-.area-mgr-filter select { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; background: var(--white); }
-.area-mgr-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 12px; }
-.area-mgr-table th { background: var(--bg); border: 1px solid var(--border); padding: 7px 10px; text-align: left; font-weight: 600; font-size: 11px; color: var(--label); white-space: nowrap; }
-.area-mgr-table td { border: 1px solid var(--border); padding: 6px 10px; vertical-align: middle; }
-.area-mgr-table tr:hover td { background: #faf9ff; }
-.area-mgr-table .td-op { white-space: nowrap; width: 90px; }
-.area-mgr-empty { text-align: center; padding: 32px; color: var(--muted); font-size: 12px; }
-.area-mgr-add-card { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 16px; margin-bottom: 12px; }
-.area-mgr-add-card .field { margin-bottom: 10px; }
-.area-mgr-add-card .field label { display: block; font-size: 11px; font-weight: 600; color: var(--label); margin-bottom: 4px; }
-.area-mgr-add-card .field input,
-.area-mgr-add-card .field select { width: 100%; padding: 5px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; }
-.area-mgr-add-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.btn-area-add { padding: 8px 18px; background: var(--main); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: pointer; margin-right: 8px; }
-.btn-area-add:hover { opacity: .85; }
-.btn-area-cancel { padding: 8px 14px; background: var(--bg); color: var(--label); border: 1px solid var(--border); border-radius: 4px; font-size: 12px; cursor: pointer; }
-.btn-cs-add { width: 100%; padding: 10px; background: none; border: 1px dashed var(--border); border-radius: 6px; color: var(--label); font-size: 13px; cursor: pointer; transition: all .12s; margin-top: 8px; }
-.btn-cs-add:hover { border-color: var(--main); color: var(--main); background: #f7f6fb; }
 
 <div class="toast" id="toast">設定を保存しました</div>
 
@@ -794,6 +805,7 @@ function amgrLoad() {
     const s = localStorage.getItem('gaiheki_area_data');
     amgrData = s ? JSON.parse(s) : [];
   } catch(e) { amgrData = []; }
+  amgrPopulatePref();
   if (!amgrData.length) {
     document.getElementById('amgr-list').innerHTML =
       '<div class="area-mgr-empty">データがありません。create.htmlを一度開くとデータが読み込まれます。<br>または「＋ エリアを追加」で手動追加してください。</div>';
@@ -805,12 +817,16 @@ function amgrLoad() {
 function amgrOnRegion() {
   const region = document.getElementById('amgr-region').value;
   const prefSel = document.getElementById('amgr-pref');
-  prefSel.innerHTML = '<option value="">すべての都道府県</option>';
-  if (!region) { prefSel.disabled = true; amgrRenderList(); return; }
-  const prefs = [...new Set(amgrData.filter(d => d.region === region).map(d => d.pref))];
+  const source = region ? amgrData.filter(d => d.region === region) : amgrData;
+  const prefs = [...new Set(source.map(d => d.pref))];
   prefSel.innerHTML = '<option value="">すべての都道府県</option>' + prefs.map(p => `<option>${p}</option>`).join('');
-  prefSel.disabled = false;
   amgrRenderList();
+}
+
+function amgrPopulatePref() {
+  const prefs = [...new Set(amgrData.map(d => d.pref))];
+  const prefSel = document.getElementById('amgr-pref');
+  prefSel.innerHTML = '<option value="">すべての都道府県</option>' + prefs.map(p => `<option>${p}</option>`).join('');
 }
 
 function amgrRenderList() {
@@ -824,44 +840,55 @@ function amgrRenderList() {
     listEl.innerHTML = '<div class="area-mgr-empty">該当するエリアがありません。</div>';
     return;
   }
-  listEl.innerHTML = `
-    <table class="area-mgr-table">
-      <thead><tr>
-        <th>地方</th><th>都道府県</th><th>市区町村</th>
-        <th>ポイント</th><th>年間（下〜上限）</th><th>操作</th>
-      </tr></thead>
-      <tbody>
-        ${rows.map((d, i) => {
-          const gi = amgrData.indexOf(d);
-          return `<tr id="amgr-row-${gi}" data-gi="${gi}">
-            <td>${escHtml(d.region)}</td>
-            <td>${escHtml(d.pref)}</td>
-            <td>${escHtml(d.city)}</td>
-            <td>${d.points}pt</td>
-            <td>${d.min}〜${d.max}件</td>
-            <td class="td-op">
-              <button class="btn-edit" onclick="amgrEdit(${gi})">編集</button>
-              <button class="btn-del"  onclick="amgrDelete(${gi})">削除</button>
-            </td>
-          </tr>`;
-        }).join('')}
-      </tbody>
-    </table>`;
+  listEl.innerHTML = '<div class="area-row-list">' +
+    rows.map(d => {
+      const gi = amgrData.indexOf(d);
+      return `<div>
+        <div class="area-row" id="amgr-row-${gi}">
+          <div style="flex:1">
+            <div class="area-row-name">${escHtml(d.pref)}　${escHtml(d.city)}</div>
+            <div class="area-row-sub">${escHtml(d.region)}</div>
+          </div>
+          <span class="area-row-stats">${d.min}〜${d.max}件</span>
+          <span class="area-row-pts">${d.points}pt</span>
+          <button class="btn-edit" onclick="amgrEdit(${gi})">編集</button>
+          <button class="btn-del"  onclick="amgrDelete(${gi})">削除</button>
+        </div>
+        <div class="area-row-edit" id="amgr-edit-${gi}">
+          <div class="area-edit-grid">
+            <div class="field"><label>地方</label><input type="text" id="ae-region-${gi}" value="${escHtml(d.region)}"></div>
+            <div class="field"><label>都道府県</label><input type="text" id="ae-pref-${gi}" value="${escHtml(d.pref)}"></div>
+            <div class="field"><label>市区町村</label><input type="text" id="ae-city-${gi}" value="${escHtml(d.city)}"></div>
+            <div class="field"><label>ポイント</label>
+              <select id="ae-pts-${gi}" onchange="amgrEditAutoFill(${gi})">
+                ${['6','5','4','3','2','1','0.5'].map(v => `<option value="${v}"${parseFloat(v)===d.points?' selected':''}>${v}pt</option>`).join('')}
+              </select>
+            </div>
+            <div class="field"><label>年間（下限）</label><input type="number" id="ae-min-${gi}" value="${d.min}"></div>
+            <div class="field"><label>年間（上限）</label><input type="number" id="ae-max-${gi}" value="${d.max}"></div>
+          </div>
+          <div style="margin-top:8px">
+            <button class="btn-row-save" onclick="amgrSaveEdit(${gi})">保存</button>
+            <button class="btn-del" style="margin-left:6px" onclick="amgrCloseEdit(${gi})">キャンセル</button>
+          </div>
+        </div>
+      </div>`;
+    }).join('') + '</div>';
 }
 
 function amgrEdit(gi) {
-  const d = amgrData[gi];
-  const row = document.getElementById('amgr-row-' + gi);
-  row.innerHTML = `
-    <td><input type="text" value="${escHtml(d.region)}" id="ae-region-${gi}" style="width:90px;padding:3px 6px;border:1px solid var(--border);border-radius:3px;font-size:11px"></td>
-    <td><input type="text" value="${escHtml(d.pref)}"   id="ae-pref-${gi}"   style="width:90px;padding:3px 6px;border:1px solid var(--border);border-radius:3px;font-size:11px"></td>
-    <td><input type="text" value="${escHtml(d.city)}"   id="ae-city-${gi}"   style="width:90px;padding:3px 6px;border:1px solid var(--border);border-radius:3px;font-size:11px"></td>
-    <td><input type="number" value="${d.points}" id="ae-pts-${gi}" style="width:50px;padding:3px 6px;border:1px solid var(--border);border-radius:3px;font-size:11px" step="0.5" min="0.5"></td>
-    <td><input type="number" value="${d.min}" id="ae-min-${gi}" style="width:45px;padding:3px 4px;border:1px solid var(--border);border-radius:3px;font-size:11px">〜<input type="number" value="${d.max}" id="ae-max-${gi}" style="width:45px;padding:3px 4px;border:1px solid var(--border);border-radius:3px;font-size:11px"></td>
-    <td class="td-op">
-      <button class="btn-row-save" onclick="amgrSaveEdit(${gi})">保存</button>
-      <button class="btn-del" onclick="amgrRenderList()">✕</button>
-    </td>`;
+  document.getElementById('amgr-edit-' + gi).classList.toggle('open');
+}
+function amgrCloseEdit(gi) {
+  document.getElementById('amgr-edit-' + gi).classList.remove('open');
+}
+function amgrEditAutoFill(gi) {
+  const pts = document.getElementById('ae-pts-' + gi).value;
+  const range = PT_RANGE[pts];
+  if (range) {
+    document.getElementById('ae-min-' + gi).value = range[0];
+    document.getElementById('ae-max-' + gi).value = range[1];
+  }
 }
 
 function amgrSaveEdit(gi) {
@@ -873,6 +900,7 @@ function amgrSaveEdit(gi) {
     min:    parseInt(document.getElementById('ae-min-'+gi).value) || 0,
     max:    parseInt(document.getElementById('ae-max-'+gi).value) || 0,
   };
+  amgrCloseEdit(gi);
   amgrRenderList();
 }
 
