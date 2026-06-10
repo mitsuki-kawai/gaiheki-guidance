@@ -409,7 +409,6 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-title">対応エリア設定</div>
       <div class="section-desc">エリアデータを管理します。変更はcreate.htmlのエリア選択に反映されます。</div>
       <div class="area-mgr-filter">
-        <input type="text" id="amgr-search" placeholder="市区町村・都道府県を検索…" oninput="amgrRenderList()">
         <select id="amgr-region" onchange="amgrOnRegion()">
           <option value="">すべての地方</option>
           <option>北海道</option><option>東北</option><option>関東</option>
@@ -419,6 +418,7 @@ a.header-logo:hover { opacity: 0.8; }
         <select id="amgr-pref" onchange="amgrRenderList()">
           <option value="">すべての都道府県</option>
         </select>
+        <input type="text" id="amgr-search" placeholder="市区町村・都道府県を検索…" oninput="amgrRenderList()">
       </div>
       <div id="amgr-list"></div>
       <div id="amgr-add-form" style="display:none" class="area-mgr-add-card">
