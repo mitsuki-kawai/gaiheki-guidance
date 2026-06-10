@@ -404,6 +404,8 @@ a.lb-url:hover { text-decoration: underline; }
 <!-- Firebase Auth (認証チェックのみ) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
 <script>
 (function() {
   firebase.initializeApp({
@@ -2327,6 +2329,27 @@ function saveCase() {
   render();
   renderP4();
   scalePreview();
+})();
+</script>
+
+<script>
+/* ── Firestore バックアップ（create.html 追加コード・既存JS変更なし） ── */
+(function() {
+  var _origSetItem = localStorage.setItem.bind(localStorage);
+  localStorage.setItem = function(key, value) {
+    _origSetItem(key, value); // localStorage には必ず保存
+    if (key !== 'gaiheki_cases') return;
+    try {
+      var cases = JSON.parse(value);
+      if (!Array.isArray(cases) || cases.length === 0) return;
+      var caseData = cases[0]; // saveCase は unshift で先頭に追加
+      if (!caseData || !caseData.id) return;
+      if (typeof firebase === 'undefined') return;
+      firebase.firestore().collection('cases').doc(caseData.id).set(caseData)
+        .then(function() { console.log('[FS] case saved:', caseData.id); })
+        .catch(function(e) { console.warn('[FS] case save warn:', e.message); });
+    } catch(e) { /* localStorage 保存は完了済み */ }
+  };
 })();
 </script>
 </body>

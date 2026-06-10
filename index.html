@@ -150,6 +150,8 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 <!-- Firebase Auth (認証チェックのみ) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+
 <script>
 (function() {
   firebase.initializeApp({
@@ -337,6 +339,46 @@ function escHtml(s) {
 }
 
 renderPage();
+</script>
+
+<script>
+/* ── Firestore リアルタイム同期（index.html 追加コード・既存JS変更なし） ── */
+(function() {
+  function mergeAndRender(fsDocs) {
+    try {
+      var lsCases = JSON.parse(localStorage.getItem('gaiheki_cases') || '[]');
+      var map = {};
+      lsCases.forEach(function(c) { if (c.id) map[c.id] = c; });
+      fsDocs.forEach(function(c) { if (c.id) map[c.id] = c; }); // Firestore で上書き
+      var merged = Object.values(map);
+      merged.sort(function(a, b) {
+        return (b.createdAt || '').localeCompare(a.createdAt || '');
+      });
+      localStorage.setItem('gaiheki_cases', JSON.stringify(merged));
+      if (typeof renderPage === 'function') renderPage();
+    } catch(e) {
+      console.warn('[FS] merge warn:', e.message);
+      if (typeof renderPage === 'function') renderPage();
+    }
+  }
+
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user) return;
+    firebase.firestore().collection('cases').onSnapshot(
+      function(snap) {
+        console.log('[FS] cases snapshot:', snap.size, '件');
+        var docs = snap.docs.map(function(d) {
+          return Object.assign({ id: d.id }, d.data());
+        });
+        mergeAndRender(docs);
+      },
+      function(err) {
+        console.warn('[FS] snapshot warn:', err.message);
+        if (typeof renderPage === 'function') renderPage(); // FS失敗でもlocalStorageで表示
+      }
+    );
+  });
+})();
 </script>
 </body>
 </html>
