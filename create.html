@@ -1781,7 +1781,10 @@ const DEFAULT_SETTINGS = {
   ],
 };
 
+let _settingsOverride = null; // 既存案件編集時に snapshot で上書き
+
 function getSettings() {
+  if (_settingsOverride) return _settingsOverride;
   try {
     const s = JSON.parse(localStorage.getItem('gaiheki_settings') || 'null');
     if (!s) return JSON.parse(JSON.stringify(DEFAULT_SETTINGS));
@@ -2217,6 +2220,24 @@ function collectFormData() {
   return data;
 }
 
+
+function collectSettingsSnapshot() {
+  const s = getSettings();
+  return {
+    plans:         JSON.parse(JSON.stringify(s.plans)),
+    paymentConfig: JSON.parse(JSON.stringify(s.paymentConfig)),
+    holidayText:   s.holidayText   || '',
+    excludeText:   s.excludeText   || '',
+    loginUrl:      s.loginUrl      || '',
+    photoUrl:      s.photoUrl      || '',
+    storePageUrl:  s.storePageUrl  || '',
+    loanDocUrl:    s.loanDocUrl    || '',
+    loanApplyUrl:  s.loanApplyUrl  || '',
+    giftSurveyUrl: s.giftSurveyUrl || '',
+    giftWorkUrl:   s.giftWorkUrl   || '',
+  };
+}
+
 function saveCase() {
   if (!v('company') && !v('contact_name')) { alert('会社名または担当者名を入力してください'); return; }
   if (!v('assignee')) { alert('担当者を選択してください'); return; }
@@ -2228,7 +2249,8 @@ function saveCase() {
     id, assignee: v('assignee'), company: v('company') || v('contact_name'), plan: v('plan'),
     guidance_status: (document.querySelector('input[name="guidance_status"]:checked') || {}).value || '未実施',
     createdAt: existingCase ? existingCase.createdAt : new Date().toISOString().split('T')[0],
-    formData: collectFormData()
+    formData: collectFormData(),
+    settingsSnapshot: collectSettingsSnapshot()
   };
   const cases = existing.filter(c => c.id !== id);
   cases.unshift(caseData);
@@ -2254,6 +2276,11 @@ function saveCase() {
   }
   const c = getCases().find(c => c.id === editId);
   if (!c) { updatePlanDefaults(); render(); return; }
+  // スナップショットがあれば設定値として優先使用（新規はlocalStorageを使用）
+  if (c.settingsSnapshot) {
+    const base = JSON.parse(JSON.stringify(getSettings())); // staffList/csStaff は現在値
+    _settingsOverride = Object.assign(base, c.settingsSnapshot);
+  }
   const d = c.formData;
   ['assignee','cs_assignee','company','contact_name','issue_date','plan','monthly_fee','commission','guarantee',
    'monthly_est','half_est','payment_status','payment_note','login_id'].forEach(f => {
