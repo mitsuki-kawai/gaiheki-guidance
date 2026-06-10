@@ -211,8 +211,8 @@ a.header-logo:hover { opacity: 0.8; }
 .area-mgr-filter { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
 .area-mgr-filter select { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; background: var(--white); }
 .area-mgr-filter input[type="text"] { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; background: var(--white); flex: 1; min-width: 120px; }
-.amgr-pref-auto:disabled { opacity: 1 !important; color: var(--text) !important; cursor: default !important; }
-.area-mgr-add-card select.amgr-pref-auto:disabled { opacity: 1 !important; color: var(--text) !important; }
+.amgr-pref-auto:disabled { opacity: 1 !important; color: var(--text) !important; cursor: default !important; appearance: none !important; -webkit-appearance: none !important; background-image: none !important; }
+.area-mgr-add-card select.amgr-pref-auto:disabled { opacity: 1 !important; color: var(--text) !important; appearance: none !important; -webkit-appearance: none !important; background-image: none !important; }
 .area-mgr-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 12px; }
 .area-mgr-table th { background: var(--bg); border: 1px solid var(--border); padding: 7px 10px; text-align: left; font-weight: 600; font-size: 11px; color: var(--label); white-space: nowrap; }
 .area-mgr-table td { border: 1px solid var(--border); padding: 6px 10px; vertical-align: middle; }
@@ -406,10 +406,10 @@ a.header-logo:hover { opacity: 0.8; }
             </select>
           </div>
           <div class="field"><label>年間想定（下限）</label>
-            <input type="number" id="amgr-add-min" placeholder="16">
+            <input type="number" id="amgr-add-min" placeholder="—" disabled>
           </div>
           <div class="field"><label>年間想定（上限）</label>
-            <input type="number" id="amgr-add-max" placeholder="20">
+            <input type="number" id="amgr-add-max" placeholder="—" disabled>
           </div>
         </div>
         <div style="margin-top:12px">
