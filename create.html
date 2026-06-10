@@ -160,6 +160,18 @@ a.lb-url:hover { text-decoration: underline; }
 .area-tag button { background: none; border: none; color: var(--main); cursor: pointer; font-size: 14px; line-height: 1; padding: 0; opacity: .6; }
 .area-tag button:hover { opacity: 1; }
 .area-add { display: flex; gap: 6px; }
+.area-select-row { display: flex; gap: 5px; margin-bottom: 6px; }
+.area-select-row select { flex: 1; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; font-family: inherit; background: var(--white); }
+.area-select-row select:disabled { opacity: .45; cursor: not-allowed; }
+.area-city-list { max-height: 180px; overflow-y: auto; border: 1px solid var(--border); border-radius: 4px; background: var(--white); margin-bottom: 7px; }
+.area-city-item { display: flex; align-items: center; gap: 7px; padding: 5px 10px; border-bottom: 1px solid #f0f0f0; font-size: 11.5px; cursor: pointer; }
+.area-city-item:last-child { border-bottom: none; }
+.area-city-item:hover { background: #faf9ff; }
+.area-city-item input[type="checkbox"] { flex-shrink: 0; accent-color: var(--main); cursor: pointer; width: 13px; height: 13px; }
+.area-city-name { flex: 1; color: var(--text); }
+.area-city-stats { font-size: 10.5px; color: var(--muted); white-space: nowrap; }
+.area-city-pts { font-size: 10.5px; font-weight: 700; color: var(--main); white-space: nowrap; min-width: 26px; text-align: right; }
+.area-summary { font-size: 11px; color: var(--label); background: #f7f6fb; border-radius: 4px; padding: 5px 10px; margin-top: 2px; line-height: 1.7; }
 .radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
 .radio-option { display: inline-flex; align-items: center; cursor: pointer; padding: 6px 14px; border: 1px solid #ccc; border-radius: 20px; font-size: 12px; color: #999; background: var(--white); transition: all .12s; user-select: none; }
 .radio-option:has(input:checked) { border-color: var(--main); background: var(--main); color: var(--white); font-weight: 600; }
@@ -728,9 +740,8 @@ a.lb-url:hover { text-decoration: underline; }
           <option>四国</option><option>九州・沖縄</option>
         </select>
         <select id="area-pref" onchange="areaOnPref()" disabled><option value="">都道府県</option></select>
-        <select id="area-city" disabled><option value="">市区町村</option></select>
-        <button class="area-add-btn" onclick="addAreaFromSelect()">追加</button>
       </div>
+      <div class="area-city-list" id="area-city-list" style="display:none"></div>
       <div class="area-tags" id="area-tags"></div>
       <div class="area-summary" id="area-summary" style="display:none"></div>
       <div class="f-sec">お支払い</div>
@@ -1986,34 +1997,54 @@ function populateAssigneeSelect() {
 function areaOnRegion() {
   const region = document.getElementById('area-region').value;
   const prefSel = document.getElementById('area-pref');
-  const citySel = document.getElementById('area-city');
-  if (!region) { prefSel.disabled = true; citySel.disabled = true; return; }
+  const cityList = document.getElementById('area-city-list');
+  prefSel.innerHTML = '<option value="">都道府県</option>';
+  prefSel.disabled = !region;
+  cityList.style.display = 'none';
+  cityList.innerHTML = '';
+  if (!region) return;
   const prefs = [...new Set(AREA_DATA.filter(d => d.region === region).map(d => d.pref))];
   prefSel.innerHTML = '<option value="">都道府県</option>' + prefs.map(p => `<option>${p}</option>`).join('');
-  prefSel.disabled = false;
-  citySel.innerHTML = '<option value="">市区町村</option>';
-  citySel.disabled = true;
 }
 function areaOnPref() {
   const pref = document.getElementById('area-pref').value;
-  const citySel = document.getElementById('area-city');
-  if (!pref) { citySel.disabled = true; return; }
+  const cityList = document.getElementById('area-city-list');
+  cityList.innerHTML = '';
+  if (!pref) { cityList.style.display = 'none'; return; }
   const cities = AREA_DATA.filter(d => d.pref === pref);
-  citySel.innerHTML = '<option value="">市区町村</option>' + cities.map(c => `<option value="${esc(c.city)}">${esc(c.city)}</option>`).join('');
-  citySel.disabled = false;
+  cityList.innerHTML = cities.map(c => {
+    const checked = areas.some(a => a.pref === pref && a.city === c.city) ? 'checked' : '';
+    const pts = c.points % 1 === 0 ? c.points : c.points;
+    return `<label class="area-city-item">
+      <input type="checkbox" ${checked} onchange="onCityCheck('${esc(pref)}','${esc(c.city)}',this)">
+      <span class="area-city-name">${esc(c.city)}</span>
+      <span class="area-city-stats">${c.min}〜${c.max}件</span>
+      <span class="area-city-pts">${pts}pt</span>
+    </label>`;
+  }).join('');
+  cityList.style.display = '';
 }
-function addAreaFromSelect() {
-  const pref = document.getElementById('area-pref').value;
-  const city = document.getElementById('area-city').value;
-  if (!pref || !city) { alert('都道府県と市区町村を選択してください'); return; }
-  const data = AREA_DATA.find(d => d.pref === pref && d.city === city);
-  if (!data) return;
-  if (areas.find(a => a.pref === pref && a.city === city)) { alert('すでに追加済みです'); return; }
-  areas.push({ pref, city, points: data.points, min: data.min, max: data.max });
+function onCityCheck(pref, city, cb) {
+  if (cb.checked) {
+    if (!areas.some(a => a.pref === pref && a.city === city)) {
+      const data = AREA_DATA.find(d => d.pref === pref && d.city === city);
+      if (data) areas.push({ pref, city, points: data.points, min: data.min, max: data.max });
+    }
+  } else {
+    const idx = areas.findIndex(a => a.pref === pref && a.city === city);
+    if (idx !== -1) areas.splice(idx, 1);
+  }
   renderAreaTags();
   render();
 }
-function removeArea(i) { areas.splice(i, 1); renderAreaTags(); render(); }
+function removeArea(i) {
+  areas.splice(i, 1);
+  renderAreaTags();
+  // タグ削除後にチェックボックスの状態を同期
+  const pref = document.getElementById('area-pref').value;
+  if (pref) areaOnPref();
+  render();
+}
 function renderAreaTags() {
   const tagsEl = document.getElementById('area-tags');
   const summEl = document.getElementById('area-summary');
@@ -2025,9 +2056,7 @@ function renderAreaTags() {
     const mn  = areas.reduce((s, a) => s + a.min, 0);
     const mx  = areas.reduce((s, a) => s + a.max, 0);
     summEl.innerHTML =
-      `合計ポイント：<strong>${pts}pt</strong>　` +
-      `年間想定件数：<strong>${mn}〜${mx}件</strong>　` +
-      `月間換算：<strong>${Math.floor(mn/12)}〜${Math.floor(mx/12)}件</strong>`;
+      `合計：<strong>${pts}pt</strong> / 年間 <strong>${mn}〜${mx}件</strong>（月間 <strong>${Math.floor(mn/12)}〜${Math.floor(mx/12)}件</strong>）`;
     summEl.style.display = '';
   } else {
     summEl.style.display = 'none';
