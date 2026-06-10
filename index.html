@@ -147,20 +147,11 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
   .sidebar { padding: 8px 12px; }
 }
 </style>
-<!-- Firebase Auth -->
+<!-- Firebase -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
-<script>
-firebase.initializeApp({
-  apiKey: "AIzaSyCtKA71KjRHQvMPtYcURVjuSKaOanoEh7Y",
-  authDomain: "madoguchi-guidance.firebaseapp.com",
-  projectId: "madoguchi-guidance",
-  storageBucket: "madoguchi-guidance.firebasestorage.app",
-  messagingSenderId: "1080989158935",
-  appId: "1:1080989158935:web:4b75da9e3252e8086a5652"
-});
-</script>
-<script src="auth-check.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="firebase-app.js"></script>
 </head>
 <body>
 <div class="app">
@@ -224,17 +215,15 @@ function goToCreate() {
   location.href = url;
 }
 
-function getCases() {
-  try { return JSON.parse(localStorage.getItem('gaiheki_cases') || '[]'); } catch(e) { return []; }
-}
+let _casesCache = [];
+function getCases() { return _casesCache; }
 
 function deleteCase(id, e) {
   e.preventDefault();
   e.stopPropagation();
   if (!confirm('この案件を削除しますか？')) return;
-  const cases = getCases().filter(c => c.id !== id);
-  localStorage.setItem('gaiheki_cases', JSON.stringify(cases));
-  renderPage();
+  db.collection('cases').doc(id).delete()
+    .catch(err => console.error('案件削除エラー:', err));
 }
 
 const planLabel = {light:'LIGHT', basic:'BASIC', pro:'PRO'};
@@ -330,7 +319,18 @@ function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-renderPage();
+// ── Firebase Auth + Firestore cases リアルタイム ──
+auth.onAuthStateChanged(user => {
+  if (!user || !(user.email || '').endsWith('@' + ALLOWED_DOMAIN)) {
+    location.replace('login.html'); return;
+  }
+  db.collection('cases').onSnapshot(snap => {
+    _casesCache = snap.docs.map(d => ({ ...d.data(), id: d.id }));
+    // 作成日降順
+    _casesCache.sort((a, b) => (b.createdAt || '').localeCompare(a.createdAt || ''));
+    renderPage();
+  }, err => console.error('cases snapshot error:', err));
+});
 </script>
 </body>
 </html>
