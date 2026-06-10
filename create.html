@@ -2335,20 +2335,45 @@ function saveCase() {
 <script>
 /* ── Firestore バックアップ（create.html 追加コード・既存JS変更なし） ── */
 (function() {
+  // firebase.firestore() 初期化確認
+  console.log('[FS] スクリプト読み込み完了');
+  console.log('[FS] firebase利用可能:', typeof firebase !== 'undefined');
+  if (typeof firebase !== 'undefined') {
+    try {
+      var _db = firebase.firestore();
+      console.log('[FS] Firestore初期化OK:', !!_db);
+    } catch(e) {
+      console.error('[FS] Firestore初期化エラー:', e);
+    }
+  }
+
   var _origSetItem = localStorage.setItem.bind(localStorage);
   localStorage.setItem = function(key, value) {
     _origSetItem(key, value); // localStorage には必ず保存
     if (key !== 'gaiheki_cases') return;
+    console.log('保存開始');
     try {
       var cases = JSON.parse(value);
-      if (!Array.isArray(cases) || cases.length === 0) return;
+      if (!Array.isArray(cases) || cases.length === 0) {
+        console.warn('[FS] casesが空です');
+        return;
+      }
       var caseData = cases[0]; // saveCase は unshift で先頭に追加
-      if (!caseData || !caseData.id) return;
-      if (typeof firebase === 'undefined') return;
+      if (!caseData || !caseData.id) {
+        console.warn('[FS] caseDataまたはidが不正:', caseData);
+        return;
+      }
+      if (typeof firebase === 'undefined') {
+        console.error('[FS] firebaseが未定義です');
+        return;
+      }
+      console.log('Firestore保存試行', caseData);
       firebase.firestore().collection('cases').doc(caseData.id).set(caseData)
-        .then(function() { console.log('[FS] case saved:', caseData.id); })
-        .catch(function(e) { console.warn('[FS] case save warn:', e.message); });
-    } catch(e) { /* localStorage 保存は完了済み */ }
+        .then(function() { console.log('Firestore保存成功', caseData.id); })
+        .catch(function(e) { console.error('Firestore保存失敗', e); });
+    } catch(e) {
+      console.error('[FS] 予期しないエラー:', e);
+    }
   };
 })();
 </script>
