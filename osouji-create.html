@@ -2491,5 +2491,27 @@ function saveCase() {
   });
 })();
 </script>
+
+<script>
+/* ── 担当者選択肢を Firestore settings/osouji から動的に取得 ── */
+(function() {
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user) return;
+    firebase.firestore().collection('settings').doc('osouji').get()
+      .then(function(doc) {
+        if (!doc.exists || !doc.data().staffList || !doc.data().staffList.length) return;
+        // localStorage を更新して getSettings() に反映
+        try {
+          var cur = JSON.parse(localStorage.getItem('osouji_settings') || '{}');
+          cur.staffList = doc.data().staffList;
+          localStorage.setItem('osouji_settings', JSON.stringify(cur));
+        } catch(e) {}
+        // 担当者ドロップダウンを再描画 (staffList from Firestore)
+        if (typeof populateAssigneeSelect === 'function') populateAssigneeSelect();
+      })
+      .catch(function(e) { /* Firestore 読み込み失敗は無視 */ });
+  });
+})();
+</script>
 </body>
 </html>
