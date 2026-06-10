@@ -210,6 +210,9 @@ a.header-logo:hover { opacity: 0.8; }
 /* ── 対応エリア設定 ── */
 .area-mgr-filter { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
 .area-mgr-filter select { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; background: var(--white); }
+.area-mgr-filter input[type="text"] { padding: 5px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; background: var(--white); flex: 1; min-width: 120px; }
+.amgr-pref-auto:disabled { opacity: 1 !important; color: var(--text) !important; cursor: default !important; }
+.area-mgr-add-card select.amgr-pref-auto:disabled { opacity: 1 !important; color: var(--text) !important; }
 .area-mgr-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 12px; }
 .area-mgr-table th { background: var(--bg); border: 1px solid var(--border); padding: 7px 10px; text-align: left; font-weight: 600; font-size: 11px; color: var(--label); white-space: nowrap; }
 .area-mgr-table td { border: 1px solid var(--border); padding: 6px 10px; vertical-align: middle; }
@@ -362,6 +365,7 @@ a.header-logo:hover { opacity: 0.8; }
       <div class="section-title">対応エリア設定</div>
       <div class="section-desc">エリアデータを管理します。変更はcreate.htmlのエリア選択に反映されます。</div>
       <div class="area-mgr-filter">
+        <input type="text" id="amgr-search" placeholder="市区町村・都道府県を検索…" oninput="amgrRenderList()">
         <select id="amgr-region" onchange="amgrOnRegion()">
           <option value="">すべての地方</option>
           <option>北海道</option><option>東北</option><option>関東</option>
@@ -643,6 +647,10 @@ function pmUpdateNote(methodId, groupId, idx, value) {
 }
 
 function showSection(id, btn) {
+  if (id !== 'area' && amgrDirty) {
+    if (!confirm('対応エリア設定に保存されていない変更があります。移動しますか？')) return;
+    amgrDirty = false;
+  }
   document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.sidenav-item').forEach(b => b.classList.remove('active'));
   document.getElementById('sec-' + id).classList.add('active');
@@ -794,6 +802,7 @@ function saveUrlSection() {
 
 /* ── 対応エリア管理 ── */
 let amgrData = [];
+let amgrDirty = false;
 
 const PT_RANGE = {
   '6': [48, 60], '5': [40, 50], '4': [32, 40],
@@ -820,6 +829,14 @@ function amgrOnRegion() {
   const source = region ? amgrData.filter(d => d.region === region) : amgrData;
   const prefs = [...new Set(source.map(d => d.pref))];
   prefSel.innerHTML = '<option value="">すべての都道府県</option>' + prefs.map(p => `<option>${p}</option>`).join('');
+  if (prefs.length === 1) {
+    prefSel.value = prefs[0];
+    prefSel.disabled = true;
+    prefSel.classList.add('amgr-pref-auto');
+  } else {
+    prefSel.disabled = false;
+    prefSel.classList.remove('amgr-pref-auto');
+  }
   amgrRenderList();
 }
 
@@ -832,9 +849,11 @@ function amgrPopulatePref() {
 function amgrRenderList() {
   const region = document.getElementById('amgr-region').value;
   const pref   = document.getElementById('amgr-pref').value;
+  const q      = (document.getElementById('amgr-search')?.value || '').trim();
   let rows = amgrData;
   if (region) rows = rows.filter(d => d.region === region);
   if (pref)   rows = rows.filter(d => d.pref === pref);
+  if (q)      rows = rows.filter(d => d.city.includes(q) || d.pref.includes(q));
   const listEl = document.getElementById('amgr-list');
   if (!rows.length) {
     listEl.innerHTML = '<div class="area-mgr-empty">該当するエリアがありません。</div>';
@@ -900,6 +919,7 @@ function amgrSaveEdit(gi) {
     min:    parseInt(document.getElementById('ae-min-'+gi).value) || 0,
     max:    parseInt(document.getElementById('ae-max-'+gi).value) || 0,
   };
+  amgrDirty = true;
   amgrCloseEdit(gi);
   amgrRenderList();
 }
@@ -907,6 +927,7 @@ function amgrSaveEdit(gi) {
 function amgrDelete(gi) {
   if (!confirm('「' + amgrData[gi].pref + ' ' + amgrData[gi].city + '」を削除しますか？')) return;
   amgrData.splice(gi, 1);
+  amgrDirty = true;
   amgrRenderList();
 }
 
@@ -925,11 +946,22 @@ function amgrHideAdd() { document.getElementById('amgr-add-form').style.display 
 function amgrAddOnRegion() {
   const region = document.getElementById('amgr-add-region').value;
   const prefSel = document.getElementById('amgr-add-pref');
-  if (!region) { prefSel.innerHTML = '<option value="">先に地方を選択</option>'; prefSel.disabled = true; return; }
+  if (!region) {
+    prefSel.innerHTML = '<option value="">先に地方を選択</option>';
+    prefSel.disabled = true;
+    prefSel.classList.remove('amgr-pref-auto');
+    return;
+  }
   const prefs = [...new Set(amgrData.filter(d => d.region === region).map(d => d.pref))];
   prefSel.innerHTML = '<option value="">選択</option>' + prefs.map(p => `<option>${p}</option>`).join('');
-  if (prefs.length === 1) { prefSel.value = prefs[0]; }
-  prefSel.disabled = false;
+  if (prefs.length === 1) {
+    prefSel.value = prefs[0];
+    prefSel.disabled = true;
+    prefSel.classList.add('amgr-pref-auto');
+  } else {
+    prefSel.disabled = false;
+    prefSel.classList.remove('amgr-pref-auto');
+  }
 }
 
 function amgrAutoFillMinMax() {
@@ -953,6 +985,7 @@ function amgrAddEntry() {
     return;
   }
   amgrData.push({ region, pref, city, points: pts, min: mn || 0, max: mx || 0 });
+  amgrDirty = true;
   amgrHideAdd();
   amgrRenderList();
 }
@@ -960,6 +993,7 @@ function amgrAddEntry() {
 function saveAreaSection() {
   try {
     localStorage.setItem('gaiheki_area_data', JSON.stringify(amgrData));
+    amgrDirty = false;
     console.log('[settings] saveAreaSection: saved', amgrData.length, 'entries');
   } catch(e) {
     console.error('[settings] saveAreaSection error:', e);
