@@ -28,6 +28,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 /* ── ヘッダー ── */
 .header{grid-column:1/-1;background:var(--white);border-bottom:1px solid var(--gray-border);display:flex;align-items:center;height:56px;padding:0 24px;gap:16px;position:sticky;top:0;z-index:10}
 .header-logo{font-size:18px;font-weight:800;letter-spacing:-0.5px;margin-right:auto}
+.biz-dropdown{margin-right:auto}
 .header-logo span{color:var(--purple)}
 .header-logo .sub{font-size:10px;color:var(--gray-text);font-weight:400;margin-left:6px;letter-spacing:0}
 .btn-new{display:flex;align-items:center;gap:5px;padding:8px 16px;background:#7c6fb5;color:var(--white);border:none;border-radius:7px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:background 0.13s}
@@ -162,11 +163,21 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 .btn-logout{display:block;width:100%;padding:11px 14px;font-size:13px;font-weight:600;color:#e53935;background:none;border:none;cursor:pointer;text-align:left;transition:background .12s}
 .btn-logout:hover{background:#ffeaea}
 
-/* ── 事業部切り替え ── */
-.biz-tabs{padding:10px 8px 8px;border-bottom:1px solid var(--gray-border)}
-.biz-tab{display:block;width:100%;padding:7px 10px;border:none;border-radius:6px;font-size:12px;font-weight:500;color:var(--mid);background:none;cursor:pointer;text-align:left;transition:all .12s;text-decoration:none;margin-bottom:2px}
-.biz-tab:hover{background:var(--gray-bg);color:var(--purple)}
-.biz-tab.active{background:var(--purple-light);color:var(--purple);font-weight:700}
+
+
+/* ── 事業部ドロップダウン ── */
+.biz-dropdown{position:relative;display:flex;align-items:center}
+.biz-dd-btn{display:flex;align-items:center;gap:6px;background:none;border:none;cursor:pointer;padding:4px 8px;border-radius:6px;font-size:13px;font-weight:600;color:var(--dark);transition:background .12s}
+.biz-dd-btn:hover{background:var(--gray-bg)}
+.biz-dd-arrow{font-size:10px;color:var(--gray-text);transition:transform .15s}
+.biz-dd-btn.open .biz-dd-arrow{transform:rotate(180deg)}
+.biz-dd-menu{display:none;position:absolute;top:calc(100% + 6px);left:0;background:var(--white);border:1px solid var(--gray-border);border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);min-width:200px;overflow:hidden;z-index:100}
+.biz-dd-menu.open{display:block}
+.biz-dd-item{display:flex;align-items:center;gap:8px;padding:10px 14px;font-size:13px;font-weight:500;color:var(--dark);text-decoration:none;transition:background .12s;cursor:pointer}
+.biz-dd-item:hover{background:var(--gray-bg)}
+.biz-dd-item.active{font-weight:700;color:var(--purple)}
+.biz-dd-check{font-size:13px;width:16px;flex-shrink:0}
+
 </style>
 <!-- Firebase Auth (認証チェックのみ) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
@@ -196,8 +207,16 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 
 <!-- ── ヘッダー ── -->
 <div class="header">
-  <div class="header-logo">
-    <img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block;margin-bottom:2px">
+  <div class="biz-dropdown" id="biz-dropdown">
+    <button class="biz-dd-btn" id="biz-dd-btn" onclick="toggleBizDD()">
+      <img src="gaiheki-logo.png" alt="gaiheki+" height="32" style="display:block;margin-bottom:2px">
+      <span class="biz-dd-arrow">▼</span>
+    </button>
+    <div class="biz-dd-menu" id="biz-dd-menu">
+    <a href="gaiheki.html" class="biz-dd-item active"><span class="biz-dd-check">✓</span>🏠 gaiheki+</a>
+    <a href="osouji.html" class="biz-dd-item"><span class="biz-dd-check"></span>🧹 おそうじ合衆国</a>
+    <a href="fuyouhin.html" class="biz-dd-item"><span class="biz-dd-check"></span>📦 不用品回収の窓口</a>
+    </div>
   </div>
   <a href="gaiheki-setting.html" class="btn-settings">⚙ 設定</a>
   <button class="btn-new" onclick="goToCreate()">＋ 新規作成</button>
@@ -205,11 +224,6 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 
 <!-- ── 左サイドバー ── -->
 <div class="sidebar">
-  <div class="biz-tabs">
-    <a href="gaiheki.html" class="biz-tab active">🏠 gaiheki+</a>
-    <a href="osouji.html"  class="biz-tab">🧹 おそうじ合衆国</a>
-    <a href="fuyouhin.html" class="biz-tab">📦 不用品回収の窓口</a>
-  </div>
   <div class="sidebar-section">担当者フィルター</div>
   <div id="filter-list"></div>
   <select id="filter-select" class="filter-select" onchange="setFilter(this.value)">
@@ -478,6 +492,21 @@ document.addEventListener('click', function(e) {
     );
   });
 })();
+
+function toggleBizDD() {
+  var btn = document.getElementById('biz-dd-btn');
+  var menu = document.getElementById('biz-dd-menu');
+  btn.classList.toggle('open');
+  menu.classList.toggle('open');
+}
+document.addEventListener('click', function(e) {
+  var dd = document.getElementById('biz-dropdown');
+  if (dd && !dd.contains(e.target)) {
+    document.getElementById('biz-dd-btn').classList.remove('open');
+    document.getElementById('biz-dd-menu').classList.remove('open');
+  }
+});
+
 </script>
 </body>
 </html>
