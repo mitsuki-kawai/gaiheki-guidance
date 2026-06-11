@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>案件プレビュー</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:#d8d8d8;min-height:100vh}
+.topbar{position:sticky;top:0;z-index:10;background:#fff;border-bottom:1px solid #ddd;height:48px;display:flex;align-items:center;padding:0 20px;gap:12px}
+.tb-back{font-size:12px;color:#666;text-decoration:none;padding:4px 10px;border-radius:4px;transition:background .12s}
+.tb-back:hover{background:#f3f3f3}
+.tb-title{font-size:13px;font-weight:600;color:#1a1a1a;flex:1}
+.btn-print{padding:6px 16px;background:#3F3277;color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;transition:opacity .12s}
+.btn-print:hover{opacity:.85}
+.preview-wrap{display:flex;flex-direction:column;align-items:center;gap:24px;padding:24px 0 48px}
+.a4-page{width:794px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.18);position:relative}
+.loading{padding:80px;text-align:center;color:#999;font-size:13px}
+.error{padding:80px;text-align:center;color:#c00;font-size:13px}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  body{background:white}
+  .topbar{display:none}
+  .preview-wrap{padding:0;gap:0}
+  .a4-page{width:100%;box-shadow:none}
+  .a4-page+.a4-page{page-break-before:always;break-before:page}
+}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  firebase.initializeApp({
+    apiKey:"AIzaSyCtKA71KjRHQvMPtYcURVjuSKaOanoEh7Y",
+    authDomain:"madoguchi-guidance.firebaseapp.com",
+    projectId:"madoguchi-guidance",
+    storageBucket:"madoguchi-guidance.firebasestorage.app",
+    messagingSenderId:"1080989158935",
+    appId:"1:1080989158935:web:4b75da9e3252e8086a5652"
+  });
+  firebase.auth().onAuthStateChanged(function(u){
+    if(!u||!(u.email||'').endsWith('@madoguchi.inc')) location.replace('login.html');
+  });
+})();
+</script>
+</head>
+<body>
+
+<div class="topbar">
+  <a id="back-link" href="gaiheki.html" class="tb-back">← 一覧へ</a>
+  <div class="tb-title" id="tb-title">案件プレビュー</div>
+  <button class="btn-print" onclick="window.print()">PDF印刷</button>
+</div>
+
+<div class="preview-wrap" id="preview-wrap">
+  <div class="loading">読み込み中...</div>
+</div>
+
+<script>
+var params   = new URLSearchParams(location.search);
+var CASE_ID  = params.get('caseId') || params.get('id') || '';
+var BUSINESS = params.get('business') || 'gaiheki';
+
+// business に応じたコレクション名
+var COL_MAP = {
+  gaiheki:  'cases_gaiheki',
+  osouji:   'cases_osouji',
+  fuyouhin: 'cases_fuyouhin',
+};
+var COLLECTION = COL_MAP[BUSINESS] || 'cases_gaiheki';
+
+// 戻るリンク
+var backPages = { gaiheki:'gaiheki.html', osouji:'osouji.html', fuyouhin:'fuyouhin.html' };
+document.getElementById('back-link').href = backPages[BUSINESS] || 'gaiheki.html';
+
+var db   = firebase.firestore();
+var auth = firebase.auth();
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// gaiheki 旧コレクション(cases)も試みる
+function fetchCase(caseId, collection) {
+  return db.collection(collection).doc(caseId).get().then(function(doc){
+    if (doc.exists) return doc.data();
+    // フォールバック: 旧 cases コレクション（gaiheki のみ）
+    if (collection === 'cases_gaiheki') {
+      return db.collection('cases').doc(caseId).get().then(function(d2){
+        return d2.exists ? d2.data() : null;
+      });
+    }
+    return null;
+  });
+}
+
+function renderCase(c) {
+  if (!c) {
+    document.getElementById('preview-wrap').innerHTML =
+      '<div class="error">案件データが見つかりません（ID: '+esc(CASE_ID)+'）</div>';
+    return;
+  }
+
+  document.getElementById('tb-title').textContent =
+    (c.company || c.contact_name || '（会社名未設定）') + ' – プレビュー';
+
+  var fd = c.formData || {};
+
+  // ページ埋め込み用のcreateページへのリンクを生成
+  var editUrl = (BUSINESS === 'gaiheki' ? 'gaiheki-create.html' :
+                 BUSINESS === 'osouji'   ? 'osouji-create.html'  :
+                                           'fuyouhin-create.html')
+                + '?id=' + encodeURIComponent(CASE_ID);
+
+  document.getElementById('preview-wrap').innerHTML =
+    '<div style="width:794px;background:#fff;padding:16px 24px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.12)">' +
+    '<p style="font-size:12px;color:#666;margin-bottom:8px">このページは印刷専用です。編集は <a href="'+esc(editUrl)+'">こちら</a></p>' +
+    '</div>' +
+    '<iframe src="'+esc(editUrl)+'" ' +
+    'style="width:794px;border:none;box-shadow:0 2px 8px rgba(0,0,0,.15);display:block;" ' +
+    'height="1200" ' +
+    'title="案件プレビュー"></iframe>';
+}
+
+auth.onAuthStateChanged(function(user){
+  if (!user) return;
+  if (!CASE_ID) {
+    document.getElementById('preview-wrap').innerHTML =
+      '<div class="error">URLにcaseIdパラメータが必要です</div>';
+    return;
+  }
+  fetchCase(CASE_ID, COLLECTION)
+    .then(renderCase)
+    .catch(function(e){
+      document.getElementById('preview-wrap').innerHTML =
+        '<div class="error">読み込みエラー: '+esc(e.message)+'</div>';
+    });
+});
+</script>
+</body>
+</html>
