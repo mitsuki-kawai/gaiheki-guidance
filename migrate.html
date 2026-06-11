@@ -51,12 +51,80 @@ h1{font-size:18px;font-weight:800;color:#1a1a1a;margin-bottom:6px}
 
   <button class="btn-run" id="btn" onclick="runMigration()">移行実行</button>
 
+  <hr style="margin:28px 0;border:none;border-top:1px solid #e0e0e0">
+
+  <h2 style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:6px">CS担当者一括更新</h2>
+  <div class="sub" style="margin-bottom:16px">
+    <strong>cases_gaiheki</strong> の全ドキュメントの<br>
+    <strong>formData.cs_assignee</strong> を「飯塚来己」に一括更新します。
+  </div>
+  <button class="btn-run" id="btn-cs" onclick="updateCsAssignee()" style="background:#1a6e3c">cases_gaihekiのCS担当者を飯塚来己に一括更新</button>
+
   <div class="log" id="log"></div>
   <div class="status" id="status"></div>
 </div>
 
 <script>
 var db = firebase.firestore();
+
+function updateCsAssignee() {
+  var btn = document.getElementById('btn-cs');
+  var statusEl = document.getElementById('status');
+  var logEl = document.getElementById('log');
+  btn.disabled = true;
+  statusEl.textContent = '';
+  statusEl.className = 'status';
+  logEl.innerHTML = '';
+  logEl.classList.add('show');
+
+  addLog('cases_gaiheki を取得中...');
+
+  db.collection('cases_gaiheki').get()
+    .then(function(snap) {
+      var docs = snap.docs;
+      addLog('取得件数: ' + docs.length + ' 件');
+      if (docs.length === 0) {
+        addLog('更新対象がありません。');
+        statusEl.textContent = '対象なし';
+        statusEl.className = 'status ok';
+        btn.disabled = false;
+        return;
+      }
+
+      var BATCH_SIZE = 499;
+      var batches = [];
+      for (var i = 0; i < docs.length; i += BATCH_SIZE) {
+        batches.push(docs.slice(i, i + BATCH_SIZE));
+      }
+
+      var updated = 0;
+      return batches.reduce(function(p, batchDocs, idx) {
+        return p.then(function() {
+          var batch = db.batch();
+          batchDocs.forEach(function(doc) {
+            var ref = db.collection('cases_gaiheki').doc(doc.id);
+            batch.update(ref, { 'formData.cs_assignee': '飯塚来己' });
+            updated++;
+          });
+          return batch.commit().then(function() {
+            addLog('バッチ ' + (idx+1) + '/' + batches.length + ' 完了 (' + batchDocs.length + '件)');
+          });
+        });
+      }, Promise.resolve()).then(function() {
+        addLog('');
+        addLog('✅ 更新完了');
+        statusEl.textContent = '更新完了：' + updated + '件';
+        statusEl.className = 'status ok';
+        btn.disabled = false;
+      });
+    })
+    .catch(function(e) {
+      addLog('❌ エラー: ' + e.message);
+      statusEl.textContent = 'エラー: ' + e.message;
+      statusEl.className = 'status err';
+      btn.disabled = false;
+    });
+}
 
 function addLog(msg) {
   var el = document.getElementById('log');
