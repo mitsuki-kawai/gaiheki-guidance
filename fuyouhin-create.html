@@ -56,7 +56,7 @@ body {
 .phb-title { font-size: 11px; opacity: .85; letter-spacing: .04em; }
 
 /* ドキュメントメタ（1ページのみ） */
-.doc-meta { padding: 11px 32px 10px; border-bottom: 2px solid var(--main); display: flex; justify-content: space-between; align-items: flex-end; }
+.doc-meta { padding: 11px 32px 10px; border-bottom: 2px solid var(--accent); display: flex; justify-content: space-between; align-items: flex-end; }
 .doc-recipient { font-size: 13px; color: var(--label); }
 .doc-recipient strong { font-size: 15px; font-weight: 700; color: var(--text); }
 .doc-issued { font-size: 11px; color: var(--muted); }
@@ -70,7 +70,7 @@ body {
 
 /* セクションヘッダー行 */
 .sh td {
-  background: var(--color-main-light); color: var(--main);
+  background: var(--color-main-light); color: var(--accent);
   font-size: 11.5px; font-weight: 700;
   padding: 8px 12px;
   border-top: 1px solid var(--border) !important;
@@ -82,7 +82,7 @@ body {
 /* ギャップ行 */
 
 /* キーセル */
-.k { background: var(--bg) !important; color: var(--main) !important; font-size: 11.5px !important; font-weight: 600 !important; width: 220px !important; min-width: 220px !important; max-width: 220px !important; vertical-align: middle !important; white-space: nowrap !important; padding: 8px 20px !important; }
+.k { background: var(--bg) !important; color: var(--accent) !important; font-size: 11.5px !important; font-weight: 600 !important; width: 220px !important; min-width: 220px !important; max-width: 220px !important; vertical-align: middle !important; white-space: nowrap !important; padding: 8px 20px !important; }
 
 /* バリューセル */
 .v { background: var(--white); color: var(--text); font-size: 11.5px; }
@@ -177,7 +177,7 @@ a.lb-url:hover { text-decoration: underline; }
 .area-summary { font-size: 11px; color: var(--label); background: #f7f6fb; border-radius: 4px; padding: 5px 10px; margin-top: 2px; line-height: 1.7; }
 .radio-group { display: flex; gap: 8px; flex-wrap: wrap; }
 .radio-option { display: inline-flex; align-items: center; cursor: pointer; padding: 4px 12px; border: 1px solid #ccc; border-radius: 20px; font-size: 11px; color: #999; background: var(--white); transition: all .12s; user-select: none; }
-.radio-option:has(input:checked) { border-color: var(--main); background: var(--main); color: var(--white); font-weight: 600; }
+.radio-option:has(input:checked) { border-color: #297DCE; background: #297DCE; color: var(--white); font-weight: 600; }
 .radio-option input[type="radio"] { display: none; }
 .area-add input { flex: 1; padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; }
 .area-add button { padding: 7px 12px; background: var(--main); color: var(--white); border: none; border-radius: 4px; cursor: pointer; font-size: 11px; font-weight: 600; white-space: nowrap; transition: opacity .12s; }
