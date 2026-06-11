@@ -298,7 +298,7 @@ a.header-logo:hover { opacity: 0.8; }
 
 <!-- ヘッダー -->
 <div class="header">
-  <a href="osouji.html" class="header-logo"><img src="osouji-logo.png" alt="おそうじ合衆国" style="width:116px;height:auto;display:block"></a>
+  <a href="osouji.html" class="header-logo"><img src="osouji-logo.png" alt="おそうじ合衆国" style="width:151px;height:auto;display:block"></a>
   <a href="osouji.html" class="btn-back" style="margin-left:auto">戻る</a>
 </div>
 
@@ -746,11 +746,25 @@ function renderStaffList() {
     </div>`).join('');
 }
 
+/* Enter2回で保存（1回目はフラグをセット、500ms以内に2回目で保存） */
+function handleStaffEnter(event, i) {
+  if (event.key !== 'Enter') return;
+  var inp = event.target;
+  if (inp._enterOnce) {
+    clearTimeout(inp._enterTimer);
+    inp._enterOnce = false;
+    saveStaff(i);
+  } else {
+    inp._enterOnce = true;
+    inp._enterTimer = setTimeout(function() { inp._enterOnce = false; }, 600);
+  }
+}
+
 function editStaff(i) {
   const row = document.getElementById('staff-row-' + i);
   row.innerHTML = `
     <input type="text" id="staff-inp-${i}" value="${escHtml(staffList[i])}"
->
+      onkeydown="handleStaffEnter(event,${i})">
     <button class="btn-row-save" onclick="saveStaff(${i})">保存</button>
     <button class="btn-del"  onclick="removeStaff(${i})">削除</button>`;
   document.getElementById('staff-inp-' + i).focus();
@@ -758,11 +772,22 @@ function editStaff(i) {
 
 function saveStaff(i) {
   const val = (document.getElementById('staff-inp-' + i)?.value || '').trim();
-  if (!val) { staffList.splice(i, 1); }
-  else { staffList[i] = val; }
-  // 押したアイテムのみ保存（Enterキーは無効）
+  if (!val) {
+    staffList.splice(i, 1);
+    renderStaffList(); // 削除時は全体再描画
+    return;
+  }
+  staffList[i] = val;
+  // このアイテムだけ表示を更新（他アイテムの編集状態を維持）
+  const row = document.getElementById('staff-row-' + i);
+  if (row) {
+    row.innerHTML = `
+      <span class="staff-row-name">${escHtml(val)}</span>
+      <button class="btn-edit" onclick="editStaff(${i})">編集</button>
+      <button class="btn-del"  onclick="removeStaff(${i})">削除</button>`;
+  }
+  // このアイテムの値だけ Firestore/localStorage に保存
   saveStaffSection();
-  renderStaffList();
 }
 
 function addStaff() {
