@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>データ移行 - cases → cases_gaiheki</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;background:#F3F3F3;min-height:100vh;display:flex;align-items:center;justify-content:center}
+.card{background:#fff;border-radius:12px;box-shadow:0 4px 24px rgba(0,0,0,.10);padding:48px 44px;width:100%;max-width:500px}
+h1{font-size:18px;font-weight:800;color:#1a1a1a;margin-bottom:6px}
+.sub{font-size:12px;color:#999;margin-bottom:32px;line-height:1.7}
+.btn-run{width:100%;padding:13px;background:#3F3277;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;transition:opacity .12s}
+.btn-run:hover{opacity:.85}
+.btn-run:disabled{opacity:.5;cursor:not-allowed}
+.log{margin-top:20px;background:#f7f7f7;border-radius:6px;padding:14px;font-size:12px;color:#333;line-height:1.8;max-height:300px;overflow-y:auto;display:none}
+.log.show{display:block}
+.status{margin-top:14px;font-size:13px;font-weight:600;text-align:center}
+.status.ok{color:#2a7a50}
+.status.err{color:#c62828}
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  firebase.initializeApp({
+    apiKey:"AIzaSyCtKA71KjRHQvMPtYcURVjuSKaOanoEh7Y",
+    authDomain:"madoguchi-guidance.firebaseapp.com",
+    projectId:"madoguchi-guidance",
+    storageBucket:"madoguchi-guidance.firebasestorage.app",
+    messagingSenderId:"1080989158935",
+    appId:"1:1080989158935:web:4b75da9e3252e8086a5652"
+  });
+  firebase.auth().onAuthStateChanged(function(u){
+    if(!u||!(u.email||'').endsWith('@madoguchi.inc')) location.replace('login.html');
+  });
+})();
+</script>
+</head>
+<body>
+<div class="card">
+  <h1>Firestore データ移行</h1>
+  <div class="sub">
+    <strong>cases</strong> コレクションのドキュメントを<br>
+    <strong>cases_gaiheki</strong> コレクションにコピーします。<br><br>
+    ・既存の cases_gaiheki ドキュメントは上書きされます<br>
+    ・元の cases コレクションは削除しません<br>
+    ・ログインユーザーが @madoguchi.inc であることが必要です
+  </div>
+
+  <button class="btn-run" id="btn" onclick="runMigration()">移行実行</button>
+
+  <div class="log" id="log"></div>
+  <div class="status" id="status"></div>
+</div>
+
+<script>
+var db = firebase.firestore();
+
+function addLog(msg) {
+  var el = document.getElementById('log');
+  el.classList.add('show');
+  el.innerHTML += msg + '<br>';
+  el.scrollTop = el.scrollHeight;
+}
+
+function runMigration() {
+  var btn = document.getElementById('btn');
+  var statusEl = document.getElementById('status');
+  btn.disabled = true;
+  statusEl.textContent = '';
+  statusEl.className = 'status';
+  document.getElementById('log').innerHTML = '';
+
+  addLog('cases コレクションを取得中...');
+
+  db.collection('cases').get()
+    .then(function(snap) {
+      var docs = snap.docs;
+      addLog('取得件数: ' + docs.length + ' 件');
+
+      if (docs.length === 0) {
+        addLog('移行するドキュメントがありません。');
+        statusEl.textContent = '移行するデータがありませんでした';
+        statusEl.className = 'status ok';
+        btn.disabled = false;
+        return;
+      }
+
+      // バッチ書き込み（500件上限のため分割）
+      var BATCH_SIZE = 499;
+      var batches = [];
+      for (var i = 0; i < docs.length; i += BATCH_SIZE) {
+        batches.push(docs.slice(i, i + BATCH_SIZE));
+      }
+
+      addLog('バッチ数: ' + batches.length);
+
+      return batches.reduce(function(p, batchDocs, idx) {
+        return p.then(function() {
+          var batch = db.batch();
+          batchDocs.forEach(function(doc) {
+            var ref = db.collection('cases_gaiheki').doc(doc.id);
+            batch.set(ref, doc.data());
+          });
+          return batch.commit().then(function() {
+            addLog('バッチ ' + (idx+1) + '/' + batches.length + ' 完了 (' + batchDocs.length + '件)');
+          });
+        });
+      }, Promise.resolve());
+    })
+    .then(function() {
+      addLog('');
+      addLog('✅ 移行完了！');
+      var statusEl = document.getElementById('status');
+      statusEl.textContent = '移行完了';
+      statusEl.className = 'status ok';
+      btn.disabled = false;
+    })
+    .catch(function(e) {
+      addLog('❌ エラー: ' + e.message);
+      var statusEl = document.getElementById('status');
+      statusEl.textContent = 'エラーが発生しました: ' + e.message;
+      statusEl.className = 'status err';
+      btn.disabled = false;
+    });
+}
+</script>
+</body>
+</html>
