@@ -155,7 +155,8 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 .sidebar-user{margin-top:auto;padding:12px 10px;border-top:1px solid var(--gray-border);position:relative}
 .user-row{display:flex;align-items:center;gap:8px;padding:7px 8px;border-radius:8px;cursor:pointer;transition:background .12s}
 .user-row:hover{background:var(--gray-bg)}
-.user-avatar{width:32px;height:32px;border-radius:50%;background:#3F3277;color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.user-avatar{width:32px;height:32px;border-radius:50%;background:#3F3277;color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+.user-avatar img{width:100%;height:100%;object-fit:cover;border-radius:50%}
 .user-info{flex:1;min-width:0}
 .user-name{font-size:12px;font-weight:600;color:var(--dark);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
 .user-email{font-size:10px;color:var(--gray-text);overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
@@ -466,7 +467,15 @@ document.addEventListener('click', function(e) {
       email:  document.getElementById('user-email'),
       widget: document.getElementById('sidebar-user')
     };
-    if (el.avatar) el.avatar.textContent = initial;
+    if (el.avatar) {
+      if (user.photoURL) {
+        // Googleプロフィール写真を表示
+        el.avatar.innerHTML = '<img src="' + user.photoURL + '" alt="' + initial + '">';
+      } else {
+        // フォールバック：名前の頭文字
+        el.avatar.textContent = initial;
+      }
+    }
     if (el.name)   el.name.textContent   = name;
     if (el.email)  el.email.textContent  = user.email || '';
     if (el.widget) el.widget.style.display = '';
