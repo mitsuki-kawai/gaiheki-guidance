@@ -403,11 +403,20 @@ a.header-logo:hover { opacity: 0.8; }
     <!-- ── CS担当者情報 ── -->
     <div class="section" id="sec-cs">
       <div class="section-title">CS担当者情報</div>
-      <div class="section-desc">この事業部のCS担当者は固定されています。</div>
-      <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--white);border:1px solid var(--border);border-radius:6px;font-size:13px;font-weight:500;color:var(--text)">
+      <div class="section-desc">この事業部のCS担当者を設定します。</div>
+
+      <!-- 表示モード -->
+      <div id="cs-disp" style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--white);border:1px solid var(--border);border-radius:6px;font-size:13px;font-weight:500;color:var(--text)">
         <span style="font-size:20px">👤</span>
-        <span>飯塚来己</span>
-        <span style="font-size:11px;color:var(--muted);margin-left:4px">（固定）</span>
+        <span id="cs-name-disp">飯塚来己</span>
+        <button class="btn-edit" onclick="csEditMode()" style="margin-left:auto">編集</button>
+      </div>
+
+      <!-- 編集モード -->
+      <div id="cs-edit-row" style="display:none;align-items:center;gap:8px;padding:10px 14px;background:var(--bg);border:1px solid var(--main);border-radius:6px">
+        <input type="text" id="cs-name-inp" value="飯塚来己" style="flex:1;padding:5px 9px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:inherit">
+        <button class="btn-row-save" onclick="csSaveAssignee('gaiheki')">保存</button>
+        <button class="btn-del" onclick="csCancelEdit()">✕</button>
       </div>
     </div>
 
@@ -1456,6 +1465,51 @@ function escHtml(s) {
   });
 
 })();
+
+/* ── CS担当者編集 ── */
+(function() {
+  var BIZ_DOC = 'gaiheki';
+  var DEFAULT_CS = '飯塚来己';
+
+  function load() {
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) return;
+      firebase.firestore().collection('settings').doc(BIZ_DOC).get()
+        .then(function(doc) {
+          if (doc.exists && doc.data().csAssignee) {
+            var val = doc.data().csAssignee;
+            document.getElementById('cs-name-disp').textContent = val;
+            document.getElementById('cs-name-inp').value = val;
+          }
+        }).catch(function() {});
+    });
+  }
+
+  window.csEditMode = function() {
+    document.getElementById('cs-disp').style.display = 'none';
+    document.getElementById('cs-edit-row').style.display = 'flex';
+    document.getElementById('cs-name-inp').focus();
+  };
+  window.csCancelEdit = function() {
+    document.getElementById('cs-disp').style.display = '';
+    document.getElementById('cs-edit-row').style.display = 'none';
+  };
+  window.csSaveAssignee = function(biz) {
+    var val = document.getElementById('cs-name-inp').value.trim();
+    if (!val) { alert('CS担当者名を入力してください'); return; }
+    firebase.firestore().collection('settings').doc(biz).set(
+      { csAssignee: val }, { merge: true }
+    ).then(function() {
+      document.getElementById('cs-name-disp').textContent = val;
+      csCancelEdit();
+      var t = document.getElementById('toast');
+      if (t) { t.textContent = '保存しました'; t.classList.add('show'); setTimeout(function(){t.classList.remove('show');}, 2200); }
+    }).catch(function(e) { alert('保存失敗: ' + e.message); });
+  };
+
+  load();
+})();
+
 </script>
 </body>
 </html>
