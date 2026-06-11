@@ -370,7 +370,7 @@ function renderCards() {
     const status = c.guidance_status || '未実施';
     const statusClass = status === '実施済み' ? 'done' : 'pending';
     return `
-      <a href="create.html?id=${c.id}" class="card">
+      <a href="fuyouhin-create.html?id=${c.id}&business=fuyouhin" class="card">
         <div class="card-top">
           <div class="card-company">${escHtml(c.company || '（会社名未入力）')}</div>
           <div class="card-plan ${plan}">${planLabel[plan] || plan}</div>
