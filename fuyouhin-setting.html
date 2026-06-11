@@ -7,6 +7,7 @@
 <style>
 :root {
   --main:   #FBDE36;
+  --color-main-light: #FEF9CC;
   --accent: #297DCE;
   --bg:     #F3F3F3;
   --text:   #1a1a1a;
@@ -87,7 +88,7 @@ a.header-logo:hover { opacity: 0.8; }
 .staff-row-name { flex: 1; font-size: 13px; font-weight: 500; color: var(--text); }
 .staff-row input { flex: 1; padding: 5px 9px; border: 1px solid var(--main); border-radius: 4px; font-size: 13px; font-family: inherit; }
 .staff-row input:focus { outline: none; }
-.btn-edit { padding: 4px 12px; background: #eeecf8; color: var(--main); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
+.btn-edit { padding: 4px 12px; background: var(--color-main-light); color: var(--main); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
 .btn-row-save { padding: 4px 12px; background: var(--main); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
 .btn-del  { padding: 4px 12px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
 .btn-edit:hover, .btn-row-save:hover, .btn-del:hover { opacity: .8; }
@@ -126,7 +127,7 @@ a.header-logo:hover { opacity: 0.8; }
 .cs-staff-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
 .cs-staff-item { background: var(--white); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
 .cs-staff-view { display: flex; align-items: center; gap: 8px; padding: 9px 14px; background: var(--white); }
-.cs-staff-thumb { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--main); flex-shrink: 0; background: #eeecf8; display: flex; align-items: center; justify-content: center; color: var(--main); font-size: 20px; }
+.cs-staff-thumb { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 2px solid var(--main); flex-shrink: 0; background: var(--color-main-light); display: flex; align-items: center; justify-content: center; color: var(--main); font-size: 20px; }
 .cs-staff-thumb img { width: 48px; height: 48px; border-radius: 50%; object-fit: cover; }
 .cs-staff-view-name { font-weight: 500; flex: 1; font-size: 13px; color: var(--text); }
 .cs-staff-view-sub { font-size: 11px; color: var(--muted); }
@@ -134,7 +135,7 @@ a.header-logo:hover { opacity: 0.8; }
 .cs-staff-edit.open { display: block; }
 
 /* CS担当者編集/削除ボタン */
-.cs-staff-view .btn-bact-s:first-of-type { padding: 4px 12px; background: #eeecf8; color: var(--main); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
+.cs-staff-view .btn-bact-s:first-of-type { padding: 4px 12px; background: var(--color-main-light); color: var(--main); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; }
 .cs-staff-view .btn-bact-s:last-of-type  { padding: 4px 12px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 0; font-weight: 600; cursor: pointer; transition: opacity .12s; margin-left: 0; }
 .cs-staff-view .btn-bact-s:last-of-type::before { content: "削除"; font-size: 12px; }
 .cs-staff-view .btn-bact-s:hover { opacity: .8; }

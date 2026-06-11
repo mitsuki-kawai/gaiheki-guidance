@@ -8,6 +8,7 @@
 :root {
   --purple: #2788E7;
   --purple-light: #E3F2FD;
+  --color-main-light: #D6EAFB;
   --purple-mid: #90CAF9;
   --green: #3db87a;
   --green-light: #eafaf2;
@@ -40,7 +41,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 .sidebar-section{font-size:9px;font-weight:700;letter-spacing:0.08em;color:var(--gray-text);padding:6px 8px 4px;text-transform:uppercase}
 .filter-item{display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 10px;border-radius:6px;border:none;background:none;font-size:13px;font-weight:500;color:var(--mid);cursor:pointer;text-align:left;margin-bottom:2px;transition:all 0.12s}
 .filter-item:hover{background:var(--gray-bg)}
-.filter-item.active{background:var(--purple-light);color:var(--purple);font-weight:700}
+.filter-item.active{background:var(--color-main-light);color:var(--purple);font-weight:700}
 .filter-count{font-size:11px;font-weight:700;padding:1px 7px;border-radius:10px;background:var(--gray-bg);color:var(--gray-text)}
 .filter-item.active .filter-count{background:var(--purple);color:var(--white)}
 .filter-select{display:none;width:100%;padding:8px 10px;border:1px solid var(--gray-border);border-radius:8px;font-size:13px;font-family:inherit;background:var(--white);color:var(--dark);cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath fill='%23999' d='M5 6L0 0h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;margin-top:4px}
@@ -61,11 +62,11 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 .card-company{font-size:14px;font-weight:700;line-height:1.4;flex:1;margin-right:8px}
 .card-plan{font-size:10px;font-weight:700;padding:2px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0}
 .card-plan.light{background:#fff3e0;color:#e65100}
-.card-plan.basic{background:var(--purple-light);color:var(--purple)}
+.card-plan.basic{background:var(--color-main-light);color:var(--purple)}
 .card-plan.pro{background:var(--green-light);color:var(--green)}
 
 .card-meta{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.card-assignee{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--purple);background:var(--purple-light);padding:2px 8px;border-radius:4px}
+.card-assignee{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:600;color:var(--purple);background:var(--color-main-light);padding:2px 8px;border-radius:4px}
 .card-date{font-size:11px;color:var(--gray-text);margin-left:auto}
 
 .card-footer{margin-top:10px;padding-top:10px;border-top:1px solid var(--gray-border);display:flex;align-items:center;justify-content:space-between}
@@ -84,7 +85,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 
 /* ── 新規作成カード ── */
 .card-new{border:2px dashed var(--purple-mid);background:transparent;display:flex;align-items:center;justify-content:center;border-radius:10px;text-decoration:none;transition:all 0.15s;color:inherit;min-height:130px}
-.card-new:hover{border-color:var(--purple);background:var(--purple-light);transform:translateY(-1px)}
+.card-new:hover{border-color:var(--purple);background:var(--color-main-light);transform:translateY(-1px)}
 .card-new-inner{display:flex;flex-direction:column;align-items:center;gap:6px}
 .card-new-icon{font-size:28px;font-weight:300;color:var(--purple);line-height:1}
 .card-new-label{font-size:13px;font-weight:600;color:var(--purple)}
@@ -166,7 +167,7 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif;backgroun
 .biz-tabs{padding:10px 8px 8px;border-bottom:1px solid var(--gray-border)}
 .biz-tab{display:block;width:100%;padding:7px 10px;border:none;border-radius:6px;font-size:12px;font-weight:500;color:var(--mid);background:none;cursor:pointer;text-align:left;transition:all .12s;text-decoration:none;margin-bottom:2px}
 .biz-tab:hover{background:var(--gray-bg);color:var(--purple)}
-.biz-tab.active{background:var(--purple-light);color:var(--purple);font-weight:700}
+.biz-tab.active{background:var(--color-main-light);color:var(--purple);font-weight:700}
 </style>
 <!-- Firebase Auth (認証チェックのみ) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
