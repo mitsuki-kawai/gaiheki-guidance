@@ -751,7 +751,7 @@ function editStaff(i) {
   const row = document.getElementById('staff-row-' + i);
   row.innerHTML = `
     <input type="text" id="staff-inp-${i}" value="${escHtml(staffList[i])}"
-      onkeydown="if(event.key==='Enter')saveStaff(${i})">
+>
     <button class="btn-row-save" onclick="saveStaff(${i})">保存</button>
     <button class="btn-del"  onclick="removeStaff(${i})">削除</button>`;
   document.getElementById('staff-inp-' + i).focus();
@@ -761,7 +761,8 @@ function saveStaff(i) {
   const val = (document.getElementById('staff-inp-' + i)?.value || '').trim();
   if (!val) { staffList.splice(i, 1); }
   else { staffList[i] = val; }
-  checkDirty('staff');
+  // 押したアイテムのみ保存（Enterキーは無効）
+  saveStaffSection();
   renderStaffList();
 }
 
