@@ -458,37 +458,18 @@ document.addEventListener('click', function(e) {
 
     console.log('[FS] Firestore監視開始');
     var db = firebase.firestore();
-    // 旧コレクション(cases)と新コレクション(cases_gaiheki)を両方監視してマージ
-    var _legacyDocs = [];
-    var _newDocs = [];
-    function mergeAndRender() {
-      var map = {};
-      _legacyDocs.forEach(function(d){ map[d.id] = d; });
-      _newDocs.forEach(function(d){ map[d.id] = d; }); // 新が旧を上書き
-      _cache = Object.values(map);
-      _cache.sort(function (a, b) {
-        var dA = (a.formData && a.formData.issue_date) || a.createdAt || '';
-        var dB = (b.formData && b.formData.issue_date) || b.createdAt || '';
-        return dB.localeCompare(dA);
-      });
-      console.log('[FS] cases更新:', _cache.length, '件 (legacy:', _legacyDocs.length, '/ new:', _newDocs.length, ')');
-      if (typeof renderPage === 'function') renderPage();
-    }
-    // 旧 cases コレクション（移行前データ）
-    db.collection('cases').onSnapshot(
-      function(snap) {
-        _legacyDocs = snap.docs.map(function(d){ return Object.assign({ id: d.id }, d.data()); });
-        mergeAndRender();
-      },
-      function(err) { console.warn('[FS] legacy cases warn:', err.message); }
-    );
-    // 新 cases_gaiheki コレクション
     db.collection('cases_gaiheki').onSnapshot(
       function (snap) {
-        _newDocs = snap.docs.map(function (d) {
+        _cache = snap.docs.map(function (d) {
           return Object.assign({ id: d.id }, d.data());
         });
-        mergeAndRender();
+        _cache.sort(function (a, b) {
+          var dA = (a.formData && a.formData.issue_date) || a.createdAt || '';
+          var dB = (b.formData && b.formData.issue_date) || b.createdAt || '';
+          return dB.localeCompare(dA);
+        });
+        console.log('[FS] cases_gaiheki 更新:', _cache.length, '件');
+        if (typeof renderPage === 'function') renderPage();
       },
       function (err) {
         console.error('[FS] snapshotエラー:', err.code, err.message);

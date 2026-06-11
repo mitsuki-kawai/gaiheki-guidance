@@ -84,11 +84,7 @@ function fetchCase(caseId, collection) {
   return db.collection(collection).doc(caseId).get().then(function(doc){
     if (doc.exists) return doc.data();
     // フォールバック: 旧 cases コレクション（gaiheki のみ）
-    if (collection === 'cases_gaiheki') {
-      return db.collection('cases').doc(caseId).get().then(function(d2){
-        return d2.exists ? d2.data() : null;
-      });
-    }
+    // 旧フォールバックは削除 - cases_gaiheki のみ使用
     return null;
   });
 }
