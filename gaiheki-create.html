@@ -1786,7 +1786,7 @@ const DEFAULT_SETTINGS = {
   holidayText: '弊社は基本的にカレンダー通りの営業となるため、土日祝日は営業しておりません。\n配信内容の変更等を含め、ご連絡は平日 09:00〜19:00 の間にお願いいたします。',
   excludeText: '・30日以内の、同一人物からの重複申込\n・使用されていない電話番号\n・別人の人（例：山田 太郎）\n上記にあてはまるお客様情報については、お手数ですが私までご報告ください。',
   staffList: ['恩田雅史', '鈴木宏午', '皆川進太', '中村元彌', '松本そよ', '穴澤萌花', '亀井翼', '染葉健介', '杉本山東'],
-  loanDocUrl: '', loanApplyUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '', loginUrl: 'https://business.gaihekiplus.com/sign_in',
+  loanDocUrl: '', loanApplyUrl: '', loanMediaUrl: '', loanApplicationUrl: '', giftSurveyUrl: '', giftWorkUrl: '', photoUrl: '', storePageUrl: '', loginUrl: 'https://business.gaihekiplus.com/sign_in',
   paymentConfig: [
     { id:'pm1', name:'クレジットカード', useGroups:true, groups:[
       { id:'pg1', label:'先払い', notes:['1日決済（前日が振込期限）','11日決済（前日が振込期限）','16日決済（前日が振込期限）','21日決済（前日が振込期限）'] },
@@ -2192,10 +2192,12 @@ function render() {
   setVal('p-pay-status', v('payment_status'));
   setVal('p-pay-note',   v('payment_note'));
   setVal('p-login-id',   v('login_id'));
-  setLink('p-photo-url',   s.photoUrl);
-  setLink('p-store-url',   s.storePageUrl);
-  setLink('p-loan-doc',    s.loanDocUrl);
-  setLink('p-loan-apply',  s.loanApplyUrl);
+  setLink('p-photo-url',       s.photoUrl);
+  setLink('p-store-url',       s.storePageUrl);
+  setLink('p-loan-doc',        s.loanDocUrl);
+  setLink('p-loan-apply',      s.loanApplyUrl);
+  setLink('p-loan-media-url',  s.loanMediaUrl  || s.loanDocUrl  || '');
+  setLink('p-loan-apply-url',  s.loanApplicationUrl || s.loanApplyUrl || '');
   setLink('p-gift-survey', s.giftSurveyUrl);
   setLink('p-gift-work',   s.giftWorkUrl);
   setLink('p-login-url',   s.loginUrl);
@@ -2252,8 +2254,10 @@ function collectSettingsSnapshot() {
     loginUrl:      s.loginUrl      || '',
     photoUrl:      s.photoUrl      || '',
     storePageUrl:  s.storePageUrl  || '',
-    loanDocUrl:    s.loanDocUrl    || '',
-    loanApplyUrl:  s.loanApplyUrl  || '',
+    loanDocUrl:         s.loanDocUrl         || '',
+    loanApplyUrl:       s.loanApplyUrl       || '',
+    loanMediaUrl:       s.loanMediaUrl       || '',
+    loanApplicationUrl: s.loanApplicationUrl || '',
     giftSurveyUrl: s.giftSurveyUrl || '',
     giftWorkUrl:   s.giftWorkUrl   || '',
   };
@@ -2455,6 +2459,8 @@ function saveCase() {
         case 'link-card': return '<div style="margin-bottom:12px">'+(b.text?'<div style="font-weight:600;margin-bottom:2px">'+t+'</div>':'')+'<a href="'+u+'" target="_blank" style="display:inline-flex;align-items:center;gap:5px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:1px 6px;line-height:1.4;text-decoration:none;color:var(--text);font-size:13px;transition:background .12s" onmouseover="this.style.background=\'#e8eaed\'" onmouseout="this.style.background=\'#f1f3f4\'">📄 '+esc(b.linkLabel||b.url||'')+'</a></div>';
         case 'url-ext': var uet=proc(b.text||''),ueu=esc(b.url||'#'); return '<div style="margin-bottom:24px">'+uet+'<br><a class="url-val" href="'+ueu+'" target="_blank">'+ueu+'</a></div>';
         case 'link-locked': var llt=proc(b.text||''),llu=esc(b.url||'#'); return '<div style="margin-bottom:8px"><a href="'+llu+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:4px 12px;text-decoration:none;color:var(--text);font-size:12px;font-weight:600" onmouseover="this.style.background=\'#e8eaed\'" onmouseout="this.style.background=\'#f1f3f4\'">🔗 '+llt+'</a></div>';
+        case 'url-loan-media': return '<div style="margin-bottom:24px">'+proc(b.text||'▼媒体資料')+'<br><a class="url-val" id="p-loan-media-url" href="#" target="_blank">（URL未設定）</a></div>';
+        case 'url-loan-apply': return '<div style="margin-bottom:24px">'+proc(b.text||'▼お申込書')+'<br><a class="url-val" id="p-loan-apply-url" href="#" target="_blank">（URL未設定）</a></div>';
         case 'url-photo': return '<div style="margin-bottom:24px">'+proc(b.text||'▼写真アップロードフォーム')+'<br><a class="url-val" id="p-photo-url" href="#" target="_blank">（URL未設定）</a></div>';
         case 'url-store': return '<div style="margin-bottom:48px">'+proc(b.text||'▼加盟店様の紹介ページ')+'<br><a class="url-val" id="p-store-url" href="#" target="_blank">（URL未設定）</a></div>';
         case 'images':    return '<div style="display:flex;gap:8px;margin-top:10px;margin-bottom:8px"><img src="images/gaiheki/photo1.jpg" alt="施工写真1" style="flex:1;min-width:0;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:#e8e8e8" onerror="this.style.background=\'#e8e8e8\';this.style.display=\'block\';this.removeAttribute(\'src\')"><img src="images/gaiheki/photo2.jpg" alt="施工写真2" style="flex:1;min-width:0;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:#e8e8e8" onerror="this.style.background=\'#e8e8e8\';this.style.display=\'block\';this.removeAttribute(\'src\')"><img src="images/gaiheki/photo3.jpg" alt="施工写真3" style="flex:1;min-width:0;aspect-ratio:4/3;object-fit:cover;border-radius:6px;background:#e8e8e8" onerror="this.style.background=\'#e8e8e8\';this.style.display=\'block\';this.removeAttribute(\'src\')"></div>';
@@ -2556,6 +2562,19 @@ function saveCase() {
           var el = document.getElementById('cs_assignee');
           if (el) el.value = data.csAssignee;
           if (typeof renderP4 === 'function') renderP4();
+        }
+        // loanMediaUrl / loanApplicationUrl を設定に反映してリンクを更新
+        if (data.loanMediaUrl || data.loanApplicationUrl) {
+          try {
+            var cur2 = JSON.parse(localStorage.getItem('gaiheki_settings') || '{}');
+            if (data.loanMediaUrl)       cur2.loanMediaUrl       = data.loanMediaUrl;
+            if (data.loanApplicationUrl) cur2.loanApplicationUrl = data.loanApplicationUrl;
+            localStorage.setItem('gaiheki_settings', JSON.stringify(cur2));
+          } catch(e) {}
+          if (typeof setLink === 'function') {
+            setLink('p-loan-media-url', data.loanMediaUrl       || '');
+            setLink('p-loan-apply-url', data.loanApplicationUrl || '');
+          }
         }
       })
       .catch(function(e) { /* Firestore 読み込み失敗は無視 */ });

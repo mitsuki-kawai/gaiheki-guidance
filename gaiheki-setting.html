@@ -1100,6 +1100,13 @@ function saveUrlSection() {
     clearDirty('url');
     saveSectionData('urls', data);
     snapshotSection('url');
+    /* Firestoreにも loanMediaUrl / loanApplicationUrl として保存 */
+    try {
+      firebase.firestore().collection('settings').doc('gaiheki').set({
+        loanMediaUrl:       data.loanDocUrl,
+        loanApplicationUrl: data.loanApplyUrl
+      }, { merge: true });
+    } catch(fe) { console.warn('Firestore URL save:', fe); }
   } catch(e) { console.error('saveUrlSection エラー:', e); }
 }
 
@@ -1477,11 +1484,16 @@ function escHtml(s) {
       if (!user) return;
       firebase.firestore().collection('settings').doc(BIZ_DOC).get()
         .then(function(doc) {
-          if (doc.exists && doc.data().csAssignee) {
-            var val = doc.data().csAssignee;
-            document.getElementById('cs-name-disp').textContent = val;
-            document.getElementById('cs-name-inp').value = val;
+          if (!doc.exists) return;
+          var d = doc.data();
+          /* CS担当者 */
+          if (d.csAssignee) {
+            document.getElementById('cs-name-disp').textContent = d.csAssignee;
+            document.getElementById('cs-name-inp').value = d.csAssignee;
           }
+          /* ローンURL（Firestoreから読み込んでURL設定欄に反映） */
+          if (d.loanMediaUrl)       document.getElementById('loan-doc-url').value   = d.loanMediaUrl;
+          if (d.loanApplicationUrl) document.getElementById('loan-apply-url').value = d.loanApplicationUrl;
         }).catch(function() {});
     });
   }
