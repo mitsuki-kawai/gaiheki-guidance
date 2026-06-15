@@ -299,7 +299,7 @@ var SPACE_PX = { small:'16px', medium:'32px', large:'64px' };
 function renderBlock(b) {
   var t = processText(b.text);
   switch (b.style) {
-    case 'title':    return '<div style="font-size:20px;font-weight:700;color:#1a1a1a">'+t+'</div>';
+    case 'title':    return '<div style="font-size:20px;font-weight:700;color:#1a1a1a;margin-top:48px">'+t+'</div>';
     case 'body':     return '<div>'+t+'</div>';
     case 'bg-text':  return '<div><span style="display:inline-block;background:'+BG_TEXT_BG+';color:'+BG_TEXT_COLOR+';font-weight:700;padding:3px 10px;border-radius:3px">'+t+'</span></div>';
     case 'bold':     return '<div><strong>'+t+'</strong></div>';

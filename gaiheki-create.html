@@ -2454,7 +2454,7 @@ function saveCase() {
     function rBlock(b) {
       var t=proc(b.text), u=esc(b.url||'');
       switch(b.style) {
-        case 'title':     return '<div style="font-size:20px;font-weight:700;color:var(--text)">'+t+'</div>';
+        case 'title':     return '<div style="font-size:20px;font-weight:700;color:var(--text);margin-top:48px">'+t+'</div>';
         case 'body':      return '<div>'+t+'</div>';
         case 'bg-text':   return '<div><span style="display:inline-block;background:'+BG+';color:'+MC+';font-weight:700;padding:3px 10px;border-radius:3px">'+t+'</span></div>';
         case 'bold':      return '<div><strong>'+t+'</strong></div>';
