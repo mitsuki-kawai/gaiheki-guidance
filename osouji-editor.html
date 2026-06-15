@@ -49,6 +49,7 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
 
 /* ── エディタペイン ── */
 .editor-pane { width: 50%; overflow-y: auto; padding: 16px 20px; background: var(--bg); border-left: 1px solid var(--border); }
+.editor-tabs-sticky { position: sticky; top: 0; z-index: 5; background: var(--bg); display: flex; gap: 4px; padding: 10px 0 10px; border-bottom: 1px solid var(--border); margin-bottom: 12px; }
 .editor-head { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
 
 /* ── ブロックカード ── */
@@ -125,15 +126,10 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
 <body>
 
 <div class="header">
-  <a href="osouji-setting.html" class="btn-back" onclick="guardNav(event)">← 設定</a>
-  <a href="osouji-setting.html" class="h-logo" onclick="guardNav(event)"><img src="osouji-logo.png" alt="おそうじ合衆国" height="32"></a>
-  <div class="h-divider"></div>
-  <span class="h-title">ガイダンス資料エディタ</span>
-  <div class="h-tabs">
-    <button class="h-tab active" data-page="p2" onclick="switchPage('p2')">P2 写真のお願い</button>
-    <button class="h-tab" data-page="p3" onclick="switchPage('p3')">P3 成約施策</button>
-  </div>
+  <a href="osouji.html" class="h-logo" onclick="guardNav(event)"><img src="osouji-logo.png" alt="おそうじ合衆国" height="32"></a>
+  <div style="flex:1"></div>
   <button class="btn-save" id="btn-save" onclick="saveTemplate()">保存</button>
+  <a href="osouji-setting.html" class="btn-back" onclick="guardNav(event)">戻る</a>
 </div>
 
 <div class="main">
@@ -152,6 +148,10 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
   </div>
 
   <div class="editor-pane">
+    <div class="editor-tabs-sticky">
+      <button class="h-tab active" data-page="p2" onclick="switchPage('p2')">P2 写真のお願い</button>
+      <button class="h-tab" data-page="p3" onclick="switchPage('p3')">P3 成約施策</button>
+    </div>
     <div class="editor-head">ブロック一覧（ヘッダーをクリックして展開）</div>
     <div id="block-list"></div>
     <button class="btn-add" onclick="addBlock()">＋ ブロック追加</button>
