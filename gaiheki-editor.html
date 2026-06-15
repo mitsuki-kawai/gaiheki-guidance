@@ -299,22 +299,22 @@ var SPACE_PX = { small:'16px', medium:'32px', large:'64px' };
 function renderBlock(b) {
   var t = processText(b.text);
   switch (b.style) {
-    case 'title':    return '<div style="font-size:20px;font-weight:700;color:#1a1a1a;margin-top:40px;margin-bottom:18px">'+t+'</div>';
-    case 'body':     return '<div style="margin-bottom:12px">'+t+'</div>';
-    case 'bg-text':  return '<div style="margin-top:8px;margin-bottom:12px"><span style="display:inline-block;background:'+BG_TEXT_BG+';color:'+BG_TEXT_COLOR+';font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:4px">'+t+'</span></div>';
-    case 'bold':     return '<div style="margin-bottom:12px"><strong>'+t+'</strong></div>';
-    case 'muted':    return '<div style="margin-bottom:12px;color:#999;font-size:10.5px">'+t+'</div>';
+    case 'title':    return '<div style="font-size:20px;font-weight:700;color:#1a1a1a">'+t+'</div>';
+    case 'body':     return '<div>'+t+'</div>';
+    case 'bg-text':  return '<div><span style="display:inline-block;background:'+BG_TEXT_BG+';color:'+BG_TEXT_COLOR+';font-weight:700;padding:3px 10px;border-radius:3px">'+t+'</span></div>';
+    case 'bold':     return '<div><strong>'+t+'</strong></div>';
+    case 'muted':    return '<div style="color:#999;font-size:10.5px">'+t+'</div>';
     case 'space':    return '<div style="height:'+(SPACE_PX[b.spaceSize||'medium']||'32px')+'"></div>';
-    case 'url-ext':     return '<div style="margin-bottom:24px">'+processText(b.text)+'<br><a href="'+escHtml(b.url||'#')+'" style="color:'+BG_TEXT_COLOR+';word-break:break-all" target="_blank">'+escHtml(b.url||'')+'</a></div>';
-    case 'link-locked':return '<div style="margin-bottom:8px"><a href="'+escHtml(b.url||'#')+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:4px 12px;text-decoration:none;color:#1a1a1a;font-size:12px;font-weight:600">🔗 '+processText(b.text)+'</a></div>';
-    case 'url-loan-media':{ var lm=b.text?processText(b.text)+'<br>':''; return '<div style="margin-bottom:12px">'+lm+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（ローン媒体資料URL・設定画面で変更）</span></div>'; }
-    case 'url-loan-apply':{ var la=b.text?processText(b.text)+'<br>':''; return '<div style="margin-bottom:12px">'+la+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（ローン申込書URL・設定画面で変更）</span></div>'; }
-    case 'url-form1':{ var f1=b.text?processText(b.text)+'<br>':''; return '<div style="margin-bottom:12px">'+f1+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（現調完了申請フォームURL・設定画面で変更）</span></div>'; }
-    case 'url-form2':{ var f2=b.text?processText(b.text)+'<br>':''; return '<div style="margin-bottom:12px">'+f2+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（作業完了申請フォームURL・設定画面で変更）</span></div>'; }
-    case 'url-photo':return '<div style="margin-bottom:24px">'+processText(b.text||'▼写真アップロードフォーム')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（写真アップロードURL・設定画面で変更）</span></div>';
-    case 'url-store':return '<div style="margin-bottom:48px">'+processText(b.text||'▼加盟店様の紹介ページ')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（加盟店紹介URL・設定画面で変更）</span></div>';
-    case 'images':   return '<div style="display:flex;gap:8px;margin-top:10px;margin-bottom:8px"><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真1</div><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真2</div><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真3</div></div>';
-    default:         return '<div style="margin-bottom:12px">'+t+'</div>';
+    case 'url-ext':     return '<div>'+processText(b.text)+'<br><a href="'+escHtml(b.url||'#')+'" style="color:'+BG_TEXT_COLOR+';word-break:break-all" target="_blank">'+escHtml(b.url||'')+'</a></div>';
+    case 'link-locked':return '<div><a href="'+escHtml(b.url||'#')+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:4px 12px;text-decoration:none;color:#1a1a1a;font-size:12px;font-weight:600">🔗 '+processText(b.text)+'</a></div>';
+    case 'url-loan-media':{ var lm=b.text?processText(b.text)+'<br>':''; return '<div>'+lm+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（ローン媒体資料URL・設定画面で変更）</span></div>'; }
+    case 'url-loan-apply':{ var la=b.text?processText(b.text)+'<br>':''; return '<div>'+la+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（ローン申込書URL・設定画面で変更）</span></div>'; }
+    case 'url-form1':{ var f1=b.text?processText(b.text)+'<br>':''; return '<div>'+f1+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（現調完了申請フォームURL・設定画面で変更）</span></div>'; }
+    case 'url-form2':{ var f2=b.text?processText(b.text)+'<br>':''; return '<div>'+f2+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（作業完了申請フォームURL・設定画面で変更）</span></div>'; }
+    case 'url-photo':return '<div>'+processText(b.text||'▼写真アップロードフォーム')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（写真アップロードURL・設定画面で変更）</span></div>';
+    case 'url-store':return '<div>'+processText(b.text||'▼加盟店様の紹介ページ')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（加盟店紹介URL・設定画面で変更）</span></div>';
+    case 'images':   return '<div style="display:flex;gap:8px"><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真1</div><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真2</div><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真3</div></div>';
+    default:         return '<div>'+t+'</div>';
   }
 }
 
