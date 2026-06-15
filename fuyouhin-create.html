@@ -187,20 +187,29 @@ a.lb-url:hover { text-decoration: underline; }
 .btn-save:hover { opacity: .85; }
 .btn-pdf { padding: 10px 14px; background: var(--accent); color: var(--white); border: none; border-radius: 4px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .12s; white-space: nowrap; }
 .btn-pdf:hover { opacity: .85; }
-/* ── CS名刺カード ── */
-.cs-card { background: #fff; border-radius: 8px; border: 1px solid #e0e0e0; padding: 24px; margin: 32px auto; max-width: 620px; }
-.cs-card-name { font-size: 16px; font-weight: 700; color: var(--main); margin-bottom: 4px; }
-.cs-card-body { display: flex; align-items: flex-start; gap: 0; }
-.cs-card-left { width: 40%; flex-shrink: 0; }
-.cs-card-photo { width: 100%; aspect-ratio: 4/3; object-fit: cover; border-radius: 4px; display: block; image-rendering: auto; image-rendering: high-quality; }
-.cs-card-no-photo { width: 100%; aspect-ratio: 4/3; background: var(--color-main-light); border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 48px; color: var(--main); }
-.cs-card-phone-row { font-size: 12px; color: var(--label); margin-top: 12px; }
-.cs-line-block { background: #06C755; color: #fff; border-radius: 6px; padding: 6px 10px; margin-top: 8px; display: flex; flex-direction: row-reverse; align-items: center; gap: 12px; }
-.cs-line-block-text { flex: 1; font-size: 11px; line-height: 1.6; }
-.cs-line-block-msg { font-size: 13px; font-weight: bold; text-align: center; }
-.cs-card-qr { width: 50px; height: 50px; max-width: 50px; object-fit: contain; border-radius: 4px; flex-shrink: 0; border: 3px solid white; }
-.cs-card-right { flex: 1; padding-left: 32px; }
-.cs-card-bio { font-size: 11.5px; color: var(--label); line-height: 1.75; }
+/* ── CS担当者 P4 ── */
+.p4-wrap { padding: 24px 32px; }
+.p4-card { background: #fff; border-radius: 8px; border: 1px solid #e0e0e0; overflow: hidden; }
+.p4-top { display: flex; }
+.p4-left { width: 190px; flex-shrink: 0; background: #FBDE36; color: #1a1a1a; padding: 24px 18px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+.p4-logo { width: 120px; height: 28px; object-fit: contain; margin-bottom: 10px;  }
+.p4-title { font-size: 10px; opacity: .85; letter-spacing: .04em; line-height: 1.5; }
+.p4-name-ja { font-size: 17px; font-weight: 700; margin-top: 4px; }
+.p4-name-en { font-size: 10px; opacity: .8; letter-spacing: .04em; }
+.p4-photo { width: 78px; height: 78px; border-radius: 50%; object-fit: cover; border: 3px solid rgba(255,255,255,.5); margin-top: 10px; background: rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; font-size: 28px; }
+.p4-right { flex: 1; padding: 20px 22px; min-width: 0; }
+.p4-mission-label { font-size: 9px; font-weight: 700; letter-spacing: .12em; color: #FBDE36; text-transform: uppercase; margin-bottom: 4px; }
+.p4-mission-text { font-size: 12.5px; font-weight: 700; color: #1a1a1a; margin-bottom: 14px; line-height: 1.55; }
+.p4-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; margin-bottom: 12px; }
+.p4-grid-item { background: #f7f7f9; border-radius: 5px; padding: 7px 9px; }
+.p4-grid-label { font-size: 9px; font-weight: 700; color: #FBDE36; letter-spacing: .06em; margin-bottom: 3px; }
+.p4-grid-val { font-size: 10.5px; color: #333; line-height: 1.5; }
+.p4-bubble { background: #f0f0f0; border-radius: 8px; padding: 9px 13px; font-size: 11px; color: #333; line-height: 1.6; position: relative; }
+.p4-bubble::before { content: ''; position: absolute; top: -7px; left: 18px; border: 7px solid transparent; border-bottom-color: #f0f0f0; border-top: none; }
+.p4-bottom { display: flex; align-items: center; gap: 14px; padding: 12px 22px; border-top: 1px solid #eee; }
+.p4-phone { font-size: 11.5px; color: var(--label); flex: 1; cursor: pointer; }
+.p4-line-wrap { background: #06C755; color: #fff; border-radius: 6px; padding: 6px 10px; display: flex; align-items: center; gap: 9px; font-size: 10px; line-height: 1.5; flex-shrink: 0; }
+.p4-lineqr { width: 42px; height: 42px; object-fit: contain; border: 2px solid #fff; border-radius: 3px; flex-shrink: 0; }
 
 /* ── 共有・閲覧モード ── */
 
@@ -1918,45 +1927,44 @@ function renderP4() {
     content.innerHTML = `<div style="text-align:center;color:var(--muted);padding:60px 0;font-size:13px">${esc(name)} の情報が設定されていません</div>`;
     return;
   }
-  const photoMap = {
-    '飯塚来己':  'images/iizuka.jpg',
-    '留木涼花':  'images/tomeki.jpg',
-    '手光菜津美': 'images/tebika.jpg',
-  };
-  const lineQrMap = {
-    '飯塚来己':  'images/line_iizuka.jpg',
-    '留木涼花':  'images/line_tomeki.jpg',
-    '手光菜津美': 'images/line_tebika.jpg',
-  };
-  const photoSrc = photoMap[staff.name] || '';
-  const lineQrSrc = lineQrMap[staff.name] || '';
+  const photoMap = { '飯塚来己':'images/iizuka.jpg', '留木涼花':'images/tomeki.jpg', '手光菜津美':'images/tebika.jpg' };
+  const lineQrMap = { '飯塚来己':'images/line_iizuka.jpg', '留木涼花':'images/line_tomeki.jpg', '手光菜津美':'images/line_tebika.jpg' };
+  const photoSrc   = staff.photoUrl   || photoMap[staff.name]   || '';
+  const lineQrSrc  = staff.lineQrUrl  || lineQrMap[staff.name]  || '';
   const photoHtml = photoSrc
-    ? `<img class="cs-card-photo" src="${photoSrc}" alt="${esc(staff.name)}" onerror="csPhotoFallback(this)">`
-    : `<div class="cs-card-no-photo">👤</div>`;
-  const qrHtml = lineQrSrc
-    ? `<img class="cs-card-qr" src="${lineQrSrc}" alt="LINE QR" onerror="this.style.display='none'">`
-    : `<div style="font-size:10px;color:var(--muted)">未設定</div>`;
+    ? `<img class="p4-photo" src="${esc(photoSrc)}" alt="${esc(staff.name)}" onerror="this.textContent='👤'">`
+    : `<div class="p4-photo">👤</div>`;
+  const gridItems = [
+    { label:'人柄',      val: staff.personality },
+    { label:'趣味',      val: staff.hobby },
+    { label:'対応スピード', val: staff.responseSpeed },
+    { label:'経歴',      val: staff.career },
+  ].filter(g => g.val).map(g => `<div class="p4-grid-item"><div class="p4-grid-label">${esc(g.label)}</div><div class="p4-grid-val">${esc(g.val)}</div></div>`).join('');
+  const phoneClick = staff.phone ? `onclick="(function(){if(confirm('${esc(staff.phone)}に電話しますか？')){window.location.href='tel:${esc(staff.phone)}'}})()"` : '';
   content.innerHTML = `
-    <div style="padding:32px 40px">
-      <div class="cs-card">
-        <div class="cs-card-name">${esc(staff.name)}</div>
-        <div class="cs-card-body">
-          <div class="cs-card-left">
-            ${photoHtml}
-            ${staff.phone ? `<div class="cs-card-phone-row">📞電話番号：<span onclick="(function(){if(confirm('${esc(staff.phone)}に電話しますか？')){window.location.href='tel:${esc(staff.phone)}'}})()" style="cursor:pointer;text-decoration:underline">${esc(fmtPhoneDisplay(staff.phone))}</span></div>` : ''}
-            <div class="cs-line-block">
-              <div class="cs-line-block-text">
-                <div class="cs-line-block-msg">何かあったらお気軽に<br>ご連絡ください。</div>
-              </div>
-              ${qrHtml}
-            </div>
-          </div>
-          <div class="cs-card-right">
-            <div class="cs-card-bio">${staff.bio ? esc(staff.bio) : ''}</div>
-          </div>
+  <div class="p4-wrap">
+    <div class="p4-card">
+      <div class="p4-top">
+        <div class="p4-left">
+          <img class="p4-logo" src="fuyouhin-logo.png" alt="不用品回収の窓口" onerror="this.style.display='none'">
+          ${staff.title ? `<div class="p4-title">${esc(staff.title)}</div>` : ''}
+          <div class="p4-name-ja">${esc(staff.name)}</div>
+          ${staff.nameEn ? `<div class="p4-name-en">${esc(staff.nameEn)}</div>` : ''}
+          ${photoHtml}
+        </div>
+        <div class="p4-right">
+          ${staff.mission ? `<div class="p4-mission-label">MISSION</div><div class="p4-mission-text">${esc(staff.mission)}</div>` : ''}
+          ${gridItems ? `<div class="p4-grid">${gridItems}</div>` : ''}
+          ${staff.oneWord ? `<div class="p4-bubble">${esc(staff.oneWord)}</div>` : ''}
         </div>
       </div>
-    </div>`;
+      ${(staff.phone || lineQrSrc) ? `
+      <div class="p4-bottom">
+        ${staff.phone ? `<div class="p4-phone" ${phoneClick}>📞 ${esc(fmtPhoneDisplay(staff.phone))}</div>` : '<div></div>'}
+        ${lineQrSrc ? `<div class="p4-line-wrap"><div>LINE<br>で<br>相談</div><img class="p4-lineqr" src="${esc(lineQrSrc)}" alt="LINE QR" onerror="this.style.display='none'"></div>` : ''}
+      </div>` : ''}
+    </div>
+  </div>`;
 }
 
 function scrollToPage(id) {
@@ -2556,6 +2564,15 @@ function saveCase() {
         if (data.csAssignee) {
           var el = document.getElementById('cs_assignee');
           if (el) el.value = data.csAssignee;
+          if (typeof renderP4 === 'function') renderP4();
+        }
+        // csInfo (CS担当者詳細) をlocalStorageに反映
+        if (data.csInfo && data.csInfo.length) {
+          try {
+            var curCs = JSON.parse(localStorage.getItem('fuyouhin_settings') || '{}');
+            curCs.csStaff = data.csInfo;
+            localStorage.setItem('fuyouhin_settings', JSON.stringify(curCs));
+          } catch(e) {}
           if (typeof renderP4 === 'function') renderP4();
         }
       })

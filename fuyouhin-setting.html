@@ -403,23 +403,15 @@ a.header-logo:hover { opacity: 0.8; }
     </div>
 
 
-    <!-- ── CS担当者情報 ── -->
+        <!-- ── CS担当者情報 ── -->
     <div class="section" id="sec-cs">
       <div class="section-title">CS担当者情報</div>
-      <div class="section-desc">この事業部のCS担当者を設定します。</div>
-
-      <!-- 表示モード -->
-      <div id="cs-disp" style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--white);border:1px solid var(--border);border-radius:6px;font-size:13px;font-weight:500;color:var(--text)">
-        <span style="font-size:20px">👤</span>
-        <span id="cs-name-disp">留木涼花</span>
-        <button class="btn-edit" onclick="csEditMode()" style="margin-left:auto">編集</button>
-      </div>
-
-      <!-- 編集モード -->
-      <div id="cs-edit-row" style="display:none;align-items:center;gap:8px;padding:10px 14px;background:var(--bg);border:1px solid var(--main);border-radius:6px">
-        <input type="text" id="cs-name-inp" value="留木涼花" style="flex:1;padding:5px 9px;border:1px solid var(--border);border-radius:4px;font-size:13px;font-family:inherit">
-        <button class="btn-row-save" onclick="csSaveAssignee('fuyouhin')">保存</button>
-        <button class="btn-del" onclick="csCancelEdit()">✕</button>
+      <div class="section-desc">ガイダンス資料P4に表示するCS担当者を設定します。</div>
+      <div class="cs-staff-list" id="cs-staff-list"></div>
+      <button class="btn-cs-add" onclick="csAdd()">＋ 担当者を追加</button>
+      <div class="save-btn-wrap">
+        <span class="dirty-badge" id="dirty-cs">未保存の変更があります</span>
+        <button id="btn-save-cs" class="btn-save" onclick="saveCsSection()">保存</button>
       </div>
     </div>
 
@@ -546,11 +538,9 @@ const DEFAULT_SETTINGS = {
       { id:'pg4', label:null, notes:['末締め翌月20日引き落とし'] },
     ]},
   ],
-  csStaff: [
-    { id:'cs1', name:'飯塚来己',  bio:'お客様に寄り添ったサポートを心がけています。', phone:'' },
-    { id:'cs2', name:'留木涼花',  bio:'迅速・丁寧な対応をモットーにしています。', phone:'' },
-    { id:'cs3', name:'手光菜津美', bio:'何でもお気軽にご相談ください。', phone:'' },
-  ],
+  csStaff: [[{ id:'cs1', name:'飯塚来己',  nameEn:'', title:'', bio:'お客様に寄り添ったサポートを心がけています。', phone:'', mission:'', personality:'', hobby:'', career:'', responseSpeed:'', oneWord:'', photoUrl:'', lineQrUrl:'' },
+    { id:'cs2', name:'留木涼花',  nameEn:'', title:'', bio:'迅速・丁寧な対応をモットーにしています。', phone:'', mission:'', personality:'', hobby:'', career:'', responseSpeed:'', oneWord:'', photoUrl:'', lineQrUrl:'' },
+    { id:'cs3', name:'手光菜津美', nameEn:'', title:'', bio:'何でもお気軽にご相談ください。', phone:'', mission:'', personality:'', hobby:'', career:'', responseSpeed:'', oneWord:'', photoUrl:'', lineQrUrl:'' },],
 };
 
 function getSettings() {
@@ -585,24 +575,37 @@ function csRenderList() {
   if (!list) return;
   list.innerHTML = csStaff.map(st => {
     const isOpen = csEditingId === st.id;
+    const thumb = st.photoUrl ? `<img src="${csEsc(st.photoUrl)}" onerror="this.parentNode.textContent='👤'">` : '👤';
     return `<div class="cs-staff-item" id="csitem-${st.id}">
   <div class="cs-staff-view">
+    <div class="cs-staff-thumb">${thumb}</div>
     <div style="flex:1">
       <div class="cs-staff-view-name">${csEsc(st.name || '（名前未設定）')}</div>
-      <div class="cs-staff-view-sub">${csEsc(st.phone || '')}${st.bio ? ' · ' + st.bio.slice(0,20) + '…' : ''}</div>
+      <div class="cs-staff-view-sub">${csEsc(st.title||'')}${st.phone ? ' · ' + st.phone : ''}</div>
     </div>
     <button class="btn-bact-s" onclick="csToggleEdit('${st.id}')">${isOpen ? '閉じる' : '編集'}</button>
     <button class="btn-bact-s" onclick="csDelete('${st.id}')" style="margin-left:4px">🗑️</button>
   </div>
   <div class="cs-staff-edit ${isOpen ? 'open' : ''}">
-    <div class="field"><label>名前</label>
-      <input type="text" value="${csEsc(st.name)}" oninput="csUpdate('${st.id}','name',this.value)" placeholder="例：飯塚来己">
+    <div class="field-row">
+      <div class="field"><label>名前（漢字）</label><input type="text" value="${csEsc(st.name||'')}" oninput="csUpdate('${st.id}','name',this.value)" placeholder="例：飯塚来己"></div>
+      <div class="field"><label>フルネーム英語</label><input type="text" value="${csEsc(st.nameEn||'')}" oninput="csUpdate('${st.id}','nameEn',this.value)" placeholder="例：Masafumi Onda"></div>
     </div>
-    <div class="field"><label>紹介文</label>
-      <textarea rows="3" oninput="csUpdate('${st.id}','bio',this.value)">${csEsc(st.bio)}</textarea>
+    <div class="field"><label>肩書き</label><input type="text" value="${csEsc(st.title||'')}" oninput="csUpdate('${st.id}','title',this.value)" placeholder="例：事業部 セールス"></div>
+    <div class="field"><label>ミッション</label><textarea rows="2" oninput="csUpdate('${st.id}','mission',this.value)">${csEsc(st.mission||'')}</textarea></div>
+    <div class="field-row">
+      <div class="field"><label>人柄</label><input type="text" value="${csEsc(st.personality||'')}" oninput="csUpdate('${st.id}','personality',this.value)"></div>
+      <div class="field"><label>趣味</label><input type="text" value="${csEsc(st.hobby||'')}" oninput="csUpdate('${st.id}','hobby',this.value)"></div>
     </div>
-    <div class="field"><label>電話番号</label>
-      <input type="text" value="${csEsc(st.phone)}" oninput="this.value=fmtPhone(this.value);csUpdate('${st.id}','phone',this.value)" placeholder="ハイフンなしで入力してください">
+    <div class="field-row">
+      <div class="field"><label>対応スピード</label><input type="text" value="${csEsc(st.responseSpeed||'')}" oninput="csUpdate('${st.id}','responseSpeed',this.value)"></div>
+      <div class="field"><label>経歴</label><input type="text" value="${csEsc(st.career||'')}" oninput="csUpdate('${st.id}','career',this.value)"></div>
+    </div>
+    <div class="field"><label>一言</label><textarea rows="2" oninput="csUpdate('${st.id}','oneWord',this.value)">${csEsc(st.oneWord||'')}</textarea></div>
+    <div class="field"><label>電話番号</label><input type="text" value="${csEsc(st.phone||'')}" oninput="this.value=fmtPhone(this.value);csUpdate('${st.id}','phone',this.value)" placeholder="ハイフンなしで入力"></div>
+    <div class="field-row">
+      <div class="field"><label>写真URL</label><input type="text" value="${csEsc(st.photoUrl||'')}" oninput="csUpdate('${st.id}','photoUrl',this.value)" placeholder="https://..."></div>
+      <div class="field"><label>LINE QR URL</label><input type="text" value="${csEsc(st.lineQrUrl||'')}" oninput="csUpdate('${st.id}','lineQrUrl',this.value)" placeholder="https://..."></div>
     </div>
   </div>
 </div>`;
@@ -625,7 +628,7 @@ function csDelete(id) {
 }
 function csAdd() {
   const id = csNewId();
-  csStaff.push({ id, name: '', bio: '', phone: '' });
+  csStaff.push({ id, name: '', nameEn: '', title: '', bio: '', phone: '', mission: '', personality: '', hobby: '', career: '', responseSpeed: '', oneWord: '', photoUrl: '', lineQrUrl: '' });
   checkDirty('cs');
   csEditingId = id;
   csRenderList();
@@ -1063,12 +1066,15 @@ function saveTextSection() {
 }
 
 function saveCsSection() {
-  console.log('保存ボタンクリック：CS担当者情報');
-  console.log('  csStaff =', csStaff);
   try {
     clearDirty('cs');
     saveSectionData('csStaff', { csStaff: JSON.parse(JSON.stringify(csStaff)) });
     snapshotSection('cs');
+    try {
+      firebase.firestore().collection('settings').doc('fuyouhin').set(
+        { csInfo: JSON.parse(JSON.stringify(csStaff)) }, { merge: true }
+      );
+    } catch(fe) { console.warn('Firestore csInfo save:', fe); }
   } catch(e) { console.error('saveCsSection エラー:', e); }
 }
 
