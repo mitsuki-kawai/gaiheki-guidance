@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>gaiheki+ ガイダンスエディタ</title>
+<style>
+:root {
+  --main:   #3F3277;
+  --action: #3F3277;
+  --bg:     #F3F3F3;
+  --text:   #1a1a1a;
+  --white:  #ffffff;
+  --border: #d0d0d0;
+  --label:  #555555;
+  --muted:  #999999;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; background: var(--bg); color: var(--text); font-size: 14px; line-height: 1.6; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
+
+/* ── ヘッダー ── */
+.header { height: 56px; background: var(--white); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 16px; gap: 12px; flex-shrink: 0; }
+.btn-back { font-size: 12px; font-weight: 600; color: var(--muted); text-decoration: none; padding: 6px 10px; border-radius: 4px; flex-shrink: 0; }
+.btn-back:hover { background: var(--bg); color: var(--action); }
+.h-logo img { display: block; }
+.h-divider { width: 1px; height: 18px; background: var(--border); }
+.h-title { font-size: 13px; font-weight: 600; color: var(--label); flex: 1; }
+.h-tabs { display: flex; gap: 4px; }
+.h-tab { padding: 6px 14px; border-radius: 4px; border: 1px solid var(--border); background: none; font-size: 13px; color: var(--label); cursor: pointer; transition: all .12s; white-space: nowrap; }
+.h-tab.active { background: var(--action); color: var(--white); border-color: var(--action); font-weight: 600; }
+.h-tab:hover:not(.active) { border-color: var(--action); color: var(--action); }
+.btn-reset { padding: 7px 14px; background: none; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; color: var(--label); cursor: pointer; transition: all .12s; white-space: nowrap; }
+.btn-reset:hover { border-color: #e53935; color: #e53935; }
+.btn-save { padding: 7px 20px; background: var(--action); color: var(--white); border: none; border-radius: 4px; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity .12s; white-space: nowrap; }
+.btn-save:hover { opacity: .85; }
+.btn-save:disabled { opacity: .6; cursor: not-allowed; }
+
+/* ── メインレイアウト ── */
+.main { flex: 1; display: flex; overflow: hidden; }
+
+/* ── プレビュー ── */
+.preview-pane { width: 50%; overflow: auto; background: #d8d8d8; padding: 20px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+#preview-page-wrap { transform-origin: top center; }
+
+/* A4ページスタイル */
+.a4-page { width: 794px; min-height: 1123px; background: var(--white); position: relative; box-shadow: 0 2px 8px rgba(0,0,0,.18); }
+.page-hbar { background: var(--main); color: var(--white); padding: 13px 32px; display: flex; justify-content: space-between; align-items: center; }
+.phb-brand { font-size: 17px; font-weight: 800; letter-spacing: -.5px; }
+.page-content { padding: 10px 32px 24px; }
+.preview-inner { max-width: 760px; margin: 0; font-size: 11.5px; color: var(--label); line-height: 1.9; padding: 0 8px; }
+.url-val { color: var(--action); word-break: break-all; }
+
+/* ── エディタ ── */
+.editor-pane { width: 50%; overflow-y: auto; padding: 16px 20px; background: var(--bg); border-left: 1px solid var(--border); }
+.editor-head { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
+
+/* ブロックカード */
+.block-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; overflow: hidden; }
+.bc-head { display: flex; align-items: flex-start; gap: 8px; padding: 10px 12px; }
+.bc-order { display: flex; flex-direction: column; gap: 2px; flex-shrink: 0; }
+.btn-ord { width: 24px; height: 20px; padding: 0; border: 1px solid var(--border); border-radius: 3px; background: var(--bg); color: var(--label); font-size: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .1s; }
+.btn-ord:hover:not(:disabled) { border-color: var(--action); color: var(--action); background: #f0eef8; }
+.btn-ord:disabled { opacity: .3; cursor: not-allowed; }
+.bc-style-sel { flex: 1; min-width: 0; padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; background: var(--white); cursor: pointer; }
+.bc-style-sel:focus { outline: none; border-color: var(--action); }
+.btn-del { padding: 4px 10px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; flex-shrink: 0; transition: opacity .12s; }
+.btn-del:hover { opacity: .8; }
+.bc-body { padding: 0 12px 10px; }
+.bc-textarea { width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; resize: vertical; min-height: 60px; line-height: 1.5; }
+.bc-textarea:focus { outline: none; border-color: var(--action); }
+.bc-url-label { font-size: 10px; color: var(--muted); margin-top: 5px; display: block; }
+.bc-url { width: 100%; padding: 5px 9px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; font-family: inherit; }
+.bc-url:focus { outline: none; border-color: var(--action); }
+
+/* 特殊ブロック */
+.block-special { background: #fafafa; }
+.special-tag { flex: 1; font-size: 11px; color: var(--muted); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 5px 10px; }
+
+/* ブロック追加ボタン */
+.btn-add { width: 100%; padding: 11px; background: none; border: 1px dashed var(--border); border-radius: 6px; color: var(--label); font-size: 13px; cursor: pointer; transition: all .12s; margin-top: 4px; }
+.btn-add:hover { border-color: var(--action); color: var(--action); background: #f7f6fb; }
+
+/* トースト */
+.toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(8px); background: #1a1a1a; color: var(--white); padding: 11px 28px; border-radius: 6px; font-size: 13px; font-weight: 500; opacity: 0; transition: opacity .25s, transform .25s; pointer-events: none; z-index: 999; }
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+</style>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+(function() {
+  firebase.initializeApp({
+    apiKey: "AIzaSyCtKA71KjRHQvMPtYcURVjuSKaOanoEh7Y",
+    authDomain: "madoguchi-guidance.firebaseapp.com",
+    projectId: "madoguchi-guidance",
+    storageBucket: "madoguchi-guidance.firebasestorage.app",
+    messagingSenderId: "1080989158935",
+    appId: "1:1080989158935:web:4b75da9e3252e8086a5652"
+  });
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (!user || !(user.email || '').endsWith('@madoguchi.inc')) {
+      location.replace('login.html');
+    }
+  });
+})();
+</script>
+</head>
+<body>
+
+<div class="header">
+  <a href="gaiheki-setting.html" class="btn-back">← 設定</a>
+  <a href="gaiheki-setting.html" class="h-logo"><img src="gaiheki-logo.png" alt="gaiheki+" height="32"></a>
+  <div class="h-divider"></div>
+  <span class="h-title">ガイダンス資料エディタ</span>
+  <div class="h-tabs">
+    <button class="h-tab active" data-page="p2" onclick="switchPage('p2')">P2 写真のお願い</button>
+    <button class="h-tab" data-page="p3" onclick="switchPage('p3')">P3 成約施策</button>
+  </div>
+  <button class="btn-reset" onclick="resetToDefault()">リセット</button>
+  <button class="btn-save" id="btn-save" onclick="saveTemplate()">保存</button>
+</div>
+
+<div class="main">
+  <div class="preview-pane" id="preview-pane">
+    <div id="preview-page-wrap">
+      <div class="a4-page">
+        <div class="page-hbar">
+          <div class="phb-brand">gaiheki+</div>
+          <div style="text-align:right;font-size:11px;opacity:.8">プレビュー</div>
+        </div>
+        <div class="page-content">
+          <div class="preview-inner" id="preview-content"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="editor-pane">
+    <div class="editor-head">ブロック一覧</div>
+    <div id="block-list"></div>
+    <button class="btn-add" onclick="addBlock()">＋ ブロック追加</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var BIZ_ID = 'gaiheki';
+var BG_TEXT_BG = '#e8e6f3';
+var BG_TEXT_COLOR = '#3F3277';
+
+var DEFAULT_BLOCKS = {
+  p2: [
+    { id:'_p2_01', style:'title',    text:'現場・会社の写真ご提供のお願い' },
+    { id:'_p2_02', style:'bg-text',  text:'実際に写真の掲載をお願いしている理由' },
+    { id:'_p2_03', style:'body',     text:'・実際に成約率やアポ率が高くなるというデータが出ている\n・施工の丁寧さや雰囲気が伝わりやすく満足度が上がる\n・結果的に利益が伸びる' },
+    { id:'_p2_04', style:'body',     text:'スマホ撮影の写真でも問題ありませんので、\n下記フォームより2〜5枚ほどご提供をお願いいたします。' },
+    { id:'_p2_05', style:'url-photo',text:'' },
+    { id:'_p2_06', style:'bold',     text:'【おすすめの写真例】' },
+    { id:'_p2_07', style:'body',     text:'・施工中の様子（職人さんの手元や後ろ姿など）\n・会社外観や社内の様子\n・スタッフ集合写真、看板、車両など' },
+    { id:'_p2_08', style:'images',   text:'' },
+    { id:'_p2_09', style:'muted',    text:'※お送りいただいた素材は掲載前に確認のうえ、内容に問題のない範囲で使用いたします。' },
+    { id:'_p2_10', style:'body',     text:'お手数おかけしてしまいますが、\nご協力のほど、どうぞよろしくお願いいたします。' },
+    { id:'_p2_11', style:'url-store',text:'' },
+    { id:'_p2_12', style:'bold',     text:'【管理画面へ追加で欲しい機能について】' },
+    { id:'_p2_13', style:'body',     text:'普段、使っている機能や管理システム等が弊社管理画面にもあれば便利なのに！！\nのようなことがあればお願い致します！' }
+  ],
+  p3: [
+    { id:'_p3_01', style:'title',     text:'＜現調 / 成約に繋げるための施策＞' },
+    { id:'_p3_02', style:'bg-text',   text:'【ローンについて】' },
+    { id:'_p3_03', style:'body',      text:'**エンドユーザー様向けローン**を導入することとなりました。\n外壁・屋根工事は高額になりやすく、\n「金額で迷われる」「今は難しいと言われる」\nといった理由で失注してしまうケースも少なくありません。' },
+    { id:'_p3_04', style:'body',      text:'ローンが利用可能になることで、\n・月々払いでのご提案が可能\n・予算で迷われているお客様の後押し\n・ワンランク上の工事提案がしやすくなる\n→ 結果として成約率向上が期待できます。' },
+    { id:'_p3_05', style:'bold',      text:'【加盟店様の費用負担・手数料負担はございません。】' },
+    { id:'_p3_06', style:'muted',     text:'※お客様にも所定の審査がございます。' },
+    { id:'_p3_07', style:'body',      text:'導入をご希望の加盟店様は、\n下記資料をお目通しいただけますと幸いです。' },
+    { id:'_p3_08', style:'link-card', text:'【媒体資料】', url:'https://drive.google.com/file/d/1eYcxVHQ9Bdwpe0sgHwFJ5QHvQeRa-9oX/view?usp=sharing', linkLabel:'【madoguchi様】業務協定契約のご提案_Ver2.0_20251201 (1) (1).pdf' },
+    { id:'_p3_09', style:'link-card', text:'【お申込書】', url:'https://drive.google.com/file/d/1YWvqYl0y2YJdtkg9s-9Umu8nKb_xF_c8/view?usp=sharing', linkLabel:'【アプラス】加盟店契約希望申出書.pdf' },
+    { id:'_p3_10', style:'bg-text',   text:'【下記、弊社からお支払いをさせて頂きます！】' },
+    { id:'_p3_11', style:'bold',      text:'アマギフ1000円　現地調査完了＆お見積書提示' },
+    { id:'_p3_12', style:'link',      text:'', url:'https://docs.google.com/forms/d/e/1FAIpQLSfRrZcyFszZbp4Qrb_HJ2NTVMfgzRu-NoAT2buCPvu8tWBvmQ/viewform?usp=dialog' },
+    { id:'_p3_13', style:'bold',      text:'作業金額の1%のアマギフ　作業完了後' },
+    { id:'_p3_14', style:'link',      text:'', url:'https://docs.google.com/forms/d/e/1FAIpQLSc6mL6HfKFGRqIBVfyBSCxbvmeMIZL9Jn6HeThZyb0G_nHV4w/viewform?usp=di' },
+    { id:'_p3_15', style:'bold',      text:'＜使い方＞' },
+    { id:'_p3_16', style:'body',      text:'現地調査完了でAmazonギフト1000円分、作業完了でさらに金額の1％分のAmazonギフトをプレゼントさせていただきます。\nこれを営業トークのフックとして使っていただくことが可能なので、まずは現地見積もりにつなげるために「Amazonギフト券」をフックにして、現地見積もりのアポイントを打診してみてください。\nなお、Amazonギフト自体は弊社から直接お客様にお送りする形となります。' }
+  ]
+};
+
+var currentPage = 'p2';
+var blocks = { p2: [], p3: [] };
+var db = firebase.firestore();
+
+/* ── Firestore ── */
+function loadTemplate() {
+  db.collection('templates').doc(BIZ_ID).get()
+    .then(function(doc) {
+      if (doc.exists && doc.data().blocks) {
+        var s = doc.data().blocks;
+        blocks = {
+          p2: (s.p2 && s.p2.length) ? s.p2 : JSON.parse(JSON.stringify(DEFAULT_BLOCKS.p2)),
+          p3: (s.p3 && s.p3.length) ? s.p3 : JSON.parse(JSON.stringify(DEFAULT_BLOCKS.p3))
+        };
+      } else {
+        blocks = JSON.parse(JSON.stringify(DEFAULT_BLOCKS));
+      }
+      renderAll();
+      scalePreview();
+    })
+    .catch(function(e) {
+      console.error('[Editor] load:', e.message);
+      blocks = JSON.parse(JSON.stringify(DEFAULT_BLOCKS));
+      renderAll();
+      scalePreview();
+    });
+}
+
+function saveTemplate() {
+  var btn = document.getElementById('btn-save');
+  btn.disabled = true; btn.textContent = '保存中...';
+  db.collection('templates').doc(BIZ_ID).set({ blocks: blocks, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
+    .then(function() {
+      showToast('保存しました');
+      btn.disabled = false; btn.textContent = '保存';
+    })
+    .catch(function(e) {
+      alert('保存に失敗しました: ' + e.message);
+      btn.disabled = false; btn.textContent = '保存';
+    });
+}
+
+function resetToDefault() {
+  if (!confirm('テンプレートをデフォルト状態に戻しますか？\n（「保存」するまでFirestoreには反映されません）')) return;
+  blocks = JSON.parse(JSON.stringify(DEFAULT_BLOCKS));
+  renderAll();
+}
+
+/* ── ページ切替 ── */
+function switchPage(page) {
+  currentPage = page;
+  document.querySelectorAll('.h-tab').forEach(function(t) {
+    t.classList.toggle('active', t.dataset.page === page);
+  });
+  renderAll();
+}
+
+/* ── レンダリング ── */
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function processText(s) {
+  return escHtml(s || '').replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>');
+}
+
+function renderBlock(b) {
+  var t = processText(b.text);
+  var u = escHtml(b.url || '');
+  switch (b.style) {
+    case 'title':
+      return '<div style="font-size:20px;font-weight:700;color:#1a1a1a;margin-top:40px;margin-bottom:18px">' + t + '</div>';
+    case 'body':
+      return '<div style="margin-bottom:12px">' + t + '</div>';
+    case 'bg-text':
+      return '<div style="margin-top:8px;margin-bottom:12px"><span style="display:inline-block;background:' + BG_TEXT_BG + ';color:' + BG_TEXT_COLOR + ';font-weight:700;padding:3px 10px;border-radius:3px;margin-bottom:4px">' + t + '</span></div>';
+    case 'bold':
+      return '<div style="margin-bottom:12px"><strong>' + t + '</strong></div>';
+    case 'muted':
+      return '<div style="margin-bottom:12px;color:#999999;font-size:10.5px">' + t + '</div>';
+    case 'link':
+      var ll = b.text ? '<div style="margin-bottom:2px">' + t + '</div>' : '';
+      return '<div style="margin-bottom:12px">' + ll + '<a href="' + u + '" style="color:' + BG_TEXT_COLOR + ';word-break:break-all" target="_blank">' + u + '</a></div>';
+    case 'link-card':
+      var cl = b.text ? '<div style="font-weight:600;margin-bottom:2px">' + t + '</div>' : '';
+      var lt = escHtml(b.linkLabel || b.url || '');
+      return '<div style="margin-bottom:12px">' + cl + '<a href="' + u + '" target="_blank" style="display:inline-flex;align-items:center;gap:5px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:1px 6px;line-height:1.4;text-decoration:none;color:#1a1a1a;font-size:13px">📄 ' + lt + '</a></div>';
+    case 'url-photo':
+      return '<div style="margin-bottom:24px">▼写真アップロードフォーム<br><span style="color:' + BG_TEXT_COLOR + ';font-size:11px">（写真アップロードURL・設定画面で変更）</span></div>';
+    case 'url-store':
+      return '<div style="margin-bottom:48px">▼加盟店様の紹介ページ<br><span style="color:' + BG_TEXT_COLOR + ';font-size:11px">（加盟店紹介URL・設定画面で変更）</span></div>';
+    case 'images':
+      return '<div style="display:flex;gap:8px;margin-top:10px;margin-bottom:8px">'
+        + '<div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真1</div>'
+        + '<div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真2</div>'
+        + '<div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真3</div>'
+        + '</div>';
+    default:
+      return '<div style="margin-bottom:12px">' + t + '</div>';
+  }
+}
+
+function renderPreview() {
+  var el = document.getElementById('preview-content');
+  if (!el) return;
+  el.innerHTML = (blocks[currentPage] || []).map(renderBlock).join('');
+}
+
+var SPECIAL_STYLES = { 'url-photo': '🔒 写真アップロードURL（設定画面で変更）', 'url-store': '🔒 加盟店紹介URL（設定画面で変更）', 'images': '🔒 写真サンプル画像（3枚）' };
+var STYLE_OPTS = [
+  ['title','タイトル'], ['body','本文'], ['bg-text','背景ありテキスト'],
+  ['bold','太字'], ['muted','補足テキスト'], ['link','URLリンク'], ['link-card','ファイルリンク']
+];
+
+function renderEditor() {
+  var list = document.getElementById('block-list');
+  if (!list) return;
+  var arr = blocks[currentPage] || [];
+  list.innerHTML = arr.map(function(b, i) { return buildCard(b, i, arr.length); }).join('');
+}
+
+function buildCard(b, idx, total) {
+  var isSpecial = SPECIAL_STYLES.hasOwnProperty(b.style);
+  var up = '<button class="btn-ord"' + (idx === 0 ? ' disabled' : ' onclick="moveBlock(' + idx + ',-1)"') + '>▲</button>';
+  var dn = '<button class="btn-ord"' + (idx === total - 1 ? ' disabled' : ' onclick="moveBlock(' + idx + ',1)"') + '>▼</button>';
+  var del = '<button class="btn-del" onclick="delBlock(' + idx + ')">削除</button>';
+
+  if (isSpecial) {
+    return '<div class="block-card block-special"><div class="bc-head"><div class="bc-order">' + up + dn + '</div>'
+      + '<span class="special-tag">' + SPECIAL_STYLES[b.style] + '</span>' + del + '</div></div>';
+  }
+
+  var opts = STYLE_OPTS.map(function(o) {
+    return '<option value="' + o[0] + '"' + (b.style === o[0] ? ' selected' : '') + '>' + o[1] + '</option>';
+  }).join('');
+  var hasUrl = b.style === 'link' || b.style === 'link-card';
+  var hasLL  = b.style === 'link-card';
+  var urlF = hasUrl
+    ? '<span class="bc-url-label">URL</span><input class="bc-url" type="text" placeholder="https://..." value="' + escHtml(b.url || '') + '" data-idx="' + idx + '" data-field="url" oninput="updateBlock(this)">'
+    : '';
+  var llF  = hasLL
+    ? '<span class="bc-url-label">ファイル表示名（省略時はURLを使用）</span><input class="bc-url" type="text" placeholder="ファイル名.pdf" value="' + escHtml(b.linkLabel || '') + '" data-idx="' + idx + '" data-field="linkLabel" oninput="updateBlock(this)">'
+    : '';
+
+  return '<div class="block-card"><div class="bc-head"><div class="bc-order">' + up + dn + '</div>'
+    + '<select class="bc-style-sel" data-idx="' + idx + '" onchange="updateStyle(this)">' + opts + '</select>'
+    + del + '</div>'
+    + '<div class="bc-body"><textarea class="bc-textarea" rows="3" placeholder="テキスト内容（Enterで改行、**テキスト**で太字）" data-idx="' + idx + '" data-field="text" oninput="updateBlock(this)">' + escHtml(b.text || '') + '</textarea>'
+    + urlF + llF + '</div></div>';
+}
+
+function renderAll() { renderPreview(); renderEditor(); }
+
+/* ── 操作ハンドラ ── */
+function updateStyle(sel) {
+  var idx = parseInt(sel.dataset.idx);
+  blocks[currentPage][idx].style = sel.value;
+  renderAll();
+}
+
+function updateBlock(inp) {
+  var idx = parseInt(inp.dataset.idx);
+  blocks[currentPage][idx][inp.dataset.field] = inp.value;
+  renderPreview();
+}
+
+function moveBlock(idx, dir) {
+  var arr = blocks[currentPage];
+  var ni = idx + dir;
+  if (ni < 0 || ni >= arr.length) return;
+  var tmp = arr[idx]; arr[idx] = arr[ni]; arr[ni] = tmp;
+  renderAll();
+}
+
+function delBlock(idx) {
+  if (!confirm('このブロックを削除しますか？')) return;
+  blocks[currentPage].splice(idx, 1);
+  renderAll();
+}
+
+function addBlock() {
+  blocks[currentPage].push({ id: 'new_' + Date.now(), style: 'body', text: '' });
+  renderAll();
+  setTimeout(function() {
+    var last = document.querySelector('#block-list .block-card:last-child');
+    if (last) last.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 60);
+}
+
+/* ── プレビュースケール ── */
+function scalePreview() {
+  var pane = document.getElementById('preview-pane');
+  var wrap = document.getElementById('preview-page-wrap');
+  if (!pane || !wrap) return;
+  var s = Math.min(1, Math.max(0.3, (pane.clientWidth - 40) / 794));
+  wrap.style.transform = 'scale(' + s + ')';
+  wrap.style.transformOrigin = 'top center';
+  wrap.style.marginBottom = (Math.round(1200 * s) - 1200 + 20) + 'px';
+}
+window.addEventListener('resize', scalePreview);
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+loadTemplate();
+</script>
+</body>
+</html>
