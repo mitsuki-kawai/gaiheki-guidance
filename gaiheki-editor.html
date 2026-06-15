@@ -125,15 +125,14 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
 <body>
 
 <div class="header">
-  <a href="gaiheki-setting.html" class="btn-back">← 設定</a>
-  <a href="gaiheki-setting.html" class="h-logo"><img src="gaiheki-logo.png" alt="gaiheki+" height="32"></a>
+  <a href="gaiheki-setting.html" class="btn-back" onclick="guardNav(event)">← 設定</a>
+  <a href="gaiheki-setting.html" class="h-logo" onclick="guardNav(event)"><img src="gaiheki-logo.png" alt="gaiheki+" height="32"></a>
   <div class="h-divider"></div>
   <span class="h-title">ガイダンス資料エディタ</span>
   <div class="h-tabs">
     <button class="h-tab active" data-page="p2" onclick="switchPage('p2')">P2 写真のお願い</button>
     <button class="h-tab" data-page="p3" onclick="switchPage('p3')">P3 成約施策</button>
   </div>
-  <button class="btn-reset" onclick="resetToDefault()">リセット</button>
   <button class="btn-save" id="btn-save" onclick="saveTemplate()">保存</button>
 </div>
 
@@ -214,6 +213,18 @@ var blocks      = { p2: [], p3: [] };
 var db          = firebase.firestore();
 var dragSrcIdx  = -1;
 var expandedIds = {};   /* blockId -> true/false */
+var isDirty = false;
+
+function markDirty() { isDirty = true; }
+function clearDirty() { isDirty = false; }
+
+function guardNav(e) {
+  if (!isDirty) return;
+  if (!confirm('保存されていない変更があります。このページを離れますか？')) {
+    e.preventDefault();
+  }
+}
+
 
 /* ── Firestore ── */
 function migrateBlocks(arr) {
@@ -270,7 +281,7 @@ function saveTemplate() {
   var btn = document.getElementById('btn-save');
   btn.disabled = true; btn.textContent = '保存中...';
   db.collection('templates').doc(BIZ_ID).set({ blocks: blocks, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
-    .then(function() { showToast('保存しました'); btn.disabled = false; btn.textContent = '保存'; })
+    .then(function() { clearDirty(); showToast('保存しました'); btn.disabled = false; btn.textContent = '保存'; })
     .catch(function(e) { alert('保存に失敗: '+e.message); btn.disabled = false; btn.textContent = '保存'; });
 }
 
@@ -283,6 +294,8 @@ function resetToDefault() {
 
 /* ── Page switch ── */
 function switchPage(page) {
+  if (page === currentPage) return;
+  if (isDirty && !confirm('保存されていない変更があります。このページを離れますか？')) return;
   currentPage = page;
   document.querySelectorAll('.h-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.page===page); });
   renderAll();
@@ -495,6 +508,7 @@ function toggleCard(blockId) {
 
 /* ── Update handlers ── */
 function updateStyle(sel) {
+  markDirty();
   var idx = parseInt(sel.dataset.idx);
   blocks[currentPage][idx].style = sel.value;
   if (sel.value==='space' && !blocks[currentPage][idx].spaceSize) blocks[currentPage][idx].spaceSize = 'medium';
@@ -502,6 +516,7 @@ function updateStyle(sel) {
 }
 
 function updateBlock(inp) {
+  markDirty();
   var idx = parseInt(inp.dataset.idx);
   blocks[currentPage][idx][inp.dataset.field] = inp.value;
   renderPreview();
@@ -521,11 +536,13 @@ function updateBlock(inp) {
 
 function delBlock(idx) {
   if (!confirm('このブロックを削除しますか？')) return;
+  markDirty();
   blocks[currentPage].splice(idx,1);
   renderAll();
 }
 
 function addBlock() {
+  markDirty();
   var nb = { id:'new_'+Date.now(), style:'body', text:'' };
   blocks[currentPage].push(nb);
   expandedIds[nb.id] = true;   /* 追加時は展開状態 */
@@ -563,6 +580,7 @@ function dropDrag(e) {
   e.preventDefault();
   var ti = parseInt(e.currentTarget.dataset.idx);
   if (dragSrcIdx < 0 || dragSrcIdx === ti) { dragSrcIdx = -1; return; }
+  markDirty();
   var arr   = blocks[currentPage];
   var moved = arr.splice(dragSrcIdx, 1)[0];
   arr.splice(ti > dragSrcIdx ? ti - 1 : ti, 0, moved);
@@ -591,6 +609,11 @@ function scalePreview() {
   wrap.style.transformOrigin = 'top center';
   wrap.style.marginBottom = (Math.round(1200*s)-1200+20)+'px';
 }
+window.addEventListener('beforeunload', function(e) {
+  if (!isDirty) return;
+  e.preventDefault();
+  e.returnValue = '';
+});
 window.addEventListener('resize', scalePreview);
 
 function showToast(msg) {
