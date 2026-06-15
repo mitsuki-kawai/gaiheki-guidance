@@ -192,8 +192,10 @@ var DEFAULT_BLOCKS = {
     { id:'_p3_05', style:'bold',    text:'【加盟店様の費用負担・手数料負担はございません。】' },
     { id:'_p3_06', style:'muted',   text:'※お客様にも所定の審査がございます。' },
     { id:'_p3_07', style:'body',    text:'導入をご希望の加盟店様は、\n下記資料をお目通しいただけますと幸いです。' },
-    { id:'_p3_08', style:'url-loan-media', text:'▼媒体資料' },
-    { id:'_p3_09', style:'url-loan-apply', text:'▼お申込書' },
+    { id:'_p3_08',  style:'bold',           text:'【媒体資料】' },
+    { id:'_p3_08u', style:'url-loan-media', text:'' },
+    { id:'_p3_09',  style:'bold',           text:'【お申込書】' },
+    { id:'_p3_09u', style:'url-loan-apply', text:'' },
     { id:'_p3_10', style:'bg-text', text:'【下記、弊社からお支払いをさせて頂きます！】' },
     { id:'_p3_11', style:'bold',    text:'アマギフ1000円　現地調査完了＆お見積書提示' },
     { id:'_p3_12', style:'url-ext', text:'現地調査完了・お見積書提示後の申請フォーム', url:'https://docs.google.com/forms/d/e/1FAIpQLSfRrZcyFszZbp4Qrb_HJ2NTVMfgzRu-NoAT2buCPvu8tWBvmQ/viewform?usp=dialog' },
@@ -283,8 +285,8 @@ function renderBlock(b) {
     case 'space':    return '<div style="height:'+(SPACE_PX[b.spaceSize||'medium']||'32px')+'"></div>';
     case 'url-ext':     return '<div style="margin-bottom:24px">'+processText(b.text)+'<br><a href="'+escHtml(b.url||'#')+'" style="color:'+BG_TEXT_COLOR+';word-break:break-all" target="_blank">'+escHtml(b.url||'')+'</a></div>';
     case 'link-locked':return '<div style="margin-bottom:8px"><a href="'+escHtml(b.url||'#')+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:4px 12px;text-decoration:none;color:#1a1a1a;font-size:12px;font-weight:600">🔗 '+processText(b.text)+'</a></div>';
-    case 'url-loan-media':return '<div style="margin-bottom:24px">'+processText(b.text||'▼媒体資料')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（ローン媒体資料URL・設定画面で変更）</span></div>';
-    case 'url-loan-apply':return '<div style="margin-bottom:24px">'+processText(b.text||'▼お申込書')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（ローン申込書URL・設定画面で変更）</span></div>';
+    case 'url-loan-media':{ var lm=b.text?processText(b.text)+'<br>':''; return '<div style="margin-bottom:12px">'+lm+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（ローン媒体資料URL・設定画面で変更）</span></div>'; }
+    case 'url-loan-apply':{ var la=b.text?processText(b.text)+'<br>':''; return '<div style="margin-bottom:12px">'+la+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（ローン申込書URL・設定画面で変更）</span></div>'; }
     case 'url-photo':return '<div style="margin-bottom:24px">'+processText(b.text||'▼写真アップロードフォーム')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（写真アップロードURL・設定画面で変更）</span></div>';
     case 'url-store':return '<div style="margin-bottom:48px">'+processText(b.text||'▼加盟店様の紹介ページ')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（加盟店紹介URL・設定画面で変更）</span></div>';
     case 'images':   return '<div style="display:flex;gap:8px;margin-top:10px;margin-bottom:8px"><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真1</div><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真2</div><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真3</div></div>';
