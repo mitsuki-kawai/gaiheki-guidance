@@ -198,9 +198,11 @@ var DEFAULT_BLOCKS = {
     { id:'_p3_09u', style:'url-loan-apply', text:'' },
     { id:'_p3_10', style:'bg-text', text:'【下記、弊社からお支払いをさせて頂きます！】' },
     { id:'_p3_11', style:'bold',    text:'アマギフ1000円　現地調査完了＆お見積書提示' },
-    { id:'_p3_12', style:'url-ext', text:'現地調査完了・お見積書提示後の申請フォーム', url:'https://docs.google.com/forms/d/e/1FAIpQLSfRrZcyFszZbp4Qrb_HJ2NTVMfgzRu-NoAT2buCPvu8tWBvmQ/viewform?usp=dialog' },
+    { id:'_p3_12',  style:'bold',     text:'現地調査完了・お見積書提示後の申請フォーム' },
+    { id:'_p3_12u', style:'url-form1', text:'' },
     { id:'_p3_13', style:'bold',    text:'作業金額の1%のアマギフ　作業完了後' },
-    { id:'_p3_14', style:'url-ext', text:'作業完了後の申請フォーム', url:'https://docs.google.com/forms/d/e/1FAIpQLSc6mL6HfKFGRqIBVfyBSCxbvmeMIZL9Jn6HeThZyb0G_nHV4w/viewform?usp=di' },
+    { id:'_p3_14',  style:'bold',     text:'作業完了後の申請フォーム' },
+    { id:'_p3_14u', style:'url-form2', text:'' },
     { id:'_p3_15', style:'bold',    text:'＜使い方＞' },
     { id:'_p3_16', style:'body',    text:'現地調査完了でAmazonギフト1000円分、作業完了でさらに金額の1％分のAmazonギフトをプレゼントさせていただきます。\nこれを営業トークのフックとして使っていただくことが可能なので、まずは現地見積もりにつなげるために「Amazonギフト券」をフックにして、現地見積もりのアポイントを打診してみてください。\nなお、Amazonギフト自体は弊社から直接お客様にお送りする形となります。' }
   ]
@@ -218,8 +220,28 @@ function migrateBlocks(arr) {
   return (arr||[]).map(function(b) {
     if (b.style === 'link')      return Object.assign({}, b, { style:'body', text: b.url||b.text||'' });
     if (b.style === 'link-card') return Object.assign({}, b, { style:'bold', text: b.text||b.linkLabel||'' });
+    if (b.style === 'url-ext')   return Object.assign({}, b, { style:'bold', url: undefined });
     return b;
   });
+}
+
+/* 必須ロックリンクブロックがなければ挿入 */
+function ensureP3Blocks(arr) {
+  var rules = [
+    { style:'url-loan-media', block:{id:'_p3_08u',style:'url-loan-media',text:''}, afterId:'_p3_08',  afterText:'媒体資料' },
+    { style:'url-loan-apply', block:{id:'_p3_09u',style:'url-loan-apply',text:''}, afterId:'_p3_09',  afterText:'お申込書' },
+    { style:'url-form1',      block:{id:'_p3_12u',style:'url-form1',     text:''}, afterId:'_p3_12',  afterText:'現地調査完了' },
+    { style:'url-form2',      block:{id:'_p3_14u',style:'url-form2',     text:''}, afterId:'_p3_14',  afterText:'作業完了後の申請フォーム' },
+  ];
+  rules.forEach(function(r) {
+    if (arr.some(function(b){ return b.style===r.style; })) return;
+    var idx = -1;
+    for (var i=0; i<arr.length; i++) {
+      if (arr[i].id===r.afterId || (r.afterText && arr[i].text && arr[i].text.indexOf(r.afterText)>=0)) { idx=i; break; }
+    }
+    if (idx>=0) arr.splice(idx+1, 0, JSON.parse(JSON.stringify(r.block)));
+  });
+  return arr;
 }
 
 function loadTemplate() {
@@ -230,7 +252,7 @@ function loadTemplate() {
         var s = doc.data().blocks;
         blocks = {
           p2: migrateBlocks((s.p2&&s.p2.length) ? s.p2 : def.p2),
-          p3: migrateBlocks((s.p3&&s.p3.length) ? s.p3 : def.p3)
+          p3: ensureP3Blocks(migrateBlocks((s.p3&&s.p3.length) ? s.p3 : def.p3))
         };
       } else {
         blocks = def;
@@ -287,6 +309,8 @@ function renderBlock(b) {
     case 'link-locked':return '<div style="margin-bottom:8px"><a href="'+escHtml(b.url||'#')+'" target="_blank" style="display:inline-flex;align-items:center;gap:6px;background:#f1f3f4;border:1px solid #dadce0;border-radius:4px;padding:4px 12px;text-decoration:none;color:#1a1a1a;font-size:12px;font-weight:600">🔗 '+processText(b.text)+'</a></div>';
     case 'url-loan-media':{ var lm=b.text?processText(b.text)+'<br>':''; return '<div style="margin-bottom:12px">'+lm+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（ローン媒体資料URL・設定画面で変更）</span></div>'; }
     case 'url-loan-apply':{ var la=b.text?processText(b.text)+'<br>':''; return '<div style="margin-bottom:12px">'+la+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（ローン申込書URL・設定画面で変更）</span></div>'; }
+    case 'url-form1':{ var f1=b.text?processText(b.text)+'<br>':''; return '<div style="margin-bottom:12px">'+f1+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（現調完了申請フォームURL・設定画面で変更）</span></div>'; }
+    case 'url-form2':{ var f2=b.text?processText(b.text)+'<br>':''; return '<div style="margin-bottom:12px">'+f2+'<span style="color:'+BG_TEXT_COLOR+';font-size:11px">（作業完了申請フォームURL・設定画面で変更）</span></div>'; }
     case 'url-photo':return '<div style="margin-bottom:24px">'+processText(b.text||'▼写真アップロードフォーム')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（写真アップロードURL・設定画面で変更）</span></div>';
     case 'url-store':return '<div style="margin-bottom:48px">'+processText(b.text||'▼加盟店様の紹介ページ')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（加盟店紹介URL・設定画面で変更）</span></div>';
     case 'images':   return '<div style="display:flex;gap:8px;margin-top:10px;margin-bottom:8px"><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真1</div><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真2</div><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真3</div></div>';
@@ -306,13 +330,19 @@ var SEMI_LOCKED = {
   'url-photo':      '写真URL（🔒）',
   'url-store':      '店舗URL（🔒）',
   'url-loan-media': 'ローン媒体資料URL（🔒）',
-  'url-loan-apply': 'ローン申込書URL（🔒）'
+  'url-loan-apply': 'ローン申込書URL（🔒）',
+  'url-form1':      'フォームURL-1（🔒）',
+  'url-form2':      'フォームURL-2（🔒）'
 };
+/* ロック解除不可スタイル（削除ボタン非表示） */
+var NO_DELETE_STYLES = ['url-loan-media','url-loan-apply','url-form1','url-form2'];
 var SEMI_URL_LABEL = {
   'url-photo':      '写真アップロードURL（設定画面のURL設定で変更）',
   'url-store':      '加盟店紹介URL（設定画面のURL設定で変更）',
   'url-loan-media': 'ローン媒体資料URL（設定画面のURL設定で変更）',
-  'url-loan-apply': 'ローン申込書URL（設定画面のURL設定で変更）'
+  'url-loan-apply': 'ローン申込書URL（設定画面のURL設定で変更）',
+  'url-form1':      '現調完了申請フォームURL（設定画面のURL設定で変更）',
+  'url-form2':      '作業完了申請フォームURL（設定画面のURL設定で変更）'
 };
 
 var STYLE_OPTS = [
@@ -328,6 +358,7 @@ function badgeStyle(s) {
   if (s==='muted') return 'background:#ebebeb;color:#999';
   if (s==='space')        return 'background:#e8f5e9;color:#2e7d32';
   if (s==='url-ext')    return 'background:#e3f2fd;color:#1565c0';
+  if (s==='url-form1'||s==='url-form2') return 'background:#e3f2fd;color:#1565c0';
   if (s==='link-locked') return 'background:#e3f2fd;color:#1565c0';
   return 'background:#f0f0f0;color:#555';
 }
@@ -359,12 +390,13 @@ function buildCard(b, idx) {
   if (SEMI_LOCKED.hasOwnProperty(b.style)) {
     var slLabel = SEMI_LOCKED[b.style];
     var slBadge = '<span class="bc-badge" style="background:#fff3e0;color:#e65100">'+slLabel+'</span>';
+    var noDel   = NO_DELETE_STYLES.indexOf(b.style) >= 0;
     var slPre   = (b.text||'').replace(/\n/g,' ');
     slPre = slPre.length > 44 ? slPre.substring(0,44)+'…' : slPre;
     var bodyH   = expanded ? '' : ' style="display:none"';
     return '<div class="block-card"'+cardDnd+'>'
       +'<div class="bc-head" onclick="toggleCard(\''+bid+'\')">'
-      +handle+slBadge+'<span class="bc-preview">'+escHtml(slPre)+'</span>'+arrow+del
+      +handle+slBadge+'<span class="bc-preview">'+escHtml(slPre)+'</span>'+arrow+(noDel?'':del)
       +'</div>'
       +'<div class="bc-body"'+bodyH+'>'
       +'<span class="bc-field-label">ラベルテキスト</span>'

@@ -1105,7 +1105,9 @@ function saveUrlSection() {
     try {
       firebase.firestore().collection('settings').doc('gaiheki').set({
         loanMediaUrl:       data.loanDocUrl,
-        loanApplicationUrl: data.loanApplyUrl
+        loanApplicationUrl: data.loanApplyUrl,
+        formUrl1:           document.getElementById('gift-survey-url').value.trim(),
+        formUrl2:           document.getElementById('gift-work-url').value.trim()
       }, { merge: true });
     } catch(fe) { console.warn('Firestore URL save:', fe); }
   } catch(e) { console.error('saveUrlSection エラー:', e); }
