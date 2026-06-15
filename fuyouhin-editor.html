@@ -20,7 +20,7 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
 
 /* ── ヘッダー ── */
 .header { height: 56px; background: var(--white); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 16px; gap: 12px; flex-shrink: 0; }
-.btn-back { font-size: 12px; font-weight: 600; color: var(--muted); text-decoration: none; padding: 6px 10px; border-radius: 4px; flex-shrink: 0; }
+.btn-back { font-size: 12px; font-weight: 600; color: var(--muted); text-decoration: none; padding: 6px 10px; border-radius: 4px; }
 .btn-back:hover { background: var(--bg); color: var(--action); }
 .h-logo img { display: block; }
 .h-divider { width: 1px; height: 18px; background: var(--border); }
@@ -31,7 +31,7 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
 .h-tab:hover:not(.active) { border-color: var(--action); color: var(--action); }
 .btn-reset { padding: 7px 14px; background: none; border: 1px solid var(--border); border-radius: 4px; font-size: 13px; color: var(--label); cursor: pointer; transition: all .12s; white-space: nowrap; }
 .btn-reset:hover { border-color: #e53935; color: #e53935; }
-.btn-save { padding: 7px 20px; background: var(--action); color: var(--white); border: none; border-radius: 4px; font-size: 13px; font-weight: 700; cursor: pointer; transition: opacity .12s; white-space: nowrap; }
+.btn-save { padding: 7px 20px; background: var(--action); color: var(--white); border: none; border-radius: 4px; font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap; }
 .btn-save:hover { opacity: .85; }
 .btn-save:disabled { opacity: .6; cursor: not-allowed; }
 
@@ -41,35 +41,48 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
 /* ── プレビュー ── */
 .preview-pane { width: 50%; overflow: auto; background: #d8d8d8; padding: 20px; display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
 #preview-page-wrap { transform-origin: top center; }
-.a4-page { width: 794px; min-height: 1123px; background: var(--white); position: relative; box-shadow: 0 2px 8px rgba(0,0,0,.18); }
+.a4-page { width: 794px; min-height: 1123px; background: var(--white); box-shadow: 0 2px 8px rgba(0,0,0,.18); }
 .page-hbar { background: var(--main); color: #1a1a1a; padding: 13px 32px; display: flex; justify-content: space-between; align-items: center; }
 .phb-brand { font-size: 17px; font-weight: 800; letter-spacing: -.5px; }
 .page-content { padding: 10px 32px 24px; }
 .preview-inner { max-width: 760px; margin: 0; font-size: 11.5px; color: var(--label); line-height: 1.9; padding: 0 8px; }
 
-/* ── エディタ ── */
+/* ── エディタペイン ── */
 .editor-pane { width: 50%; overflow-y: auto; padding: 16px 20px; background: var(--bg); border-left: 1px solid var(--border); }
 .editor-head { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
 
 /* ── ブロックカード ── */
-.block-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; overflow: hidden; transition: box-shadow .12s, border-color .12s; }
-.block-card.dragging { opacity: .45; box-shadow: 0 6px 16px rgba(0,0,0,.2); }
-.block-card.drag-over { border-color: var(--action); box-shadow: 0 0 0 2px rgba(63,50,119,.22); background: #faf9ff; }
+.block-card { background: var(--white); border: 1px solid var(--border); border-radius: 6px; margin-bottom: 8px; overflow: hidden; }
+.block-card.dragging { opacity: .45; box-shadow: 0 6px 16px rgba(0,0,0,.18); }
+.block-card.drag-over { border-color: var(--action); box-shadow: 0 0 0 2px rgba(63,50,119,.2); background: #faf9ff; }
 
 /* カードヘッダー */
-.bc-head { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-bottom: 1px solid #f0f0f0; min-height: 40px; }
-.bc-drag { font-size: 18px; color: #ccc; cursor: grab; flex-shrink: 0; user-select: none; line-height: 1; padding: 1px 4px; border-radius: 3px; transition: color .1s, background .1s; }
-.bc-drag:hover { color: var(--action); background: #f0eef8; }
-.block-card.dragging .bc-drag { cursor: grabbing; }
+.bc-head { display: flex; align-items: center; gap: 8px; padding: 9px 12px; cursor: pointer; user-select: none; min-height: 40px; }
+.bc-head:hover { background: #faf9ff; }
+.block-special .bc-head,
+.block-special .bc-head:hover { cursor: default; background: transparent; }
+
+/* ドラッグハンドル */
+.bc-drag { font-size: 18px; color: #ccc; cursor: grab; flex-shrink: 0; line-height: 1; padding: 1px 4px; border-radius: 3px; transition: color .1s; }
+.bc-drag:hover { color: var(--action); background: #ede9f6; }
+
+/* バッジ・プレビュー */
 .bc-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; }
 .bc-preview { flex: 1; font-size: 11px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
-.btn-del { padding: 3px 9px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; flex-shrink: 0; transition: opacity .12s; }
+.bc-arrow { font-size: 9px; color: var(--muted); flex-shrink: 0; padding: 0 2px; }
+.btn-del { padding: 3px 9px; background: #ffeaea; color: #e53935; border: none; border-radius: 4px; font-size: 11px; font-weight: 600; cursor: pointer; flex-shrink: 0; }
 .btn-del:hover { opacity: .8; }
 
+/* 特殊ブロック */
+.block-special { background: #fafafa; }
+.bc-special-tag { flex: 1; font-size: 11px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
 /* カードボディ */
-.bc-body { padding: 10px 12px; }
+.bc-body { padding: 10px 12px 12px; border-top: 1px solid #f0f0f0; }
 .bc-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
 .bc-row-label { font-size: 11px; color: var(--muted); flex-shrink: 0; }
+.bc-field-label { font-size: 11px; color: var(--muted); display: block; margin-bottom: 4px; margin-top: 8px; }
+.bc-field-label:first-child { margin-top: 0; }
 .bc-style-sel { flex: 1; max-width: 190px; padding: 4px 8px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; background: var(--white); cursor: pointer; }
 .bc-style-sel:focus { outline: none; border-color: var(--action); }
 .bc-textarea { width: 100%; padding: 7px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; resize: vertical; min-height: 60px; line-height: 1.5; }
@@ -77,11 +90,12 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
 .bc-space-sel { padding: 4px 10px; border: 1px solid var(--border); border-radius: 4px; font-size: 12px; font-family: inherit; background: var(--white); cursor: pointer; }
 .bc-space-sel:focus { outline: none; border-color: var(--action); }
 
-/* 特殊ブロック */
-.block-special .bc-head { border-bottom: none; }
-.bc-special-tag { flex: 1; font-size: 11px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* ロックURL行 */
+.bc-lock-row { display: flex; align-items: center; gap: 6px; margin-top: 8px; }
+.bc-lock-icon { font-size: 13px; flex-shrink: 0; }
+.bc-url-locked { flex: 1; padding: 5px 9px; border: 1px solid var(--border); border-radius: 4px; font-size: 11px; font-family: inherit; background: #f5f5f5; color: var(--muted); cursor: not-allowed; }
 
-/* ブロック追加 */
+/* ブロック追加ボタン */
 .btn-add { width: 100%; padding: 11px; background: none; border: 1px dashed var(--border); border-radius: 6px; color: var(--label); font-size: 13px; cursor: pointer; transition: all .12s; margin-top: 4px; }
 .btn-add:hover { border-color: var(--action); color: var(--action); background: #f7f6fb; }
 
@@ -103,9 +117,7 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
     appId: "1:1080989158935:web:4b75da9e3252e8086a5652"
   });
   firebase.auth().onAuthStateChanged(function(user) {
-    if (!user || !(user.email || '').endsWith('@madoguchi.inc')) {
-      location.replace('login.html');
-    }
+    if (!user || !(user.email||'').endsWith('@madoguchi.inc')) location.replace('login.html');
   });
 })();
 </script>
@@ -141,7 +153,7 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
   </div>
 
   <div class="editor-pane">
-    <div class="editor-head">ブロック一覧</div>
+    <div class="editor-head">ブロック一覧（ヘッダーをクリックして展開）</div>
     <div id="block-list"></div>
     <button class="btn-add" onclick="addBlock()">＋ ブロック追加</button>
   </div>
@@ -151,8 +163,8 @@ body { font-family: 'Hiragino Kaku Gothic ProN','Noto Sans JP',sans-serif; backg
 
 <script>
 /* ── Business config ── */
-var BIZ_ID       = 'fuyouhin';
-var BG_TEXT_BG   = '#F2F7FD';
+var BIZ_ID        = 'fuyouhin';
+var BG_TEXT_BG    = '#F2F7FD';
 var BG_TEXT_COLOR = '#297DCE';
 
 /* ── Default blocks ── */
@@ -162,13 +174,13 @@ var DEFAULT_BLOCKS = {
     { id:'_p2_02', style:'bg-text',  text:'実際に写真の掲載をお願いしている理由' },
     { id:'_p2_03', style:'body',     text:'・実際に成約率やアポ率が高くなるというデータが出ている\n・施工の丁寧さや雰囲気が伝わりやすく満足度が上がる\n・結果的に利益が伸びる' },
     { id:'_p2_04', style:'body',     text:'スマホ撮影の写真でも問題ありませんので、\n下記フォームより2〜5枚ほどご提供をお願いいたします。' },
-    { id:'_p2_05', style:'url-photo',text:'' },
+    { id:'_p2_05', style:'url-photo',text:'▼写真アップロードフォーム' },
     { id:'_p2_06', style:'bold',     text:'【おすすめの写真例】' },
     { id:'_p2_07', style:'body',     text:'・施工中の様子（職人さんの手元や後ろ姿など）\n・会社外観や社内の様子\n・スタッフ集合写真、看板、車両など' },
     { id:'_p2_08', style:'images',   text:'' },
     { id:'_p2_09', style:'muted',    text:'※お送りいただいた素材は掲載前に確認のうえ、内容に問題のない範囲で使用いたします。' },
     { id:'_p2_10', style:'body',     text:'お手数おかけしてしまいますが、\nご協力のほど、どうぞよろしくお願いいたします。' },
-    { id:'_p2_11', style:'url-store',text:'' },
+    { id:'_p2_11', style:'url-store',text:'▼加盟店様の紹介ページ' },
     { id:'_p2_12', style:'bold',     text:'【管理画面へ追加で欲しい機能について】' },
     { id:'_p2_13', style:'body',     text:'普段、使っている機能や管理システム等が弊社管理画面にもあれば便利なのに！！\nのようなことがあればお願い致します！' }
   ],
@@ -194,15 +206,16 @@ var DEFAULT_BLOCKS = {
 
 /* ── State ── */
 var currentPage = 'p2';
-var blocks = { p2: [], p3: [] };
-var db = firebase.firestore();
-var dragSrcIdx = -1;
+var blocks      = { p2: [], p3: [] };
+var db          = firebase.firestore();
+var dragSrcIdx  = -1;
+var expandedIds = {};   /* blockId -> true/false */
 
 /* ── Firestore ── */
 function migrateBlocks(arr) {
-  return (arr || []).map(function(b) {
-    if (b.style === 'link')      return Object.assign({}, b, { style: 'body',  text: b.url  || b.text || '' });
-    if (b.style === 'link-card') return Object.assign({}, b, { style: 'bold',  text: b.text || b.linkLabel || '' });
+  return (arr||[]).map(function(b) {
+    if (b.style === 'link')      return Object.assign({}, b, { style:'body', text: b.url||b.text||'' });
+    if (b.style === 'link-card') return Object.assign({}, b, { style:'bold', text: b.text||b.linkLabel||'' });
     return b;
   });
 }
@@ -210,19 +223,20 @@ function migrateBlocks(arr) {
 function loadTemplate() {
   db.collection('templates').doc(BIZ_ID).get()
     .then(function(doc) {
+      var def = JSON.parse(JSON.stringify(DEFAULT_BLOCKS));
       if (doc.exists && doc.data().blocks) {
         var s = doc.data().blocks;
         blocks = {
-          p2: migrateBlocks((s.p2 && s.p2.length) ? s.p2 : JSON.parse(JSON.stringify(DEFAULT_BLOCKS.p2))),
-          p3: migrateBlocks((s.p3 && s.p3.length) ? s.p3 : JSON.parse(JSON.stringify(DEFAULT_BLOCKS.p3)))
+          p2: migrateBlocks((s.p2&&s.p2.length) ? s.p2 : def.p2),
+          p3: migrateBlocks((s.p3&&s.p3.length) ? s.p3 : def.p3)
         };
       } else {
-        blocks = JSON.parse(JSON.stringify(DEFAULT_BLOCKS));
+        blocks = def;
       }
       renderAll(); scalePreview();
     })
     .catch(function(e) {
-      console.error('[Editor] load:', e.message);
+      console.error('[Editor]', e.message);
       blocks = JSON.parse(JSON.stringify(DEFAULT_BLOCKS));
       renderAll(); scalePreview();
     });
@@ -233,24 +247,26 @@ function saveTemplate() {
   btn.disabled = true; btn.textContent = '保存中...';
   db.collection('templates').doc(BIZ_ID).set({ blocks: blocks, updatedAt: firebase.firestore.FieldValue.serverTimestamp() })
     .then(function() { showToast('保存しました'); btn.disabled = false; btn.textContent = '保存'; })
-    .catch(function(e) { alert('保存に失敗しました: ' + e.message); btn.disabled = false; btn.textContent = '保存'; });
+    .catch(function(e) { alert('保存に失敗: '+e.message); btn.disabled = false; btn.textContent = '保存'; });
 }
 
 function resetToDefault() {
-  if (!confirm('テンプレートをデフォルト状態に戻しますか？\n（「保存」するまでFirestoreには反映されません）')) return;
+  if (!confirm('デフォルト状態に戻しますか？（「保存」するまでFirestoreには反映されません）')) return;
   blocks = JSON.parse(JSON.stringify(DEFAULT_BLOCKS));
+  expandedIds = {};
   renderAll();
 }
 
 /* ── Page switch ── */
 function switchPage(page) {
   currentPage = page;
-  document.querySelectorAll('.h-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.page === page); });
+  document.querySelectorAll('.h-tab').forEach(function(t) { t.classList.toggle('active', t.dataset.page===page); });
   renderAll();
 }
 
 /* ── Render helpers ── */
 function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escId(s)   { return String(s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
 function processText(s) { return escHtml(s||'').replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>'); }
 
 /* ── Preview render ── */
@@ -265,8 +281,8 @@ function renderBlock(b) {
     case 'bold':     return '<div style="margin-bottom:12px"><strong>'+t+'</strong></div>';
     case 'muted':    return '<div style="margin-bottom:12px;color:#999;font-size:10.5px">'+t+'</div>';
     case 'space':    return '<div style="height:'+(SPACE_PX[b.spaceSize||'medium']||'32px')+'"></div>';
-    case 'url-photo':return '<div style="margin-bottom:24px">▼写真アップロードフォーム<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（写真アップロードURL・設定画面で変更）</span></div>';
-    case 'url-store':return '<div style="margin-bottom:48px">▼加盟店様の紹介ページ<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（加盟店紹介URL・設定画面で変更）</span></div>';
+    case 'url-photo':return '<div style="margin-bottom:24px">'+processText(b.text||'▼写真アップロードフォーム')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（写真アップロードURL・設定画面で変更）</span></div>';
+    case 'url-store':return '<div style="margin-bottom:48px">'+processText(b.text||'▼加盟店様の紹介ページ')+'<br><span style="color:'+BG_TEXT_COLOR+';font-size:11px">（加盟店紹介URL・設定画面で変更）</span></div>';
     case 'images':   return '<div style="display:flex;gap:8px;margin-top:10px;margin-bottom:8px"><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真1</div><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真2</div><div style="flex:1;aspect-ratio:4/3;border-radius:6px;background:#e8e8e8;display:flex;align-items:center;justify-content:center;font-size:10px;color:#aaa">写真3</div></div>';
     default:         return '<div style="margin-bottom:12px">'+t+'</div>';
   }
@@ -277,85 +293,131 @@ function renderPreview() {
   if (el) el.innerHTML = (blocks[currentPage]||[]).map(renderBlock).join('');
 }
 
-/* ── Editor render ── */
-var SPECIAL = {
-  'url-photo': '🔒 写真アップロードURL（設定画面で変更）',
-  'url-store': '🔒 加盟店紹介URL（設定画面で変更）',
-  'images':    '🔒 写真サンプル画像（3枚）'
+/* ── Editor card builder ── */
+var FULLY_LOCKED = { 'images': '🔒 写真サンプル画像（3枚）' };
+
+var SEMI_LOCKED = {
+  'url-photo': '写真URL（🔒）',
+  'url-store': '店舗URL（🔒）'
+};
+var SEMI_URL_LABEL = {
+  'url-photo': '写真アップロードURL（設定画面のURL設定で変更）',
+  'url-store': '加盟店紹介URL（設定画面のURL設定で変更）'
 };
 
 var STYLE_OPTS = [
   ['title','タイトル'],['body','本文'],['bg-text','背景ありテキスト'],
   ['bold','太字'],['muted','補足テキスト'],['space','余白']
 ];
-
 var STYLE_LABEL = { title:'タイトル', body:'本文', 'bg-text':'背景ありテキスト', bold:'太字', muted:'補足テキスト', space:'余白' };
 var SPACE_LABEL  = { small:'小（16px）', medium:'中（32px）', large:'大（64px）' };
 
 function badgeStyle(s) {
-  switch(s) {
-    case 'title':   return 'background:'+BG_TEXT_BG+';color:'+BG_TEXT_COLOR;
-    case 'body':    return 'background:#f0f0f0;color:#555';
-    case 'bg-text': return 'background:'+BG_TEXT_BG+';color:'+BG_TEXT_COLOR;
-    case 'bold':    return 'background:#2d2d2d;color:#fff';
-    case 'muted':   return 'background:#ebebeb;color:#999';
-    case 'space':   return 'background:#e8f5e9;color:#2e7d32';
-    default:        return 'background:#f0f0f0;color:#555';
-  }
-}
-
-function renderEditor() {
-  var list = document.getElementById('block-list');
-  if (!list) return;
-  var arr = blocks[currentPage] || [];
-  list.innerHTML = arr.map(function(b, i) { return buildCard(b, i); }).join('');
+  if (s==='title'||s==='bg-text') return 'background:'+BG_TEXT_BG+';color:'+BG_TEXT_COLOR;
+  if (s==='bold')  return 'background:#2d2d2d;color:#fff';
+  if (s==='muted') return 'background:#ebebeb;color:#999';
+  if (s==='space') return 'background:#e8f5e9;color:#2e7d32';
+  return 'background:#f0f0f0;color:#555';
 }
 
 function buildCard(b, idx) {
-  var dnd = ' draggable="true" data-idx="'+idx+'" ondragstart="startDrag(event)" ondragover="overDrag(event)" ondrop="dropDrag(event)" ondragend="endDrag(event)" ondragleave="leaveDrag(event)"';
-  var handle = '<span class="bc-drag" title="ドラッグで並び替え">≡</span>';
-  var del    = '<button class="btn-del" onclick="delBlock('+idx+')">削除</button>';
+  var bid = escId(b.id);
+  var expanded = !!expandedIds[b.id];
+  var arrow    = '<span class="bc-arrow">'+(expanded?'▼':'▶')+'</span>';
+  var del      = '<button class="btn-del" onclick="event.stopPropagation();delBlock('+idx+')">削除</button>';
 
-  if (SPECIAL.hasOwnProperty(b.style)) {
-    return '<div class="block-card block-special"'+dnd+'>'
-      +'<div class="bc-head">'+handle+'<span class="bc-special-tag">'+SPECIAL[b.style]+'</span>'+del+'</div>'
+  /* ドラッグハンドル（≡自身がdraggable） */
+  var handle = '<span class="bc-drag" draggable="true" data-idx="'+idx+'"'
+    +' ondragstart="startDrag(event)" ondragend="endDrag(event)"'
+    +' onclick="event.stopPropagation()" title="ドラッグで並び替え">≡</span>';
+
+  /* カード共通DnD属性 */
+  var cardDnd = ' data-idx="'+idx+'" data-blockid="'+escHtml(b.id)+'"'
+    +' ondragover="overDrag(event)" ondrop="dropDrag(event)" ondragleave="leaveDrag(event)"';
+
+  /* 完全ロック（images） */
+  if (FULLY_LOCKED.hasOwnProperty(b.style)) {
+    return '<div class="block-card block-special"'+cardDnd+'>'
+      +'<div class="bc-head">'+handle
+      +'<span class="bc-special-tag">'+FULLY_LOCKED[b.style]+'</span>'+del
+      +'</div></div>';
+  }
+
+  /* 半ロック（url-photo / url-store）: ラベル編集可・URL固定 */
+  if (SEMI_LOCKED.hasOwnProperty(b.style)) {
+    var slLabel = SEMI_LOCKED[b.style];
+    var slBadge = '<span class="bc-badge" style="background:#fff3e0;color:#e65100">'+slLabel+'</span>';
+    var slPre   = (b.text||'').replace(/\n/g,' ');
+    slPre = slPre.length > 44 ? slPre.substring(0,44)+'…' : slPre;
+    var bodyH   = expanded ? '' : ' style="display:none"';
+    return '<div class="block-card"'+cardDnd+'>'
+      +'<div class="bc-head" onclick="toggleCard(\''+bid+'\')">'
+      +handle+slBadge+'<span class="bc-preview">'+escHtml(slPre)+'</span>'+arrow+del
+      +'</div>'
+      +'<div class="bc-body"'+bodyH+'>'
+      +'<span class="bc-field-label">ラベルテキスト</span>'
+      +'<textarea class="bc-textarea" rows="2" placeholder="リンクのラベルテキスト" data-idx="'+idx+'" data-field="text" oninput="updateBlock(this)">'+escHtml(b.text||'')+'</textarea>'
+      +'<div class="bc-lock-row"><span class="bc-lock-icon">🔒</span><input class="bc-url-locked" type="text" value="'+escHtml(SEMI_URL_LABEL[b.style])+'" disabled></div>'
+      +'</div>'
       +'</div>';
   }
 
+  /* 通常ブロック */
   var label  = STYLE_LABEL[b.style] || b.style;
   var badge  = '<span class="bc-badge" style="'+badgeStyle(b.style)+'">'+label+'</span>';
-  var rawPre = b.style === 'space'
-    ? (SPACE_LABEL[b.spaceSize||'medium'] || '中（32px）')
+  var rawPre = b.style==='space'
+    ? (SPACE_LABEL[b.spaceSize||'medium']||'')
     : (b.text||'').replace(/\n/g,' ').replace(/\*\*/g,'');
-  var preText = rawPre.length > 44 ? rawPre.substring(0,44)+'…' : rawPre;
-  var preview = '<span class="bc-preview">'+escHtml(preText)+'</span>';
+  rawPre = rawPre.length > 44 ? rawPre.substring(0,44)+'…' : rawPre;
+  var bodyH = expanded ? '' : ' style="display:none"';
 
-  var opts = STYLE_OPTS.map(function(o) {
+  var opts = STYLE_OPTS.map(function(o){
     return '<option value="'+o[0]+'"'+(b.style===o[0]?' selected':'')+'>'+o[1]+'</option>';
   }).join('');
   var styleRow = '<div class="bc-row"><span class="bc-row-label">スタイル</span>'
     +'<select class="bc-style-sel" data-idx="'+idx+'" onchange="updateStyle(this)">'+opts+'</select></div>';
 
-  var bodyContent = (b.style === 'space')
+  var bodyContent = (b.style==='space')
     ? '<div class="bc-row"><span class="bc-row-label">サイズ</span>'
       +'<select class="bc-space-sel" data-idx="'+idx+'" data-field="spaceSize" onchange="updateBlock(this)">'
-      +['small','medium','large'].map(function(sz){ return '<option value="'+sz+'"'+((b.spaceSize||'medium')===sz?' selected':'')+'>'+SPACE_LABEL[sz]+'</option>'; }).join('')
-      +'</select></div>'
+      +['small','medium','large'].map(function(sz){
+        return '<option value="'+sz+'"'+((b.spaceSize||'medium')===sz?' selected':'')+'>'+SPACE_LABEL[sz]+'</option>';
+      }).join('')+'</select></div>'
     : '<textarea class="bc-textarea" rows="3" placeholder="テキスト内容（Enterで改行・**テキスト**で太字）" data-idx="'+idx+'" data-field="text" oninput="updateBlock(this)">'+escHtml(b.text||'')+'</textarea>';
 
-  return '<div class="block-card"'+dnd+'>'
-    +'<div class="bc-head">'+handle+badge+preview+del+'</div>'
-    +'<div class="bc-body">'+styleRow+bodyContent+'</div>'
+  return '<div class="block-card"'+cardDnd+'>'
+    +'<div class="bc-head" onclick="toggleCard(\''+bid+'\')">'
+    +handle+badge+'<span class="bc-preview">'+escHtml(rawPre)+'</span>'+arrow+del
+    +'</div>'
+    +'<div class="bc-body"'+bodyH+'>'+styleRow+bodyContent+'</div>'
     +'</div>';
 }
 
+function renderEditor() {
+  var list = document.getElementById('block-list');
+  if (!list) return;
+  var arr = blocks[currentPage]||[];
+  list.innerHTML = arr.map(function(b,i){ return buildCard(b,i); }).join('');
+}
+
 function renderAll() { renderPreview(); renderEditor(); }
+
+/* ── Toggle collapse ── */
+function toggleCard(blockId) {
+  expandedIds[blockId] = !expandedIds[blockId];
+  var card = document.querySelector('.block-card[data-blockid="'+blockId+'"]');
+  if (!card) return;
+  var body  = card.querySelector('.bc-body');
+  var arrow = card.querySelector('.bc-arrow');
+  if (body)  body.style.display  = expandedIds[blockId] ? '' : 'none';
+  if (arrow) arrow.textContent   = expandedIds[blockId] ? '▼' : '▶';
+}
 
 /* ── Update handlers ── */
 function updateStyle(sel) {
   var idx = parseInt(sel.dataset.idx);
   blocks[currentPage][idx].style = sel.value;
-  if (sel.value === 'space' && !blocks[currentPage][idx].spaceSize) blocks[currentPage][idx].spaceSize = 'medium';
+  if (sel.value==='space' && !blocks[currentPage][idx].spaceSize) blocks[currentPage][idx].spaceSize = 'medium';
   renderAll();
 }
 
@@ -363,12 +425,13 @@ function updateBlock(inp) {
   var idx = parseInt(inp.dataset.idx);
   blocks[currentPage][idx][inp.dataset.field] = inp.value;
   renderPreview();
+  /* ヘッダーのプレビューテキストだけ差し替え（フォーカスを失わないよう最小更新） */
   var card = document.querySelector('#block-list .block-card[data-idx="'+idx+'"]');
   if (card) {
     var pre = card.querySelector('.bc-preview');
     if (pre) {
       var b = blocks[currentPage][idx];
-      var raw = b.style === 'space'
+      var raw = b.style==='space'
         ? (SPACE_LABEL[b.spaceSize||'medium']||'')
         : (b.text||'').replace(/\n/g,' ').replace(/\*\*/g,'');
       pre.textContent = raw.length > 44 ? raw.substring(0,44)+'…' : raw;
@@ -378,12 +441,14 @@ function updateBlock(inp) {
 
 function delBlock(idx) {
   if (!confirm('このブロックを削除しますか？')) return;
-  blocks[currentPage].splice(idx, 1);
+  blocks[currentPage].splice(idx,1);
   renderAll();
 }
 
 function addBlock() {
-  blocks[currentPage].push({ id: 'new_'+Date.now(), style: 'body', text: '' });
+  var nb = { id:'new_'+Date.now(), style:'body', text:'' };
+  blocks[currentPage].push(nb);
+  expandedIds[nb.id] = true;   /* 追加時は展開状態 */
   renderAll();
   setTimeout(function() {
     var last = document.querySelector('#block-list .block-card:last-child');
@@ -393,38 +458,43 @@ function addBlock() {
 
 /* ── Drag & Drop ── */
 function startDrag(e) {
-  var handle = e.currentTarget.querySelector('.bc-drag');
-  if (!handle || !handle.contains(e.target)) { e.preventDefault(); return; }
-  var card = e.currentTarget;
-  dragSrcIdx = parseInt(card.dataset.idx);
+  /* ≡ハンドル自身がdraggable="true"なので、e.currentTargetは≡span */
+  dragSrcIdx = parseInt(e.currentTarget.dataset.idx);
   e.dataTransfer.effectAllowed = 'move';
   e.dataTransfer.setData('text/plain', String(dragSrcIdx));
-  setTimeout(function() { if (card.parentNode) card.classList.add('dragging'); }, 0);
+  /* ドラッグイメージをカード全体に */
+  var card = e.currentTarget.closest ? e.currentTarget.closest('.block-card') : null;
+  if (card) {
+    try { e.dataTransfer.setDragImage(card, 20, 12); } catch(ex) {}
+    setTimeout(function() { card.classList.add('dragging'); }, 0);
+  }
 }
 
 function overDrag(e) {
   e.preventDefault();
   e.dataTransfer.dropEffect = 'move';
-  var targetIdx = parseInt(e.currentTarget.dataset.idx);
+  var ti = parseInt(e.currentTarget.dataset.idx);
   document.querySelectorAll('#block-list .block-card').forEach(function(c) {
-    c.classList.toggle('drag-over', parseInt(c.dataset.idx) === targetIdx && targetIdx !== dragSrcIdx);
+    c.classList.toggle('drag-over', parseInt(c.dataset.idx)===ti && ti!==dragSrcIdx);
   });
 }
 
 function dropDrag(e) {
   e.preventDefault();
-  var targetIdx = parseInt(e.currentTarget.dataset.idx);
-  if (dragSrcIdx < 0 || dragSrcIdx === targetIdx) { dragSrcIdx = -1; return; }
-  var arr = blocks[currentPage];
+  var ti = parseInt(e.currentTarget.dataset.idx);
+  if (dragSrcIdx < 0 || dragSrcIdx === ti) { dragSrcIdx = -1; return; }
+  var arr   = blocks[currentPage];
   var moved = arr.splice(dragSrcIdx, 1)[0];
-  arr.splice(targetIdx > dragSrcIdx ? targetIdx - 1 : targetIdx, 0, moved);
+  arr.splice(ti > dragSrcIdx ? ti - 1 : ti, 0, moved);
   dragSrcIdx = -1;
   renderAll();
 }
 
 function endDrag(e) {
   dragSrcIdx = -1;
-  document.querySelectorAll('#block-list .block-card').forEach(function(c) { c.classList.remove('dragging','drag-over'); });
+  document.querySelectorAll('#block-list .block-card').forEach(function(c) {
+    c.classList.remove('dragging','drag-over');
+  });
 }
 
 function leaveDrag(e) {
@@ -435,18 +505,18 @@ function leaveDrag(e) {
 function scalePreview() {
   var pane = document.getElementById('preview-pane');
   var wrap = document.getElementById('preview-page-wrap');
-  if (!pane || !wrap) return;
-  var s = Math.min(1, Math.max(0.3, (pane.clientWidth - 40) / 794));
+  if (!pane||!wrap) return;
+  var s = Math.min(1, Math.max(0.3, (pane.clientWidth-40)/794));
   wrap.style.transform = 'scale('+s+')';
   wrap.style.transformOrigin = 'top center';
-  wrap.style.marginBottom = (Math.round(1200 * s) - 1200 + 20)+'px';
+  wrap.style.marginBottom = (Math.round(1200*s)-1200+20)+'px';
 }
 window.addEventListener('resize', scalePreview);
 
 function showToast(msg) {
   var t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  setTimeout(function() { t.classList.remove('show'); }, 2500);
+  setTimeout(function(){ t.classList.remove('show'); }, 2500);
 }
 
 loadTemplate();
